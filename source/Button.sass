@@ -1,0 +1,60 @@
+@import 'compass/css3'
+
+.Button
+    cursor: pointer
+    position: relative
+    height: 20px
+    &:disabled
+        cursor: default
+    &.Button-icon.Button-text
+        padding-left: 20px
+    &.Button-icon:not(.Button-text)
+        border-radius: 40px
+        width: 20px
+    &.Button-icon::before
+        content: '&'
+        position: absolute
+        left: 0
+        width: 20px
+        height: 20px
+        display: block
+    &.Button-spinner
+        +single-transition(padding-right, 0.2s)
+        &.active
+            padding-right: 20px
+            &::after
+                content: ''
+                background-image: url('./images/spinner.gif')
+                background-repeat: no-repeat
+                background-position: center center
+                position: absolute
+                top: 0
+                right: 0
+                width: 20px
+                height: 20px
+                display: block
+    &.Button-icon:not(.Button-text).Button-spinner
+        &.active
+            padding-right: 0
+            &::before
+                display: none
+
+
+// TODO: this file should only have structure
+.Button
+    vertical-align: middle
+    &:disabled
+        opacity: 0.5
+    &:hover:not(:disabled)
+        border: 1px solid blue
+    &:active:not(:disabled)
+        border: 1px solid red
+    &.Button-friendly
+        background: green
+    &.Button-dangerous
+        background: red
+    &.Button-warning
+        background: yellow
+    &.Button-action
+        background: blue
+

@@ -1,0 +1,31 @@
+.AppBar
+    border: 1px solid blue
+    background: rgba(255,255,255,0.9)
+    position: fixed
+    &.AppBar-top, &.AppBar-bottom
+        left: 0
+        right: 0
+        .AppBar-head
+            float: left
+        .AppBar-tail
+            float: right
+    &.AppBar-top
+        top: 0
+    &.AppBar-bottom
+        bottom: 0
+
+    &.AppBar-left, &.AppBar-right
+        top: 0
+        bottom: 0
+        .AppBar-head, .AppBar-tail
+            position: absolute
+            left: 0
+            right: 0
+        .AppBar-head
+            top: 0
+        .AppBar-tail
+            bottom: 0
+    &.AppBar-left
+        left: 0
+    &.AppBar-right
+        right: 0
