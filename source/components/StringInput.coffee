@@ -1,18 +1,17 @@
 { View } = Backbone
 
-si = new StringInput
-    placeholder: 'tags, comma-separated'
-    on_change: ->
-    tokenize: ','
-si.value
-> ['Some Value', 'other', 'values']
-si.raw_value
-> 'Some Value,other,values'
+# si = new StringInput
+#     placeholder: 'tags, comma-separated'
+#     on_change: ->d
+#     tokenize: ','
+# si.value
+# > ['Some Value', 'other', 'values']
+# si.raw_value
+# > 'Some Value,other,values'
 
 
 class StringInput extends View
     @__doc__ = """
-    A basic button class. See #{ DOC_URL }button/
     """
 
     tagName: 'DIV'
@@ -21,17 +20,25 @@ class StringInput extends View
     initialize: (options) ->
         @_is_enabled = true
         @_options = _.extend {},
-            #type            : 'text'
             tokenize        : null # true - tokenize on ,
             class           : null
             helptext        : null
             enabled         : true
             multiline       : false
+            token_set       : false
             placeholder     : ''
             extra_classes   : []
         , options
 
+
         @_validateOptions()
+
+        @raw_value = ''
+        if @_options.tokenize
+            @value = []
+            @_current_token = ''
+        else
+            @value = ''
 
         unless @_options.enabled
             @disable()
@@ -53,49 +60,42 @@ class StringInput extends View
     #
     # Returns nothing.
     _setClasses: ->
-        class_list = @_options.type.split('+')
-        if @_options.class?.length > 0
-            class_list.push(@_options.class.split(' ')...)
-        class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
+        class_list = []
+        # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
 
-    # Public: Add the label to the element. If the Button is type 'icon', the
-    #         label is set as the title.
+    # Public: Add the label to the element.
     #
     # Returns nothing.
     render: ->
-        console.log 'Button.render'
         @_setClasses()
-
-        if @_options.label
-            if @_options.type is 'icon'
-                @$el.attr('title', @_options.label)
-            else
-                @$el.text(@_options.label)
-        if @_options.type in ['icon', 'icon+text']
-            @$el.prepend('<div class="Button-icon-display"></div>')
-        if @_options.spinner
-            @$el.append('<div class="Button-spinner-display"></div>')
+        @_ui = {}
+        if @_options.tokenize
+            @$el.html """
+                    <div class="StringInput-tokens"></div>
+                    <input class="StringInput-input">
+                """
+            @_ui.tokens = @$el.find('.StringInput-tokens')
+        else
+            @$el.html('<input class="StringInput-input">')
+        @_ui.input = @$el.find('.StringInput-input')
         @delegateEvents()
         return @el
 
-    # Public: Set the Button state to disabled.
+    # Public: Set the StringInput state to disabled.
     #
     # Returns nothing.
     disable: ->
         @_is_enabled = false
         @$el.attr('disabled', true)
-        @_setInactive()
 
-    # Public: Set the Button state to enabled. Also sets the button as inactive.
+    # Public: Set the StringInput state to enabled.
     #
     # Returns nothing.
     enable: ->
-        console.log 'Button.enable'
         @_is_enabled = true
         @$el.removeAttr('disabled')
-        @_setInactive()
 
     # Public: Check the enabled status.
     # 
@@ -124,23 +124,6 @@ class StringInput extends View
     _setInactive: ->
         @$el.removeClass('active')
 
-    events:
-        'click': '_handleClick'
-
-    # Private: Handle the click event. Fires a 'click' event.
-    #
-    # Returns nothing.
-    _handleClick: (e) =>
-        console.log 'click!'
-        e?.stopPropagation()
-
-        if @_options.spinner
-            @disable()
-            @_setActive()
-
-        @_options.action(this)
-        return
-
     # TODO: Make a BaseUIView that has things like position, validateOptions
     getPosition: ->
         { top, left } = @$el.offset()
@@ -150,7 +133,43 @@ class StringInput extends View
         y = top + height / 2
         return { x:x, y:y }
 
+    _renderTokens: ->
+        # TODO: Make each token a view, use Collection to manage?
+        token_html = _.map @value, (token) ->
+            return "<span class='StringInput-token'>#{ token }</span>"
+        @_ui.tokens.html(token_html.join(''))
 
+    events:
+        'keydown .StringInput-input': '_handleInput'
+
+
+
+    _handleInput: (e) =>
+        _.defer =>
+            incoming_value = @_ui.input.val()
+            if @_options.tokenize?
+                if incoming_value.length > 0
+                    incoming_value = incoming_value.split('')
+                    incoming_char = incoming_value.pop()
+                    if incoming_char is @_options.tokenize
+                        incoming_value = incoming_value.join('')
+                        @_ui.input.val('')
+                        if incoming_value
+                            @raw_value += incoming_char
+                            @value.push(incoming_value)
+                            @_renderTokens()
+                            @_options.action(this, @value, @raw_value)
+                else
+                    if e.which is 8 # delete
+                        prev_token = @value.pop()
+                        @_renderTokens()
+                        @_ui.input.val(prev_token)
+                        @raw_value = @value.join(@_options.tokenize)
+                        @_options.action(this, @value, @raw_value)
+            else
+                @raw_value = @value = incoming_value
+                @_options.action(this, @value, @raw_value)
+        return
 
 
 module.exports = StringInput

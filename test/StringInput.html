@@ -1,0 +1,23 @@
+<body>
+
+    <div id="app" style="max-width: 500px"></div>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+    <link rel="stylesheet" href="../lib/Doodad.css">
+    <script src="../lib/Doodad.js"></script>
+
+    <script type="text/coffeescript" style="display: block;white-space:pre;font-family:Menlo">
+        { StringInput } = window.Doodad
+        si = new StringInput
+            tokenize: ','
+            action: (si_instance, val) ->
+                console.log val
+
+        $('#app').append(si.render())
+
+    </script>
+</body>
