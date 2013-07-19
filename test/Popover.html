@@ -1,0 +1,69 @@
+<body style="margin: 0">
+
+    <div id="app"></div>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+    <link rel="stylesheet" href="../lib/Doodad.css">
+    <script src="../lib/Doodad.js"></script>
+
+    <script type="text/coffeescript" style="display: block;white-space:pre;font-family:Menlo">
+        { Button, Popover } = window.Doodad
+        doShit = (b) ->
+            console.log(arguments)
+            setTimeout ->
+                console.log('reenabling')
+                b.enable()
+            , 2000
+        buttons = []
+        do ->
+            btn1 = new Button
+                type: 'text'
+                class: 'warning'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn2 = new Button
+                type: 'text'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn3 = new Button
+                type: 'icon'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            popover = new Popover
+                origin: 'top-left'
+                close_on_outside: true
+                offset: [0,5]
+                contents: [
+                    btn1, btn2, btn3
+                ]
+
+            buttons.push new Button
+                id: 'Foooo'
+                label: 'Stuff'
+                action: popover.toggle
+            buttons.push new Button
+                id: 'Bar'
+                label: 'ASDKAJ SD'
+                action: popover.toggle
+
+        _.each buttons, (button) ->
+            console.log button
+            $el = $ """
+                <div style="padding: 1em;">
+                </div>
+            """
+            $el.append(button.el)
+            $('#app').append($el)
+
+    </script>
+</body>

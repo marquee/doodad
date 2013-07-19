@@ -1,0 +1,84 @@
+@import "compass"
+@import "_colors"
+
+
+$Popover_border_size: 1px
+$Popover_border_color: $disabled_color
+$Popover_background_color: white
+$Popover_triangle_size: 10px
+$Popover_padding: 10px
+$Popover_border_radius: 10px
+
+.Popover
+    position    : absolute
+
+    border      : $Popover_border_size solid $Popover_border_color
+    +border-radius($Popover_border_radius)
+    background-color  : $Popover_background_color
+    padding: $Popover_padding
+    &::before, &::after
+        content: ""
+        position: absolute
+        border-style: solid
+        border-color: transparent
+        pointer-events: none
+    &::after
+        border-width: $Popover_triangle_size
+    &::before
+        border-width: $Popover_triangle_size + $Popover_border_size
+
+    $border_radius_adjustment: ($Popover_border_radius - $Popover_border_size)
+
+    &.Popover-top-left
+        margin-top  : $Popover_triangle_size * 2
+        margin-left : $Popover_triangle_size * 0.5 - $border_radius_adjustment
+        &::after
+            top                 : $Popover_triangle_size * -2
+            left                : $border_radius_adjustment
+            border-bottom-color : $Popover_background_color
+        &::before
+            top                 : ($Popover_triangle_size * -2) - (2 * $Popover_border_size)
+            left                : -1 * $Popover_border_size + $border_radius_adjustment
+            border-bottom-color : $Popover_border_color
+
+    &.Popover-top-right
+        margin-top      : $Popover_triangle_size * 2
+        margin-right    : $Popover_triangle_size * 0.5 - $border_radius_adjustment
+        &::after
+            top                 : $Popover_triangle_size * -2
+            right               : $border_radius_adjustment
+            border-bottom-color : $Popover_background_color
+        &::before
+            top                 : ($Popover_triangle_size * -2) - (2 * $Popover_border_size)
+            right               : -1 * $Popover_border_size + $border_radius_adjustment
+            border-bottom-color : $Popover_border_color
+
+    &.Popover-right-top
+        margin-top      : $Popover_triangle_size * -0.5 - $border_radius_adjustment
+        margin-right    : $Popover_triangle_size * 2
+        &::after
+            right               : $Popover_triangle_size * -2
+            top                 : $border_radius_adjustment
+            border-left-color  : $Popover_background_color
+        &::before
+            right               : ($Popover_triangle_size * -2) - (2 * $Popover_border_size)
+            top                 : -1 * $Popover_border_size + $border_radius_adjustment
+            border-left-color  : $Popover_border_color
+
+    &.Popover-left-top
+        margin-top      : $Popover_triangle_size * -0.5 - $border_radius_adjustment
+        margin-left    : $Popover_triangle_size * 2
+        &::after
+            left                : $Popover_triangle_size * -2
+            top                 : $border_radius_adjustment
+            border-right-color  : $Popover_background_color
+        &::before
+            left                : ($Popover_triangle_size * -2) - (2 * $Popover_border_size)
+            top                 : -1 * $Popover_border_size + $border_radius_adjustment
+            border-right-color  : $Popover_border_color
+
+
+
+
+// 36.5 40.5 4
+// 50 42 8

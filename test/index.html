@@ -1,0 +1,117 @@
+<body>
+
+<p>Donec id elit non mi porta gravida at eget metus. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.</p>
+<p>Nullam quis risus eget urna mollis ornare vel eu leo. Etiam porta sem malesuada magna mollis euismod. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui.</p>
+<p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam id dolor id nibh ultricies vehicula ut id elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nulla vitae elit libero, a pharetra augue.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Etiam porta sem malesuada magna mollis euismod. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+<p>Nullam quis risus eget urna mollis ornare vel eu leo. Etiam porta sem malesuada magna mollis euismod. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui.</p>
+<p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam id dolor id nibh ultricies vehicula ut id elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nulla vitae elit libero, a pharetra augue.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Etiam porta sem malesuada magna mollis euismod. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+    <link rel="stylesheet" href="../lib/Doodad.css">
+    <script src="../lib/Doodad.js"></script>
+
+    <script type="text/coffeescript">
+        { Button, AppBar, Popover, Toggle } = window.Doodad
+        doShit = (b) ->
+            console.log(arguments)
+            setTimeout ->
+                console.log('reenabling')
+                b.enable()
+            , 2000
+
+        do ->
+            btn0 = new Button
+                label: 'Stuff'
+                action: doShit
+
+            btn1 = new Button
+                label: 'Do Shit'
+                type: 'icon+text'
+                class: 'dangerous'
+                spinner: true
+                action: doShit
+
+            btn2 = new Button
+                label: 'Do Shit'
+                type: 'icon+text'
+                class: 'friendly'
+                enabled: false
+                action: doShit
+
+            btn3 = new Button
+                type: 'icon'
+                class: 'action'
+                action: doShit
+
+            btn4 = new Button
+                type: 'text'
+                class: 'warning'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn5 = new Button
+                type: 'text'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn6 = new Button
+                type: 'icon'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn7 = new Button
+                label: 'Stuff'
+                spinner: true
+                action: ->
+
+            new AppBar
+                responsive: true
+                head: [
+                    btn0, btn1, btn2, btn3
+                ]
+                tail: [
+                    btn4, btn5, btn6, btn7
+                ]
+
+        do ->
+            btn1 = new Button
+                type: 'text'
+                class: 'warning'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn2 = new Button
+                type: 'text'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            btn3 = new Button
+                type: 'icon'
+                label: 'Stuff'
+                spinner: true
+                action: doShit
+
+            popover = new Popover
+                origin: 'center-center'
+                contents: [
+                    btn1, btn2, btn3
+                ]
+
+            btn4 = new Button
+                id: 'Foooo'
+                label: 'Stuff'
+                action: popover.toggle
+            $('body').append(btn4.render())
+    </script>
+</body>

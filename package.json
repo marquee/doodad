@@ -1,0 +1,39 @@
+{
+    "name": "doodad-ui",
+    "version": "0.0.0",
+    "description": "",
+    "engines": {
+        "node": "0.10.x",
+        "npm": "1.x.x"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "backbone": "1.x.0",
+        "browserify": "2.x.x",
+        "coffeeify": "0.5.x",
+        "coffee-script": "1.x.x",
+        "mocha": "*",
+        "should": "*",
+        "sqwish": "0.2.x",
+        "uglify-js": "2.x.x"
+    },
+    "scripts": {
+        "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/alecperkins/active-markdown.git"
+    },
+    "author": "Alec Perkins <alec@droptype.com>",
+    "license": {
+        "type": "Unlicense",
+        "url": "https://raw.github.com/alecperkins/active-markdown/master/UNLICENSE"
+    },
+    "contributors": [
+        {
+            "name": "Alec Perkins",
+            "email": "alec@droptype.com"
+        }
+    ]
+}

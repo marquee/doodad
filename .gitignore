@@ -1,3 +1,5 @@
-.sass-cache
-build
+.sass-cache/*
+build/*
+lib/*
 .DS_store
+node_modules/*

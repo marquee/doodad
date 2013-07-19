@@ -1,12 +1,32 @@
-{ spawn, exec }     = require('child_process')
-util                = require('util')
-fs                  = require('fs')
+{ spawn, exec }     = require 'child_process'
+path                = require 'path'
+util                = require 'util'
+fs                  = require 'fs'
 
-STATIC_SOURCE = 'ui_source/'    # relative to Cakefile
-STATIC_OUTPUT = 'static/'
+Sqwish              = require 'sqwish'
+UglifyJS            = require 'uglify-js'
 
-TO_COPY = ['common', 'libs', 'images', 'custom_images', 'vendor', 'admin_extras']     # relative to STATIC_SOURCE
-TO_COPY_FAIL_SILENT = ['../custom_assets']
+VERSION = JSON.parse(fs.readFileSync('package.json')).version
+
+PROJECT_ROOT = path.join(path.dirname(fs.realpathSync(__filename)))
+
+SOURCE_FOLDER   = path.join(PROJECT_ROOT, 'source/')
+BUILD_FOLDER    = path.join(PROJECT_ROOT, 'build/')
+OUTPUT_FOLDER   = path.join(PROJECT_ROOT, 'lib/')
+
+JS_LIB_NAME = "Doodad-#{ VERSION }.js"
+CSS_LIB_NAME = "Doodad-#{ VERSION }.css"
+MIN_JS_LIB_NAME = "Doodad-#{ VERSION }-min.js"
+MIN_CSS_LIB_NAME = "Doodad-#{ VERSION }-min.css"
+JS_BARE_LIB_NAME = "Doodad.js"
+CSS_BARE_LIB_NAME = "Doodad.css"
+MIN_JS_BARE_LIB_NAME = "Doodad-min.js"
+MIN_CSS_BARE_LIB_NAME = "Doodad-min.css"
+
+
+
+TO_COPY = ['images',]     # relative to SOURCE_FOLDER
+TO_COPY_FAIL_SILENT = []
 
 # Set by the -q option, determines the level of verbosity
 quiet      = false
@@ -23,11 +43,10 @@ option '-p', '--production', 'Compile for production'
 compassExtraOptions = [
     #'--debug-info',
     '--relative-assets',
-    '--require',         'animation',
-    '--sass-dir',        'ui_source/',
-    '--css-dir',         'static/',
-    '--images-dir',      'static/images/',
-    '--javascripts-dir', 'static/',
+    '--sass-dir',        'source/',
+    '--css-dir',         'build/',
+    '--images-dir',      'build/images/',
+    '--javascripts-dir', 'build/',
 ]
 
 
@@ -38,8 +57,25 @@ task 'flush_static', 'Empty the static directory', (opts) ->
     flushStatic()
 
 task 'build:scripts', '', (opts) ->
-    coffee_builder = spawn 'coffee', ['--output', STATIC_OUTPUT, '--compile', STATIC_SOURCE]
-    captureOutput(coffee_builder, 'COFFEE')
+    coffee_builder = spawn 'coffee', ['--output', BUILD_FOLDER, '--compile', SOURCE_FOLDER]
+    captureOutput coffee_builder, 'COFFEE', ->
+        index_file = path.join(BUILD_FOLDER, 'index.js')
+        index_content = fs.readFileSync(index_file).toString()
+        index_content = index_content.replace(/\{X VERSION X\}/g, VERSION)
+        fs.writeFileSync(index_file, index_content)
+        browserify = require 'browserify'
+        b = browserify()
+        b.add(path.join(index_file))
+        output_file = path.join(OUTPUT_FOLDER, JS_BARE_LIB_NAME)
+        output_stream = fs.createWriteStream(output_file)
+        b.bundle().pipe(output_stream)
+        # unminified = fs.readFileSync(output_file).toString())
+        # minified = _minifyJS(unminified)
+        # fs.writeFile(path.join(OUTPUT_FOLDER, MIN_JS_BARE_LIB_NAME), minified, ->)
+
+
+
+
 
 task 'build', 'Compile the static source (coffee/sass) and put it into static/', (opts) ->
     { quiet, production } = opts
@@ -62,7 +98,11 @@ task 'build', 'Compile the static source (coffee/sass) and put it into static/',
                 compassOptions.push(flag)
 
             compass_builder = spawn 'compass', compassOptions
-            captureOutput(compass_builder, 'COMPASS')
+            captureOutput compass_builder, 'COMPASS', ->
+                unminified = fs.readFileSync(path.join(BUILD_FOLDER, 'index.css')).toString()
+                # minified = Sqwish.minify(unminified)
+                fs.writeFile(path.join(OUTPUT_FOLDER, CSS_BARE_LIB_NAME), unminified, ->)
+
 
 task 'watch', 'Build, then watch the static source (coffee/sass) for changes', (opts) ->
     invoke 'build'
@@ -71,7 +111,7 @@ task 'watch', 'Build, then watch the static source (coffee/sass) for changes', (
     if not quiet
         console.log 'Working on project:', process.cwd()
 
-    coffee_watcher = spawn 'coffee', ['--output', STATIC_OUTPUT, '--watch', '--compile', STATIC_SOURCE]
+    coffee_watcher = spawn 'coffee', ['--output', BUILD_FOLDER, '--watch', '--compile', SOURCE_FOLDER]
     captureOutput(coffee_watcher, 'COFFEE')
 
     compassOptions = ['watch']
@@ -93,40 +133,68 @@ task 'watch', 'Build, then watch the static source (coffee/sass) for changes', (
 
 # Helper/DRY functions
 
-# Copy the folders in TO_COPY from the STATIC_SOURCE to STATIC_OUTPUT.
+# Copy the folders in TO_COPY from the STATIC_SOURCE to BUILD_FOLDER.
 copyFolders = (cb) ->
     for folder in TO_COPY
         console.log "copying #{ folder }"
-        exec "cp -R #{ STATIC_SOURCE }#{ folder } #{ STATIC_OUTPUT }", (err) ->
+        exec "cp -R #{ path.join(SOURCE_FOLDER,folder) } #{ BUILD_FOLDER }", (err) ->
             if err?
                 throw err
     for folder in TO_COPY_FAIL_SILENT
         console.log "copying #{ folder }"
-        exec "cp -R #{ STATIC_SOURCE }#{ folder } #{ STATIC_OUTPUT }", (err) ->
+        exec "cp -R #{ path.join(SOURCE_FOLDER,folder) } #{ BUILD_FOLDER }", (err) ->
     cb()
 
 # Remove the static folder and its contents, then make it again (empty)
 flushStatic = (cb) ->
-    after =  ->
-        fs.mkdirSync(STATIC_OUTPUT)
+
+    after1 = ->
+        # The folder may not exist and removing it causes an error.
+        try
+            exec("rm -r #{ OUTPUT_FOLDER }", after2)
+        catch err
+            after2()
+
+    after2 =  ->
+        fs.mkdirSync(BUILD_FOLDER)
+        fs.mkdirSync(OUTPUT_FOLDER)
         cb?()
 
     # The folder may not exist and removing it causes an error.
     try
-        exec("rm -r #{ STATIC_OUTPUT }", after)
+        exec("rm -r #{ BUILD_FOLDER }", after1)
     catch err
-        after()
+        after1()
+
+
+_minifyJS = (js_script_code) ->
+    toplevel_ast = UglifyJS.parse(js_script_code)
+    toplevel_ast.figure_out_scope()
+
+    compressor = UglifyJS.Compressor
+        drop_debugger   : true
+        warnings        : false
+    compressed_ast = toplevel_ast.transform(compressor)
+    compressed_ast.figure_out_scope()
+    compressed_ast.mangle_names()
+
+    min_code = compressed_ast.print_to_string()
+    return min_code
+
+
 
 # Given a child process, add listeners to its stdout, stderr, and exit output.
 # If not suppressed, log this output to the console. Optionally takes a label to
 # prepend the output with.
-captureOutput = (operator, label='') ->
+captureOutput = (operator, label='', cb=->) ->
     if not quiet
         operator.stdout.on 'data', (data) ->
-            if data?.length > 0
+            if data?.toString().trim().length > 0
                 console.log "#{ label }.stdout: #{ data }"
         operator.on 'exit', (code) ->
             console.log "#{ label }.exit:", code
+            if code is 0
+                cb()
 
     operator.stderr.on 'data', (data) ->
         if data?.length > 10 # because compass likes to push out color codes

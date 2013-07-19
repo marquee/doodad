@@ -1,6 +1,6 @@
-Popover.coffee
-Popover.sass
-- simple enough that they only need those two files
+# Popover.coffee
+# Popover.sass
+# - simple enough that they only need those two files
 
 # button1 = new Button
 #     action: -> console.log 'click'
@@ -39,6 +39,7 @@ class Popover extends View
         @_options = _.extend {},
             origin   : ''
             contents : []
+            offset   : [0,0]
             close_on_outside: false
         , options
 
@@ -85,16 +86,21 @@ class Popover extends View
         if position is 'center'
             offset_x = @$el.width() / 2
 
-        console.log edge, position, offset_x, offset_y
+        console.log edge, position, offset_x, offset_y, @_options.offset
+
+        # TODO: Allow @_options.offset to be a function, that's given the triggering element
 
         @$el.css
-            left: x - offset_x
-            top: y - offset_y
+            left: x - offset_x + @_options.offset[0]
+            top: y - offset_y + @_options.offset[1]
 
     show: =>
         console.log 'showing popover'
         @_is_showing = true
         $('body').append(@render())
+        if @_options.close_on_outside
+            _.defer =>
+                $(window).one('click', @hide)
 
     hide: =>
         console.log 'hiding popover'
@@ -109,7 +115,12 @@ class Popover extends View
                 @setPosition(trigger.getPosition())
             @show()
         return @_is_showing
-        
 
-window.UI ?= {}
-window.UI.Popover = Popover
+    events:
+        'click': '_trapClick'
+
+    _trapClick: (e) ->
+        e.stopPropagation()
+
+
+module.exports = Popover

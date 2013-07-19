@@ -1,0 +1,162 @@
+
+@import 'compass/css3'
+@import '_colors'
+
+$button_height          : 50px !default
+$button_icon_width      : 36px !default
+$button_icon_height     : 36px !default
+$button_spinner_width   : 23px !default
+$button_spinner_height  : 23px !default
+
+$button_internal_padding: 7px !default
+$button_label_padding: 10px !default
+
+$button_font_family: Helvetica, Arial, sans-serif !default
+$button_font_size: 14px !default
+
+.Button
+    cursor: pointer
+    position: relative
+    height: $button_height
+    vertical-align: middle
+    padding-top: $button_internal_padding
+    padding-bottom: $button_internal_padding
+    padding-left: $button_internal_padding + $button_label_padding
+    padding-right: $button_internal_padding + $button_label_padding
+    &:disabled
+        cursor: default
+    &.Button-icon.Button-text
+        padding-left: $button_icon_width + $button_internal_padding * 2
+    &.Button-icon:not(.Button-text)
+        width: $button_icon_width
+    &.Button-icon::before
+        content: ''
+        position: absolute
+        left: 0
+        width: $button_icon_width
+        height: $button_icon_height
+        display: block
+    +transition-property('padding-right, background')
+    +transition-duration(0.2s)
+    &.Button-spinner
+        &.active
+            padding-right: $button_spinner_width + $button_internal_padding * 2
+            &::after
+                content: ''
+                background-repeat: no-repeat
+                background-position: center center
+                position: absolute
+                top: $button_internal_padding
+                right: $button_internal_padding
+                width: $button_spinner_width
+                height: $button_spinner_height
+                display: block
+    &.Button-icon:not(.Button-text).Button-spinner
+        &.active
+            padding-right: 0
+            &::before
+                display: none
+
+
+$button_border_radius: 0 !default
+$button_font_color: white !default
+
+$button_default_background              : $default_color !default
+$button_default_hover_background        : lighten($default_color, 10) !default
+$button_default_active_background       : darken($default_color, 10) !default
+$button_default_disabled_background     : $disabled_color
+
+$button_friendly_background             : $friendly_color !default
+$button_friendly_hover_background       : lighten($friendly_color, 10) !default
+$button_friendly_active_background      : darken($friendly_color, 10) !default
+$button_friendly_disabled_background    : $disabled_color
+
+$button_dangerous_background            : $dangerous_color !default
+$button_dangerous_hover_background      : lighten($dangerous_color, 10) !default
+$button_dangerous_active_background     : darken($dangerous_color, 10) !default
+$button_dangerous_disabled_background   : $disabled_color
+
+$button_warning_background              : $warning_color !default
+$button_warning_hover_background        : lighten($warning_color, 10) !default
+$button_warning_active_background       : darken($warning_color, 10) !default
+$button_warning_disabled_background     : $disabled_color
+
+$button_action_background               : $action_color !default
+$button_action_hover_background         : lighten($action_color, 10) !default
+$button_action_active_background        : darken($action_color, 10) !default
+$button_action_disabled_background      : $disabled_color
+
+
+%default_spinner
+    &.Button-spinner.active::after
+        background-image: inline-image('spinner.gif')
+        +background-size(100%)
+
+%friendly_spinner
+    @extend %default_spinner
+
+%dangerous_spinner
+    @extend %default_spinner
+
+%warning_spinner
+    @extend %default_spinner
+
+%action_spinner
+    @extend %default_spinner
+
+// TODO: move this to theme
+.Button
+    @extend %default_spinner
+    +border-radius($button_border_radius)
+    background: $button_default_background
+    color: $button_font_color
+    font-family: $button_font_family
+    font-size: $button_font_size
+    border: 0
+    &:hover:not(:disabled)
+        background: $button_default_hover_background
+    &:active:not(:disabled)
+        background: $button_default_active_background
+    &:disabled
+        background: $button_default_disabled_background
+
+    &.Button-friendly
+        @extend %friendly_spinner
+        background: $button_friendly_background
+        &:hover:not(:disabled)
+            background: $button_friendly_hover_background
+        &:active:not(:disabled)
+            background: $button_friendly_active_background
+        &:disabled
+            background: $button_friendly_disabled_background
+
+    &.Button-dangerous
+        @extend %dangerous_spinner
+        background: $button_dangerous_background
+        &:hover:not(:disabled)
+            background: $button_dangerous_hover_background
+        &:active:not(:disabled)
+            background: $button_dangerous_active_background
+        &:disabled
+            background: $button_dangerous_disabled_background
+
+    &.Button-warning
+        @extend %warning_spinner
+        background: $button_warning_background
+        &:hover:not(:disabled)
+            background: $button_warning_hover_background
+        &:active:not(:disabled)
+            background: $button_warning_active_background
+        &:disabled
+            background: $button_warning_disabled_background
+
+    &.Button-action
+        @extend %action_spinner
+        background: $button_action_background
+        &:hover:not(:disabled)
+            background: $button_action_hover_background
+        &:active:not(:disabled)
+            background: $button_action_active_background
+        &:disabled
+            background: $button_action_disabled_background
+
