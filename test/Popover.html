@@ -1,6 +1,6 @@
 <body style="margin: 0">
 
-    <div id="app"></div>
+    <div id="app" style="padding-left:100px"></div>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
@@ -42,7 +42,8 @@
             popover = new Popover
                 origin: 'top-left'
                 close_on_outside: true
-                offset: [0,5]
+                offset: [0,0]
+                width: 'auto'
                 contents: [
                     btn1, btn2, btn3
                 ]

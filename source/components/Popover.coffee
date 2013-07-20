@@ -39,6 +39,7 @@ class Popover extends View
         @_options = _.extend {},
             origin   : ''
             contents : []
+            width    : 500
             offset   : [0,0]
             close_on_outside: false
         , options
@@ -54,9 +55,10 @@ class Popover extends View
         @$el.html """
             <div class="Popover-contents"></div>
         """
-        $contents = @$el.find('.Popover-contents')
-        _.each @_options.contents, (item) ->
-            $contents.append(item.render())
+        @_$contents = @$el.find('.Popover-contents')
+        @_$contents.css(width: @_options.width)
+        _.each @_options.contents, (item) =>
+            @_$contents.append(item.render())
         return @el
 
     setPosition: ({x,y}) =>
@@ -70,11 +72,11 @@ class Popover extends View
                 when 'left'
                     offset_x = 0
                 when 'right'
-                    offset_x = @$el.width()
+                    offset_x = @_$contents.width()
                 when 'top'
                     offset_y = 0
                 when 'bottom'
-                    offset_y = @$el.height()
+                    offset_y = @_$contents.height()
 
         [edge, position] = @_options.origin.split('-')
 
@@ -82,17 +84,21 @@ class Popover extends View
         strToPos(position)
 
         if edge is 'center'
-            offset_y = @$el.height() / 2
+            offset_y = @_$contents.height() / 2
         if position is 'center'
-            offset_x = @$el.width() / 2
+            offset_x = @_$contents.width() / 2
 
         console.log edge, position, offset_x, offset_y, @_options.offset
 
         # TODO: Allow @_options.offset to be a function, that's given the triggering element
 
+        # TODO: Allow for growing from right based on origin: <div class="Popover-anchor">
         @$el.css
-            left: x - offset_x + @_options.offset[0]
-            top: y - offset_y + @_options.offset[1]
+            left: x + @_options.offset[0]# - offset_x
+            top: y + @_options.offset[1]# - offset_y
+        @_$contents.css
+            left: 0 - offset_x
+            top: 0 - offset_y
 
     show: =>
         console.log 'showing popover'

@@ -1,31 +1,31 @@
-@import "_responsive"
-@import "compass/css3"
+@import 'compass/css3'
+@import './_responsive'
 
-$appbar_z_index         : 1 !default
-$appbar_height          : auto !default
-$appbar_background      : white !default
-$appbar_border          : 1px solid transparent !default
-$appbar_item_spacing     : 10px !default
-$appbar_item_v_spacing   : $appbar_item_spacing !default
-$appbar_item_h_spacing   : $appbar_item_spacing !default
+$AppBar_z_index         : 1 !default
+$AppBar_height          : auto !default
+$AppBar_background      : white !default
+$AppBar_border          : 1px solid transparent !default
+$AppBar_item_spacing     : 10px !default
+$AppBar_item_v_spacing   : $AppBar_item_spacing !default
+$AppBar_item_h_spacing   : $AppBar_item_spacing !default
 
 .AppBar
     &.AppBar-pinned
         position: fixed
-    z-index: $appbar_z_index
-    background: $appbar_background
+    z-index: $AppBar_z_index
+    background: $AppBar_background
     &.AppBar-top, &.AppBar-bottom
         left: 0
         right: 0
-        height: $appbar_height
+        height: $AppBar_height
         .AppBar-head, .AppBar-tail
             position: absolute
             top: 0
             width: 50%
             +box-sizing(border-box)
-            padding: $appbar_item_v_spacing 0
+            padding: $AppBar_item_v_spacing 0
             > *
-                margin: 0 $appbar_item_h_spacing
+                margin: 0 $AppBar_item_h_spacing
         .AppBar-head
             left: 0
         .AppBar-tail
@@ -39,10 +39,10 @@ $appbar_item_h_spacing   : $appbar_item_spacing !default
                 text-align: left
     &.AppBar-top
         top: 0
-        border-bottom: $appbar_border
+        border-bottom: $AppBar_border
     &.AppBar-bottom
         bottom: 0
-        border-top: $appbar_border
+        border-top: $AppBar_border
 
     &.AppBar-left, &.AppBar-right
         top: 0
@@ -51,18 +51,18 @@ $appbar_item_h_spacing   : $appbar_item_spacing !default
             position: absolute
             left: 0
             right: 0
-            padding: 0 $appbar_item_h_spacing
+            padding: 0 $AppBar_item_h_spacing
             > *
-                margin: $appbar_item_v_spacing 0
+                margin: $AppBar_item_v_spacing 0
         .AppBar-head
             top: 0
         .AppBar-tail
             bottom: 0
     &.AppBar-left
         left: 0
-        border-right: $appbar_border
+        border-right: $AppBar_border
     &.AppBar-right
         right: 0
-        border-left: $appbar_border
+        border-left: $AppBar_border
 
 

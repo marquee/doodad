@@ -10,9 +10,13 @@
 #             layout_trigger
 #             new_post_button
 #         ]
-#     position: 'top' # 'bottom', 'left', 'right'
-#     attach_to: null
 
+#     # (defaults)
+#     position: 'top'
+#     attach_to: 'body'
+#     pinned: true
+#     inject_padding: true
+#     responsive: true
 
 class AppBar extends View
     @__doc__ = ''

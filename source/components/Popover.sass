@@ -1,35 +1,36 @@
-@import "compass"
-@import "_colors"
+@import 'compass'
+@import './_colors'
 
 
-$Popover_border_size: 1px
-$Popover_border_color: $disabled_color
-$Popover_background_color: white
-$Popover_triangle_size: 10px
-$Popover_padding: 10px
-$Popover_border_radius: 10px
+$Popover_border_size        : 1px               !default
+$Popover_border_color       : $disabled_color   !default
+$Popover_background_color   : white             !default
+$Popover_triangle_size      : 10px              !default
+$Popover_padding            : 10px              !default
+$Popover_border_radius      : 10px              !default
 
 .Popover
     position    : absolute
-
-    border      : $Popover_border_size solid $Popover_border_color
-    +border-radius($Popover_border_radius)
-    background-color  : $Popover_background_color
-    padding: $Popover_padding
-    &::before, &::after
-        content: ""
+    .Popover-contents
         position: absolute
-        border-style: solid
-        border-color: transparent
-        pointer-events: none
-    &::after
-        border-width: $Popover_triangle_size
-    &::before
-        border-width: $Popover_triangle_size + $Popover_border_size
+        border      : $Popover_border_size solid $Popover_border_color
+        +border-radius($Popover_border_radius)
+        background-color  : $Popover_background_color
+        padding: $Popover_padding
+        &::before, &::after
+            content: ""
+            position: absolute
+            border-style: solid
+            border-color: transparent
+            pointer-events: none
+        &::after
+            border-width: $Popover_triangle_size
+        &::before
+            border-width: $Popover_triangle_size + $Popover_border_size
 
     $border_radius_adjustment: ($Popover_border_radius - $Popover_border_size)
 
-    &.Popover-top-left
+    &.Popover-top-left .Popover-contents
         margin-top  : $Popover_triangle_size * 2
         margin-left : $Popover_triangle_size * 0.5 - $border_radius_adjustment
         &::after
@@ -41,7 +42,19 @@ $Popover_border_radius: 10px
             left                : -1 * $Popover_border_size + $border_radius_adjustment
             border-bottom-color : $Popover_border_color
 
-    &.Popover-top-right
+    &.Popover-top-center .Popover-contents
+        margin-top      : $Popover_triangle_size * 2
+        margin-left     : 50%
+        &::after
+            top                 : $Popover_triangle_size * -2
+            left                : calc(50% - #{ $Popover_triangle_size })
+            border-bottom-color : $Popover_background_color
+        &::before
+            top                 : ($Popover_triangle_size * -2) - (2 * $Popover_border_size)
+            left                : calc(50% - #{ $Popover_triangle_size + $Popover_border_size })
+            border-bottom-color : $Popover_border_color
+
+    &.Popover-top-right .Popover-contents
         margin-top      : $Popover_triangle_size * 2
         margin-right    : $Popover_triangle_size * 0.5 - $border_radius_adjustment
         &::after
@@ -53,7 +66,7 @@ $Popover_border_radius: 10px
             right               : -1 * $Popover_border_size + $border_radius_adjustment
             border-bottom-color : $Popover_border_color
 
-    &.Popover-right-top
+    &.Popover-right-top .Popover-contents
         margin-top      : $Popover_triangle_size * -0.5 - $border_radius_adjustment
         margin-right    : $Popover_triangle_size * 2
         &::after
@@ -65,7 +78,7 @@ $Popover_border_radius: 10px
             top                 : -1 * $Popover_border_size + $border_radius_adjustment
             border-left-color  : $Popover_border_color
 
-    &.Popover-left-top
+    &.Popover-left-top .Popover-contents
         margin-top      : $Popover_triangle_size * -0.5 - $border_radius_adjustment
         margin-left    : $Popover_triangle_size * 2
         &::after
@@ -79,6 +92,3 @@ $Popover_border_radius: 10px
 
 
 
-
-// 36.5 40.5 4
-// 50 42 8

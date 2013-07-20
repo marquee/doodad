@@ -14,10 +14,30 @@
         { StringInput } = window.Doodad
         si = new StringInput
             tokenize: ','
+            placeholder: 'comma-separated'
+            label: 'tags'
             action: (si_instance, val) ->
                 console.log val
 
         $('#app').append(si.render())
+
+        si2 = new StringInput
+            tokenize: true
+            placeholder: 'press enter to add a tag'
+            label: 'tags'
+            unique: true
+            action: (si_instance, val) ->
+                console.log val
+
+        $('#app').append(si2.render())
+
+        si3 = new StringInput
+            placeholder: ''
+            label: 'category'
+            action: (si_instance, val) ->
+                console.log val
+
+        $('#app').append(si3.render())
 
     </script>
 </body>

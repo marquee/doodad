@@ -3,7 +3,7 @@
 # si = new StringInput
 #     placeholder: 'tags, comma-separated'
 #     on_change: ->d
-#     tokenize: ','
+#     tokenize: ',' # or true for just enter/tab
 # si.value
 # > ['Some Value', 'other', 'values']
 # si.raw_value
@@ -25,9 +25,11 @@ class StringInput extends View
             helptext        : null
             enabled         : true
             multiline       : false
-            token_set       : false
+            unique          : false
             placeholder     : ''
+            label           : ''
             extra_classes   : []
+            value           : ''
         , options
 
 
@@ -35,10 +37,11 @@ class StringInput extends View
 
         @raw_value = ''
         if @_options.tokenize
-            @value = []
+            @value = if @_options.value then @_options.value else []
+            @raw_value = @value.join(@_options.tokenize)
             @_current_token = ''
         else
-            @value = ''
+            @value = @_options.value
 
         unless @_options.enabled
             @disable()
@@ -62,8 +65,12 @@ class StringInput extends View
     _setClasses: ->
         class_list = []
         # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
+        if @_options.tokenize?
+            class_list.push('StringInput-tokenize')
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
+
+
 
     # Public: Add the label to the element.
     #
@@ -73,13 +80,26 @@ class StringInput extends View
         @_ui = {}
         if @_options.tokenize
             @$el.html """
-                    <div class="StringInput-tokens"></div>
-                    <input class="StringInput-input">
+                    <label class="StringInput-label">
+                        #{ @_options.label }
+                    </label>
+                    <div class="StringInput-token-form">
+                        <div class="StringInput-tokens"></div>
+                        <input class="StringInput-input" placeholder="#{ @_options.placeholder }">
+                    </div>
                 """
             @_ui.tokens = @$el.find('.StringInput-tokens')
         else
-            @$el.html('<input class="StringInput-input">')
+            @$el.html """
+                    <label class="StringInput-label">
+                        #{ @_options.label }
+                        <input class="StringInput-input" placeholder="#{ @_options.placeholder }">
+                    </label>
+                """
         @_ui.input = @$el.find('.StringInput-input')
+        
+        if @_options.tokenize
+            @_renderTokens()
         @delegateEvents()
         return @el
 
@@ -134,42 +154,94 @@ class StringInput extends View
         return { x:x, y:y }
 
     _renderTokens: ->
+        @_ui.tokens.empty()
         # TODO: Make each token a view, use Collection to manage?
-        token_html = _.map @value, (token) ->
-            return "<span class='StringInput-token'>#{ token }</span>"
-        @_ui.tokens.html(token_html.join(''))
+        _.each @value, (token) =>
+            $el = $ """
+                    <span class='StringInput-token'>
+                        <span class="StringInput-token-value"></span>
+                        <button class="StringInput-token-remove">x</button>
+                    </span>
+                """
+            $el.find('.StringInput-token-value').text(token)
+            $el.find('.StringInput-token-remove').on 'click', =>
+                @_removeToken(token)
+            @_ui.tokens.append($el)
+
+    _updatePlaceholder: ->
+        console.log '_updatePlaceholder', @value.length
+        if @value.length > 0
+            @_ui.input.attr('placeholder','')
+        else
+            @_ui.input.attr('placeholder',@_options.placeholder)
 
     events:
-        'keydown .StringInput-input': '_handleInput'
+        'keydown    .StringInput-input' : '_handleInput'
+        'paste      .StringInput-input' : '_processPaste'
+        'click      .StringInput-token-form': '_focusInput'
 
+    _focusInput: ->
+        @_ui.input.focus()
 
+    _removeToken: (token) ->
+        @value = _.without(@value, token)
+        @_renderTokens()
+        @raw_value = @value.join(@_options.tokenize)
+        @_options.action(this, @value, @raw_value)
 
-    _handleInput: (e) =>
+    _processPaste: (e) ->
         _.defer =>
             incoming_value = @_ui.input.val()
+            @_ui.input.val('')
             if @_options.tokenize?
+                incoming_value = incoming_value.split(@_options.tokenize)
+                incoming_value = _.map incoming_value, (x) -> x.trim()
+                @value.push(incoming_value...)
+                @_renderTokens()
+                @_options.action(this, @value, @raw_value)
+        return
+
+    _handleInput: (e) ->
+        was_token_trigger = e.which in [KEYCODES.ENTER, KEYCODES.TAB]
+        if @_options.tokenize
+            if was_token_trigger
+                e.preventDefault()
+            _.defer =>
+                incoming_value = @_ui.input.val()
                 if incoming_value.length > 0
-                    incoming_value = incoming_value.split('')
-                    incoming_char = incoming_value.pop()
-                    if incoming_char is @_options.tokenize
+                    was_token_delimiter = false
+                    incoming_char = ''
+                    if incoming_value[incoming_value.length-1] is @_options.tokenize
+                        incoming_value = incoming_value.split('')
+                        incoming_char = incoming_value.pop()
                         incoming_value = incoming_value.join('')
+                        was_token_delimiter = true
+                    console.log was_token_delimiter, incoming_value
+                    if was_token_delimiter or was_token_trigger
+                        incoming_value = incoming_value.trim()
                         @_ui.input.val('')
-                        if incoming_value
+                        if incoming_value and not (@_options.unique and incoming_value in @value)
                             @raw_value += incoming_char
                             @value.push(incoming_value)
                             @_renderTokens()
                             @_options.action(this, @value, @raw_value)
                 else
-                    if e.which is 8 # delete
+                    if e.which is KEYCODES.DELETE
                         prev_token = @value.pop()
                         @_renderTokens()
                         @_ui.input.val(prev_token)
                         @raw_value = @value.join(@_options.tokenize)
                         @_options.action(this, @value, @raw_value)
-            else
-                @raw_value = @value = incoming_value
+                @_updatePlaceholder()
+        else
+            _.defer =>
+                @raw_value = @value = @_ui.input.val()
                 @_options.action(this, @value, @raw_value)
         return
 
+KEYCODES =
+    DELETE  : 8
+    TAB     : 9
+    ENTER   : 13
 
 module.exports = StringInput

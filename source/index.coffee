@@ -3,7 +3,7 @@ Button      = require './components/Button'
 Popover     = require './components/Popover'
 # Select      = require './components/Select'
 StringInput = require './components/StringInput'
-Toggle      = require './components/Toggle'
+# Toggle      = require './components/Toggle'
 
 Doodad =
     AppBar      : AppBar
@@ -11,7 +11,7 @@ Doodad =
     Popover     : Popover
     # Select  : Select
     StringInput : StringInput
-    Toggle      : Toggle
+    # Toggle      : Toggle
     VERSION     : '{X VERSION X}'
 
 window.Doodad = Doodad
