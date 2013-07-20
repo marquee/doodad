@@ -16,7 +16,8 @@
         "mocha": "*",
         "should": "*",
         "sqwish": "0.2.x",
-        "uglify-js": "2.x.x"
+        "uglify-js": "2.x.x",
+        "walker": "1.0.3"
     },
     "scripts": {
         "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"

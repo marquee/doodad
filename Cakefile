@@ -2,7 +2,7 @@
 path                = require 'path'
 util                = require 'util'
 fs                  = require 'fs'
-
+Walker              = require 'walker'
 Sqwish              = require 'sqwish'
 UglifyJS            = require 'uglify-js'
 
@@ -74,6 +74,32 @@ task 'build:scripts', '', (opts) ->
         # fs.writeFile(path.join(OUTPUT_FOLDER, MIN_JS_BARE_LIB_NAME), minified, ->)
 
 
+task 'build:sass', '', (opts) ->
+    lines_to_concatenate = []
+    file_list = []
+    path_to_walk = path.join(SOURCE_FOLDER, 'components')
+    w = Walker(path_to_walk)
+    w.on 'file', (f, stat) ->
+        console.log f, stat
+        if f.split('.').pop() is 'sass'
+            if f.split('/').pop()[0] is '_'
+                file_list.unshift(f)
+            else
+                file_list.push(f)
+    w.on 'end', ->
+        console.log file_list
+        while file_list.length > 0
+            do ->
+                f = file_list.shift()
+                contents = fs.readFileSync(f).toString()
+                contents = contents.split('\n')
+                contents = contents.map (line) ->
+                    if line.indexOf("@import './") is 0
+                        return ''
+                    return line
+                lines_to_concatenate.push(contents...)
+        fs.writeFileSync(path.join(OUTPUT_FOLDER, 'Doodad.sass'), lines_to_concatenate.join('\n'))
+
 
 
 
@@ -85,6 +111,7 @@ task 'build', 'Compile the static source (coffee/sass) and put it into static/',
     flushStatic ->
         copyFolders ->
             invoke 'build:scripts'
+            invoke 'build:sass'
 
             compassOptions = ['compile', '--force']
 
