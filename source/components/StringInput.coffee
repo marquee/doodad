@@ -89,6 +89,13 @@ class StringInput extends View
                     </div>
                 """
             @_ui.tokens = @$el.find('.StringInput-tokens')
+        else if @_options.multiline
+            @$el.html """
+                    <label class="StringInput-label">
+                        #{ @_options.label }
+                        <textarea class="StringInput-input" placeholder="#{ @_options.placeholder }"></textarea>
+                    </label>
+                """
         else
             @$el.html """
                     <label class="StringInput-label">

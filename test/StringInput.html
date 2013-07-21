@@ -39,5 +39,14 @@
 
         $('#app').append(si3.render())
 
+        si4 = new StringInput
+            placeholder: ''
+            label: 'message'
+            multiline: true
+            action: (si_instance, val) ->
+                console.log val
+
+        $('#app').append(si4.render())
+
     </script>
 </body>
