@@ -1,3 +1,5 @@
+@import "compass/css3"
+
 $StringInput_background_color       : white !default
 $StringInput_border_size            : 1px   !default
 $StringInput_border_color           : #ccc  !default
@@ -28,11 +30,16 @@ $StringInput_token_border_color     : #ccc  !default
     border-color        : $StringInput_token_border_color
     background-color    : $StringInput_token_background_color
     display             : inline-block
+    margin              : 0.25em
 
 .StringInput-token, .StringInput-input
-    margin              : 0.25em
     padding             : 0.25em 0.5em
-    display             : inline-block
+
+.StringInput-input
+    display             : block
+    height              : 100%
+    width               : 100%
+    +box-sizing(border-box)
 
 .StringInput-tokenize .StringInput-input
     display: block

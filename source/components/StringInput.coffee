@@ -30,18 +30,17 @@ class StringInput extends View
             label           : ''
             extra_classes   : []
             value           : ''
+            size:
+                width: 'flex'
+                height: 100
+            on              : {}
         , options
 
 
         @_validateOptions()
 
-        @raw_value = ''
-        if @_options.tokenize
-            @value = if @_options.value then @_options.value else []
-            @raw_value = @value.join(@_options.tokenize)
-            @_current_token = ''
-        else
-            @value = @_options.value
+        @setValue(@_options.value)
+        @setSize(@_options.size)
 
         unless @_options.enabled
             @disable()
@@ -69,8 +68,6 @@ class StringInput extends View
             class_list.push('StringInput-tokenize')
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
-
-
 
     # Public: Add the label to the element.
     #
@@ -139,6 +136,33 @@ class StringInput extends View
             @enable()
         return @_is_enabled
 
+    # Public: set the value of the field
+    #
+    # value - String raw value to set
+    #
+    # Returns this instance for chainging.
+    setValue: (value) ->
+        @raw_value = ''
+        if @_options.tokenize
+            @value = if value then value else []
+            @raw_value = @value.join(@_options.tokenize)
+            @_current_token = ''
+        else
+            @value = value
+        @render()
+        return this
+
+    setSize: ({ width, height }) ->
+        if width?
+            @_width = width
+        if height?
+            @_height = height
+        @$el.css
+            width: @_width
+            height: @_height
+
+
+
     # Private: Set the button as active (shows the spinner).
     #
     # Returns nothing.
@@ -186,9 +210,17 @@ class StringInput extends View
         'keydown    .StringInput-input' : '_handleInput'
         'paste      .StringInput-input' : '_processPaste'
         'click      .StringInput-token-form': '_focusInput'
+        'focus      .StringInput-input' : '_fireFocus'
+        'blur       .StringInput-input' : '_fireBlur'
 
     _focusInput: ->
         @_ui.input.focus()
+
+    _fireFocus: ->
+        @_options.on.focus?(this, @value)
+
+    _fireBlur: ->
+        @_options.on.blur?(this, @value)
 
     _removeToken: (token) ->
         @value = _.without(@value, token)
@@ -198,14 +230,14 @@ class StringInput extends View
 
     _processPaste: (e) ->
         _.defer =>
-            incoming_value = @_ui.input.val()
-            @_ui.input.val('')
             if @_options.tokenize?
+                incoming_value = @_ui.input.val()
+                @_ui.input.val('')
                 incoming_value = incoming_value.split(@_options.tokenize)
                 incoming_value = _.map incoming_value, (x) -> x.trim()
                 @value.push(incoming_value...)
                 @_renderTokens()
-                @_options.action(this, @value, @raw_value)
+            @_options.action(this, @value, @raw_value)
         return
 
     _handleInput: (e) ->

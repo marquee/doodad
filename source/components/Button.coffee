@@ -148,5 +148,17 @@ class Button extends View
         y = top + height / 2
         return { x:x, y:y }
 
+    getSize: ->
+        return {
+            width: @$el.width()
+            height: @$el.height()
+        }
 
+    hide: ->
+        @$el.hide()
+        return this
+
+    show: ->
+        @$el.show()
+        return this
 module.exports = Button
