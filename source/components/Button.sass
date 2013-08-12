@@ -1,10 +1,11 @@
 
 @import 'compass/css3'
 @import '../misc/_colors'
+@import '../misc/_icons'
 
 $Button_height          : 50px !default
-$Button_icon_width      : 36px !default
-$Button_icon_height     : 36px !default
+$Button_icon_width      : 26px !default
+$Button_icon_height     : 26px !default
 $Button_spinner_width   : 23px !default
 $Button_spinner_height  : 23px !default
 
@@ -28,11 +29,11 @@ $Button_font_size: 14px !default
     &.Button-icon.Button-text
         padding-left: $Button_icon_width + $Button_internal_padding * 2
     &.Button-icon:not(.Button-text)
-        width: $Button_icon_width
-    &.Button-icon::before
-        content: ''
+        width: $Button_icon_width + ($Button_height - $Button_icon_width)
+    .Button_icon_display
         position: absolute
-        left: 0
+        left: ($Button_height - $Button_icon_width) / 2
+        top: ($Button_height - $Button_icon_height) / 2
         width: $Button_icon_width
         height: $Button_icon_height
         display: block
@@ -54,7 +55,7 @@ $Button_font_size: 14px !default
     &.Button-icon:not(.Button-text).Button-spinner
         &.active
             padding-right: 0
-            &::before
+            .Button_icon_display
                 display: none
 
 
@@ -122,6 +123,20 @@ $Button_action_disabled_background      : $disabled_color !default
     &:disabled
         background: $Button_default_disabled_background
 
+    $icon_dangerous_image: $icon_dangerous_light_image !default
+    $icon_warning_image: $icon_warning_light_image !default
+    $icon_friendly_image: $icon_friendly_light_image !default
+    $icon_action_image: $icon_action_light_image !default
+    $icon_default_image: $icon_default_light_image !default
+
+
+
+    .Button_icon_display
+        background-image: $icon_default_image
+        +background-size(contain)
+        background-repeat: no-repeat
+        background-position: center
+
     &.Button-friendly
         @extend %friendly_spinner
         background: $Button_friendly_background
@@ -131,6 +146,8 @@ $Button_action_disabled_background      : $disabled_color !default
             background: $Button_friendly_active_background
         &:disabled
             background: $Button_friendly_disabled_background
+        .Button_icon_display
+            background-image: $icon_friendly_image
 
     &.Button-dangerous
         @extend %dangerous_spinner
@@ -141,6 +158,8 @@ $Button_action_disabled_background      : $disabled_color !default
             background: $Button_dangerous_active_background
         &:disabled
             background: $Button_dangerous_disabled_background
+        .Button_icon_display
+            background-image: $icon_dangerous_image
 
     &.Button-warning
         @extend %warning_spinner
@@ -151,6 +170,8 @@ $Button_action_disabled_background      : $disabled_color !default
             background: $Button_warning_active_background
         &:disabled
             background: $Button_warning_disabled_background
+        .Button_icon_display
+            background-image: $icon_warning_image
 
     &.Button-action
         @extend %action_spinner
@@ -161,4 +182,6 @@ $Button_action_disabled_background      : $disabled_color !default
             background: $Button_action_active_background
         &:disabled
             background: $Button_action_disabled_background
+        .Button_icon_display
+            background-image: $icon_action_image
 

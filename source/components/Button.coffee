@@ -62,6 +62,7 @@ class Button extends BaseDoodad
     # Returns nothing.
     render: ->
         console.log 'Button.render'
+        @$el.empty()
         @_setClasses()
 
         if @_options.label
