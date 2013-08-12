@@ -1,0 +1,119 @@
+<script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+<link rel="stylesheet" href="../lib/Doodad.css">
+<script src="../lib/Doodad.js"></script>
+
+<style>
+    .example_code {
+        white-space: pre;
+        font-family: Menlo, monospace;
+        font-size: 14px;
+        display: block;
+    }
+</style>
+
+<h1>Doodad.Button</h1>
+
+<div class="example">
+    <h2>Basic button</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.Button
+            label: 'Do Something'
+            action: (this_button) ->
+                @text('Something done!')
+    </script>
+</div>
+
+<div class="example">
+    <h2>Classy buttons</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
+            return new Doodad.Button
+                type: 'text'
+                class: class_
+                label: "Do something #{ class_ }"
+                action: (this_button) ->
+                    @text("Something #{ class_ } done!")
+    </script>
+</div>
+
+<div class="example">
+    <h2>Iconic buttons</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
+            return new Doodad.Button
+                type: 'icon'
+                class: class_
+                label: "Do something #{ class_ }"
+                action: (this_button) ->
+                    @text("Something #{ class_ } done!")
+    </script>
+</div>
+
+<div class="example">
+    <h2>Iconic label buttons</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
+            return new Doodad.Button
+                type: 'icon+text'
+                class: class_
+                label: "Do something #{ class_ }"
+                action: (this_button) ->
+                    @text("Something #{ class_ } done!")
+    </script>
+</div>
+
+<div class="example">
+    <h2>Spinner buttons</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push ['icon', 'text', 'icon+text'].map (type) ->
+            return new Doodad.Button
+                type: type
+                label: "Do something"
+                spinner: true
+                action: (this_button) ->
+                    @text("Doing something!")
+                    setTimeout =>
+                        this_button.enable()
+                    , 2000
+    </script>
+</div>
+
+
+
+<script>
+    window.doodads = [];
+</script>
+
+<script type="text/coffeescript">
+    examples = $('.example')
+    examples.find('h2').after """
+        <div class="example_app">
+            <div class="output"></div>
+        </div>
+    """
+    _.each doodads, (doodad_set, i) ->
+        console.log doodad_set, i
+        $example_el = $(examples[i])
+        unless _.isArray(doodad_set)
+            doodad_set = [doodad_set]
+        example_timeout = null
+        _.each doodad_set, (doodad_instance) ->
+            # Add the doodad_instance to the DOM
+            $example_el.find('.example_app').prepend(doodad_instance.render())
+
+            # Patch the action to use the output element as `this`, and have
+            # it reset after two seconds.
+            old_action = doodad_instance._options.action
+            doodad_instance._options.action = (inst) ->
+                old_action.call($example_el.find('.output'), inst)
+                clearTimeout(example_timeout)
+                example_timeout = setTimeout ->
+                    $example_el.find('.output').text('')
+                , 2000
+
+
+</script>
