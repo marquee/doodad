@@ -53,9 +53,9 @@ class Popover extends View
 
     render: =>
         @$el.html """
-            <div class="Popover-contents"></div>
+            <div class="Popover_contents"></div>
         """
-        @_$contents = @$el.find('.Popover-contents')
+        @_$contents = @$el.find('.Popover_contents')
         @_$contents.css(width: @_options.width)
         _.each @_options.contents, (item) =>
             @_$contents.append(item.render())

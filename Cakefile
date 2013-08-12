@@ -14,14 +14,14 @@ SOURCE_FOLDER   = path.join(PROJECT_ROOT, 'source/')
 BUILD_FOLDER    = path.join(PROJECT_ROOT, 'build/')
 OUTPUT_FOLDER   = path.join(PROJECT_ROOT, 'lib/')
 
-JS_LIB_NAME = "Doodad-#{ VERSION }.js"
-CSS_LIB_NAME = "Doodad-#{ VERSION }.css"
-MIN_JS_LIB_NAME = "Doodad-#{ VERSION }-min.js"
-MIN_CSS_LIB_NAME = "Doodad-#{ VERSION }-min.css"
-JS_BARE_LIB_NAME = "Doodad.js"
-CSS_BARE_LIB_NAME = "Doodad.css"
-MIN_JS_BARE_LIB_NAME = "Doodad-min.js"
-MIN_CSS_BARE_LIB_NAME = "Doodad-min.css"
+JS_LIB_NAME             = "Doodad-#{ VERSION }.js"
+CSS_LIB_NAME            = "Doodad-#{ VERSION }.css"
+MIN_JS_LIB_NAME         = "Doodad-#{ VERSION }-min.js"
+MIN_CSS_LIB_NAME        = "Doodad-#{ VERSION }-min.css"
+JS_BARE_LIB_NAME        = "Doodad.js"
+CSS_BARE_LIB_NAME       = "Doodad.css"
+MIN_JS_BARE_LIB_NAME    = "Doodad-min.js"
+MIN_CSS_BARE_LIB_NAME   = "Doodad-min.css"
 
 
 
@@ -77,28 +77,29 @@ task 'build:scripts', '', (opts) ->
 task 'build:sass', '', (opts) ->
     lines_to_concatenate = []
     file_list = []
-    path_to_walk = path.join(SOURCE_FOLDER, 'components')
-    w = Walker(path_to_walk)
-    w.on 'file', (f, stat) ->
-        console.log f, stat
-        if f.split('.').pop() is 'sass'
-            if f.split('/').pop()[0] is '_'
-                file_list.unshift(f)
-            else
-                file_list.push(f)
-    w.on 'end', ->
-        console.log file_list
-        while file_list.length > 0
-            do ->
-                f = file_list.shift()
-                contents = fs.readFileSync(f).toString()
-                contents = contents.split('\n')
-                contents = contents.map (line) ->
-                    if line.indexOf("@import './") is 0
-                        return ''
-                    return line
-                lines_to_concatenate.push(contents...)
-        fs.writeFileSync(path.join(OUTPUT_FOLDER, 'Doodad.sass'), lines_to_concatenate.join('\n'))
+    ['misc', 'subcomponents', 'components'].forEach (folder) ->
+        path_to_walk = path.join(SOURCE_FOLDER, folder)
+        w = Walker(path_to_walk)
+        w.on 'file', (f, stat) ->
+            console.log f, stat
+            if f.split('.').pop() is 'sass'
+                if f.split('/').pop()[0] is '_'
+                    file_list.unshift(f)
+                else
+                    file_list.push(f)
+        w.on 'end', ->
+            console.log file_list
+            while file_list.length > 0
+                do ->
+                    f = file_list.shift()
+                    contents = fs.readFileSync(f).toString()
+                    contents = contents.split('\n')
+                    contents = contents.map (line) ->
+                        if line.indexOf("@import './") is 0
+                            return ''
+                        return line
+                    lines_to_concatenate.push(contents...)
+            fs.writeFileSync(path.join(OUTPUT_FOLDER, 'Doodad.sass'), lines_to_concatenate.join('\n'))
 
 
 

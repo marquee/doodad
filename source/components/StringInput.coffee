@@ -1,5 +1,5 @@
 { View } = Backbone
-
+ 
 # si = new StringInput
 #     placeholder: 'tags, comma-separated'
 #     on_change: ->d
@@ -8,15 +8,15 @@
 # > ['Some Value', 'other', 'values']
 # si.raw_value
 # > 'Some Value,other,values'
-
-
+ 
+ 
 class StringInput extends View
     @__doc__ = """
     """
-
+ 
     tagName: 'DIV'
     className: 'StringInput'
-
+ 
     initialize: (options) ->
         @_is_enabled = true
         @_options = _.extend {},
@@ -30,22 +30,27 @@ class StringInput extends View
             label           : ''
             extra_classes   : []
             value           : ''
-            size:
-                width: 'flex'
-                height: 100
             on              : {}
         , options
-
-
+ 
+ 
         @_validateOptions()
-
-        @setValue(@_options.value)
-        @setSize(@_options.size)
-
+ 
+        @raw_value = ''
+        if @_options.tokenize
+            @value = if @_options.value then @_options.value else []
+            @raw_value = @value.join(@_options.tokenize)
+            @_current_token = ''
+        else
+            @value = @_options.value
+ 
         unless @_options.enabled
             @disable()
-        @render()
 
+        @on(event, handler) for event, handler of @_options.on
+
+        @render()
+ 
     # Private: Check that the required options were passed to the constructor.
     #          Throws Errors if the options are invalid or missing.
     #
@@ -57,7 +62,7 @@ class StringInput extends View
         #     throw new Error "Buttons of type='text' MUST have a label set."
         # if not @_options.action? and not @_options.url?
         #     throw new Error "A Button action function or url must be specified."
-
+ 
     # Private: Apply the necessary classes to the element.
     #
     # Returns nothing.
@@ -65,10 +70,12 @@ class StringInput extends View
         class_list = []
         # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
         if @_options.tokenize?
-            class_list.push('StringInput-tokenize')
+            class_list.push('StringInput_tokenize')
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
-
+ 
+ 
+ 
     # Public: Add the label to the element.
     #
     # Returns nothing.
@@ -77,55 +84,55 @@ class StringInput extends View
         @_ui = {}
         if @_options.tokenize
             @$el.html """
-                    <label class="StringInput-label">
+                    <label class="StringInput_label">
                         #{ @_options.label }
                     </label>
-                    <div class="StringInput-token-form">
-                        <div class="StringInput-tokens"></div>
-                        <input class="StringInput-input" placeholder="#{ @_options.placeholder }">
+                    <div class="StringInput_token_form">
+                        <div class="StringInput_tokens"></div>
+                        <input class="StringInput_input" placeholder="#{ @_options.placeholder }">
                     </div>
                 """
-            @_ui.tokens = @$el.find('.StringInput-tokens')
+            @_ui.tokens = @$el.find('.StringInput_tokens')
         else if @_options.multiline
             @$el.html """
-                    <label class="StringInput-label">
+                    <label class="StringInput_label">
                         #{ @_options.label }
-                        <textarea class="StringInput-input" placeholder="#{ @_options.placeholder }"></textarea>
+                        <textarea class="StringInput_input" placeholder="#{ @_options.placeholder }"></textarea>
                     </label>
                 """
         else
             @$el.html """
-                    <label class="StringInput-label">
+                    <label class="StringInput_label">
                         #{ @_options.label }
-                        <input class="StringInput-input" placeholder="#{ @_options.placeholder }">
+                        <input class="StringInput_input" placeholder="#{ @_options.placeholder }">
                     </label>
                 """
-        @_ui.input = @$el.find('.StringInput-input')
-        
+        @_ui.input = @$el.find('.StringInput_input')
+         
         if @_options.tokenize
             @_renderTokens()
         @delegateEvents()
         return @el
-
+ 
     # Public: Set the StringInput state to disabled.
     #
     # Returns nothing.
     disable: ->
         @_is_enabled = false
         @$el.attr('disabled', true)
-
+ 
     # Public: Set the StringInput state to enabled.
     #
     # Returns nothing.
     enable: ->
         @_is_enabled = true
         @$el.removeAttr('disabled')
-
+ 
     # Public: Check the enabled status.
     # 
     # Returns true if enabled, false if disabled.
     isEnabled: -> @_is_enabled
-
+ 
     # Public: Toggle the enabled/disabled state.
     #
     # Returns true if enabled, false if disabled.
@@ -135,46 +142,19 @@ class StringInput extends View
         else
             @enable()
         return @_is_enabled
-
-    # Public: set the value of the field
-    #
-    # value - String raw value to set
-    #
-    # Returns this instance for chainging.
-    setValue: (value) ->
-        @raw_value = ''
-        if @_options.tokenize
-            @value = if value then value else []
-            @raw_value = @value.join(@_options.tokenize)
-            @_current_token = ''
-        else
-            @value = value
-        @render()
-        return this
-
-    setSize: ({ width, height }) ->
-        if width?
-            @_width = width
-        if height?
-            @_height = height
-        @$el.css
-            width: @_width
-            height: @_height
-
-
-
+ 
     # Private: Set the button as active (shows the spinner).
     #
     # Returns nothing.
     _setActive: ->
         @$el.addClass('active')
-
+ 
     # Private: Set the button as inactive (hides the spinner).
     #
     # Returns nothing.
     _setInactive: ->
         @$el.removeClass('active')
-
+ 
     # TODO: Make a BaseUIView that has things like position, validateOptions
     getPosition: ->
         { top, left } = @$el.offset()
@@ -183,51 +163,51 @@ class StringInput extends View
         x = left + width / 2
         y = top + height / 2
         return { x:x, y:y }
-
+ 
     _renderTokens: ->
         @_ui.tokens.empty()
         # TODO: Make each token a view, use Collection to manage?
         _.each @value, (token) =>
             $el = $ """
-                    <span class='StringInput-token'>
-                        <span class="StringInput-token-value"></span>
-                        <button class="StringInput-token-remove">x</button>
+                    <span class='StringInput_token'>
+                        <span class="StringInput_token_value"></span>
+                        <button class="StringInput_token_remove">x</button>
                     </span>
                 """
-            $el.find('.StringInput-token-value').text(token)
-            $el.find('.StringInput-token-remove').on 'click', =>
+            $el.find('.StringInput_token_value').text(token)
+            $el.find('.StringInput_token_remove').on 'click', =>
                 @_removeToken(token)
             @_ui.tokens.append($el)
-
+ 
     _updatePlaceholder: ->
         console.log '_updatePlaceholder', @value.length
         if @value.length > 0
             @_ui.input.attr('placeholder','')
         else
             @_ui.input.attr('placeholder',@_options.placeholder)
-
+ 
     events:
-        'keydown    .StringInput-input' : '_handleInput'
-        'paste      .StringInput-input' : '_processPaste'
-        'click      .StringInput-token-form': '_focusInput'
-        'focus      .StringInput-input' : '_fireFocus'
-        'blur       .StringInput-input' : '_fireBlur'
+        'keydown    .StringInput_input' : '_handleInput'
+        'paste      .StringInput_input' : '_processPaste'
+        'click      .StringInput_token_form': '_focusInput'
+        'blur       .StringInput_input' : '_fireBlur'
+        'focus      .StringInput_input'         : '_fireFocus'
 
     _focusInput: ->
         @_ui.input.focus()
 
-    _fireFocus: ->
-        @_options.on.focus?(this, @value)
+    _fireBlur: ->
+        @trigger('blur', this)
 
     _fireBlur: ->
-        @_options.on.blur?(this, @value)
-
+        @trigger('focus', this)
+ 
     _removeToken: (token) ->
         @value = _.without(@value, token)
         @_renderTokens()
         @raw_value = @value.join(@_options.tokenize)
         @_options.action(this, @value, @raw_value)
-
+ 
     _processPaste: (e) ->
         _.defer =>
             if @_options.tokenize?
@@ -239,7 +219,7 @@ class StringInput extends View
                 @_renderTokens()
             @_options.action(this, @value, @raw_value)
         return
-
+ 
     _handleInput: (e) ->
         was_token_trigger = e.which in [KEYCODES.ENTER, KEYCODES.TAB]
         if @_options.tokenize

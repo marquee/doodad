@@ -1,5 +1,5 @@
 @import 'compass'
-@import './_colors'
+@import '../misc/_colors'
 
 
 $Popover_border_size        : 1px               !default
@@ -11,7 +11,7 @@ $Popover_border_radius      : 10px              !default
 
 .Popover
     position    : absolute
-    .Popover-contents
+    .Popover_contents
         position: absolute
         border      : $Popover_border_size solid $Popover_border_color
         +border-radius($Popover_border_radius)
@@ -30,7 +30,7 @@ $Popover_border_radius      : 10px              !default
 
     $border_radius_adjustment: ($Popover_border_radius - $Popover_border_size)
 
-    &.Popover-top-left .Popover-contents
+    &.Popover-top-left .Popover_contents
         margin-top  : $Popover_triangle_size * 2
         margin-left : $Popover_triangle_size * 0.5 - $border_radius_adjustment
         &::after
@@ -42,7 +42,7 @@ $Popover_border_radius      : 10px              !default
             left                : -1 * $Popover_border_size + $border_radius_adjustment
             border-bottom-color : $Popover_border_color
 
-    &.Popover-top-center .Popover-contents
+    &.Popover-top-center .Popover_contents
         margin-top      : $Popover_triangle_size * 2
         margin-left     : 50%
         &::after
@@ -54,7 +54,7 @@ $Popover_border_radius      : 10px              !default
             left                : calc(50% - #{ $Popover_triangle_size + $Popover_border_size })
             border-bottom-color : $Popover_border_color
 
-    &.Popover-top-right .Popover-contents
+    &.Popover-top-right .Popover_contents
         margin-top      : $Popover_triangle_size * 2
         margin-right    : $Popover_triangle_size * 0.5 - $border_radius_adjustment
         &::after
@@ -66,7 +66,7 @@ $Popover_border_radius      : 10px              !default
             right               : -1 * $Popover_border_size + $border_radius_adjustment
             border-bottom-color : $Popover_border_color
 
-    &.Popover-right-top .Popover-contents
+    &.Popover-right-top .Popover_contents
         margin-top      : $Popover_triangle_size * -0.5 - $border_radius_adjustment
         margin-right    : $Popover_triangle_size * 2
         &::after
@@ -78,7 +78,7 @@ $Popover_border_radius      : 10px              !default
             top                 : -1 * $Popover_border_size + $border_radius_adjustment
             border-left-color  : $Popover_border_color
 
-    &.Popover-left-top .Popover-contents
+    &.Popover-left-top .Popover_contents
         margin-top      : $Popover_triangle_size * -0.5 - $border_radius_adjustment
         margin-left    : $Popover_triangle_size * 2
         &::after

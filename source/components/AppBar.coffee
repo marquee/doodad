@@ -53,8 +53,8 @@ class AppBar extends View
         $target_el.append(@render())
         _.defer =>
             if @_options.position in ['left', 'right']
-                head_width = @$el.find('.AppBar-head').width()
-                tail_width = @$el.find('.AppBar-tail').width()
+                head_width = @$el.find('.AppBar_head').width()
+                tail_width = @$el.find('.AppBar_tail').width()
                 if head_width < tail_width
                     head_width = tail_width
                 @$el.css(width: head_width)
@@ -78,14 +78,14 @@ class AppBar extends View
 
     render: =>
         @$el.html """
-            <div class='AppBar-head'></div>
-            <div class='AppBar-tail'></div>
+            <div class='AppBar_head'></div>
+            <div class='AppBar_tail'></div>
         """
-        $head = @$el.find('.AppBar-head')
+        $head = @$el.find('.AppBar_head')
         _.each @_options.head, (element) ->
             $head.append(element.render())
 
-        $tail = @$el.find('.AppBar-tail')
+        $tail = @$el.find('.AppBar_tail')
         _.each @_options.tail, (element) ->
             $tail.append(element.render())
 

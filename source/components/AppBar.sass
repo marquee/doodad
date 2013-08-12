@@ -1,5 +1,5 @@
 @import 'compass/css3'
-@import './_responsive'
+@import '../misc/_responsive'
 
 $AppBar_z_index         : 1 !default
 $AppBar_height          : auto !default
@@ -18,7 +18,7 @@ $AppBar_item_h_spacing   : $AppBar_item_spacing !default
         left: 0
         right: 0
         height: $AppBar_height
-        .AppBar-head, .AppBar-tail
+        .AppBar_head, .AppBar_tail
             position: absolute
             top: 0
             width: 50%
@@ -26,14 +26,14 @@ $AppBar_item_h_spacing   : $AppBar_item_spacing !default
             padding: $AppBar_item_v_spacing 0
             > *
                 margin: 0 $AppBar_item_h_spacing
-        .AppBar-head
+        .AppBar_head
             left: 0
-        .AppBar-tail
+        .AppBar_tail
             text-align: right
             right: 0
     &.AppBar-responsive
         +respond-to(handhelds)
-            .AppBar-head, .AppBar-tail
+            .AppBar_head, .AppBar_tail
                 width: 100%
                 position: static
                 text-align: left
@@ -47,16 +47,16 @@ $AppBar_item_h_spacing   : $AppBar_item_spacing !default
     &.AppBar-left, &.AppBar-right
         top: 0
         bottom: 0
-        .AppBar-head, .AppBar-tail
+        .AppBar_head, .AppBar_tail
             position: absolute
             left: 0
             right: 0
             padding: 0 $AppBar_item_h_spacing
             > *
                 margin: $AppBar_item_v_spacing 0
-        .AppBar-head
+        .AppBar_head
             top: 0
-        .AppBar-tail
+        .AppBar_tail
             bottom: 0
     &.AppBar-left
         left: 0

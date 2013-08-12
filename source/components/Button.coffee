@@ -1,10 +1,10 @@
 
-{ View }    = Backbone
+BaseDoodad = require './BaseDoodad'
 
 
 DOC_URL = 'http://example.com/'
 
-class Button extends View
+class Button extends BaseDoodad
     @__doc__ = """
     A basic button class. See #{ DOC_URL }button/
     """
@@ -13,7 +13,7 @@ class Button extends View
     className: 'Button'
 
     initialize: (options) ->
-        @_is_enabled = true
+        super()
         @_options = _.extend {},
             type            : 'text'
             label           : null
@@ -70,9 +70,9 @@ class Button extends View
             else
                 @$el.text(@_options.label)
         if @_options.type in ['icon', 'icon+text']
-            @$el.prepend('<div class="Button-icon-display"></div>')
+            @$el.prepend('<div class="Button_icon_display"></div>')
         if @_options.spinner
-            @$el.append('<div class="Button-spinner-display"></div>')
+            @$el.append('<div class="Button_spinner_display"></div>')
         @delegateEvents()
         return @el
 
@@ -80,18 +80,14 @@ class Button extends View
     #
     # Returns nothing.
     disable: ->
-        console.log 'Button.disable'
-        @_is_enabled = false
-        @$el.attr('disabled', true)
+        super()
         @_setInactive()
 
     # Public: Set the Button state to enabled. Also sets the button as inactive.
     #
     # Returns nothing.
     enable: ->
-        console.log 'Button.enable'
-        @_is_enabled = true
-        @$el.removeAttr('disabled')
+        super()
         @_setInactive()
 
     # Public: Check the enabled status.
@@ -139,26 +135,6 @@ class Button extends View
         @_options.action(this)
         return
 
-    # TODO: Make a BaseUIView that has things like position, validateOptions
-    getPosition: ->
-        { top, left } = @$el.offset()
-        width = @$el.width()
-        height = @$el.height()
-        x = left + width / 2
-        y = top + height / 2
-        return { x:x, y:y }
 
-    getSize: ->
-        return {
-            width: @$el.width()
-            height: @$el.height()
-        }
 
-    hide: ->
-        @$el.hide()
-        return this
-
-    show: ->
-        @$el.show()
-        return this
 module.exports = Button

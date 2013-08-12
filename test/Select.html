@@ -1,0 +1,61 @@
+<body>
+
+    <div id="app"></div>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+    <link rel="stylesheet" href="../lib/Doodad.css">
+    <script src="../lib/Doodad.js"></script>
+
+    <script type="text/coffeescript" style="display: block;white-space:pre;font-family:Menlo">
+        { Select } = window.Doodad
+
+        selects = []
+
+        selects.push new Select
+            type: 'icon-grid'
+            width: 4
+            action: (this_select) =>
+                $('#value').text(this_select.value)
+            default: 'left'
+            options: [
+                {
+                    label: 'Set Align Left'
+                    value: 'left'
+                    class: 'align-left'
+                }
+                {
+                    label: 'Set Align Center'
+                    value: 'center'
+                    class: 'align-center'
+                }
+                {
+                    label: 'Set Align Right'
+                    value: 'right'
+                    class: 'align-right'
+                }
+                {
+                    label: 'Set Align Right'
+                    value: 'right'
+                    class: 'align-right'
+                }
+
+            ]
+
+
+
+
+        _.each selects, (select) ->
+            console.log select
+            $el = $ """
+                <div style="padding: 1em;">
+                </div>
+            """
+            $el.append(select.el)
+            $('#app').append($el)
+
+    </script>
+</body>
