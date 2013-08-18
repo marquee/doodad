@@ -6,8 +6,8 @@
 $Button_height          : 50px !default
 $Button_icon_width      : 26px !default
 $Button_icon_height     : 26px !default
-$Button_spinner_width   : 23px !default
-$Button_spinner_height  : 23px !default
+$Button_spinner_width   : 22px !default
+$Button_spinner_height  : 22px !default
 
 $Button_internal_padding: 7px !default
 $Button_label_padding: 10px !default
@@ -40,18 +40,21 @@ $Button_font_size: 14px !default
     +transition-property('padding-right, background')
     +transition-duration(0.2s)
     &.Button-spinner
+        .Spinner
+            opacity: 0
+            position: absolute
+            top: $Button_internal_padding
+            right: $Button_internal_padding
+            width: $Button_spinner_width
+            min-width: $Button_spinner_width
+            height: $Button_spinner_height
+            min-height: $Button_spinner_height
+
         &.active
             padding-right: $Button_spinner_width + $Button_internal_padding * 2
-            &::after
-                content: ''
-                background-repeat: no-repeat
-                background-position: center center
-                position: absolute
-                top: $Button_internal_padding
-                right: $Button_internal_padding
-                width: $Button_spinner_width
-                height: $Button_spinner_height
+            .Spinner
                 display: block
+                opacity: 1
     &.Button-icon:not(.Button-text).Button-spinner
         &.active
             padding-right: 0
@@ -88,28 +91,8 @@ $Button_action_active_background        : darken($action_color, 10) !default
 $Button_action_disabled_background      : $disabled_color !default
 
 
-%default_spinner
-    &.Button-spinner.active::after
-        // TODO: Figure out how to package this into Sass
-        // Maybe make it a programmatic spinner, with speed controls?
-        background-image: inline-image('spinner.gif')
-        +background-size(100%)
-
-%friendly_spinner
-    @extend %default_spinner
-
-%dangerous_spinner
-    @extend %default_spinner
-
-%warning_spinner
-    @extend %default_spinner
-
-%action_spinner
-    @extend %default_spinner
-
 // TODO: move this to theme
 .Button
-    @extend %default_spinner
     +border-radius($Button_border_radius)
     background: $Button_default_background
     color: $Button_font_color
@@ -138,7 +121,6 @@ $Button_action_disabled_background      : $disabled_color !default
         background-position: center
 
     &.Button-friendly
-        @extend %friendly_spinner
         background: $Button_friendly_background
         &:hover:not(:disabled)
             background: $Button_friendly_hover_background
@@ -150,7 +132,6 @@ $Button_action_disabled_background      : $disabled_color !default
             background-image: $icon_friendly_image
 
     &.Button-dangerous
-        @extend %dangerous_spinner
         background: $Button_dangerous_background
         &:hover:not(:disabled)
             background: $Button_dangerous_hover_background
@@ -162,7 +143,6 @@ $Button_action_disabled_background      : $disabled_color !default
             background-image: $icon_dangerous_image
 
     &.Button-warning
-        @extend %warning_spinner
         background: $Button_warning_background
         &:hover:not(:disabled)
             background: $Button_warning_hover_background
@@ -174,7 +154,6 @@ $Button_action_disabled_background      : $disabled_color !default
             background-image: $icon_warning_image
 
     &.Button-action
-        @extend %action_spinner
         background: $Button_action_background
         &:hover:not(:disabled)
             background: $Button_action_hover_background

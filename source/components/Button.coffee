@@ -1,8 +1,12 @@
 
 BaseDoodad = require './BaseDoodad'
 
+Spinner = require '../subcomponents/Spinner'
+
+
 
 DOC_URL = 'http://example.com/'
+
 
 class Button extends BaseDoodad
     @__doc__ = """
@@ -29,6 +33,10 @@ class Button extends BaseDoodad
 
         unless @_options.enabled
             @disable()
+
+        if @_options.spinner
+            @_spinner = new Spinner
+                variant: 'light'
         @render()
 
     # Private: Check that the required options were passed to the constructor.
@@ -73,7 +81,7 @@ class Button extends BaseDoodad
         if @_options.type in ['icon', 'icon+text']
             @$el.prepend('<div class="Button_icon_display"></div>')
         if @_options.spinner
-            @$el.append('<div class="Button_spinner_display"></div>')
+            @$el.append(@_spinner.render())
         @delegateEvents()
         return @el
 
@@ -111,12 +119,14 @@ class Button extends BaseDoodad
     #
     # Returns nothing.
     _setActive: ->
+        @_spinner?.start()
         @$el.addClass('active')
 
     # Private: Set the button as inactive (hides the spinner).
     #
     # Returns nothing.
     _setInactive: ->
+        @_spinner?.stop()
         @$el.removeClass('active')
 
     events:

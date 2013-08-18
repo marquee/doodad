@@ -71,9 +71,10 @@ class Spinner extends BaseDoodad
 
         options = _.extend {
                 radius: width / 4
-                length: width / 4
+                length: width / 4 - 1
                 width: 3
                 color: color
+                className: ''
             }, options
         console.log options
 
