@@ -199,7 +199,7 @@ class StringInput extends View
     _fireBlur: ->
         @trigger('blur', this)
 
-    _fireBlur: ->
+    _fireFocus: ->
         @trigger('focus', this)
  
     _removeToken: (token) ->
