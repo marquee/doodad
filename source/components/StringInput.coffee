@@ -1,4 +1,4 @@
-{ View } = Backbone
+BaseDoodad = require './BaseDoodad'
  
 # si = new StringInput
 #     placeholder: 'tags, comma-separated'
@@ -10,7 +10,7 @@
 # > 'Some Value,other,values'
  
  
-class StringInput extends View
+class StringInput extends BaseDoodad
     @__doc__ = """
     """
  
@@ -21,7 +21,7 @@ class StringInput extends View
         @_is_enabled = true
         @_options = _.extend {},
             tokenize        : null # true - tokenize on ,
-            class           : null
+            variant         : null
             helptext        : null
             enabled         : true
             multiline       : false
@@ -33,9 +33,6 @@ class StringInput extends View
             on              : {}
         , options
  
- 
-        @_validateOptions()
- 
         @raw_value = ''
         if @_options.tokenize
             @value = if @_options.value then @_options.value else []
@@ -43,26 +40,13 @@ class StringInput extends View
             @_current_token = ''
         else
             @value = @_options.value
- 
-        unless @_options.enabled
-            @disable()
 
         @on(event, handler) for event, handler of @_options.on
 
         @render()
- 
-    # Private: Check that the required options were passed to the constructor.
-    #          Throws Errors if the options are invalid or missing.
-    #
-    # Returns nothing.
-    _validateOptions: ->
-        # if not @_options.type in ['text', 'icon', 'icon+text']
-        #     throw new Error "Button type must be one of 'text', 'icon', 'icon+text', got #{ @_options.type }."
-        # if @_options.type is 'text' and not @_options.label
-        #     throw new Error "Buttons of type='text' MUST have a label set."
-        # if not @_options.action? and not @_options.url?
-        #     throw new Error "A Button action function or url must be specified."
- 
+        unless @_options.enabled
+            @disable() 
+
     # Private: Apply the necessary classes to the element.
     #
     # Returns nothing.
@@ -118,51 +102,18 @@ class StringInput extends View
     #
     # Returns nothing.
     disable: ->
-        @_is_enabled = false
-        @$el.attr('disabled', true)
+        @_ui.input.attr('disabled', true)
+        return super()
+        
  
     # Public: Set the StringInput state to enabled.
     #
     # Returns nothing.
     enable: ->
-        @_is_enabled = true
-        @$el.removeAttr('disabled')
+        @_ui.input.removeAttr('disabled')
+        super()
+
  
-    # Public: Check the enabled status.
-    # 
-    # Returns true if enabled, false if disabled.
-    isEnabled: -> @_is_enabled
- 
-    # Public: Toggle the enabled/disabled state.
-    #
-    # Returns true if enabled, false if disabled.
-    toggleEnabled: ->
-        if @_is_enabled
-            @disable()
-        else
-            @enable()
-        return @_is_enabled
- 
-    # Private: Set the button as active (shows the spinner).
-    #
-    # Returns nothing.
-    _setActive: ->
-        @$el.addClass('active')
- 
-    # Private: Set the button as inactive (hides the spinner).
-    #
-    # Returns nothing.
-    _setInactive: ->
-        @$el.removeClass('active')
- 
-    # TODO: Make a BaseUIView that has things like position, validateOptions
-    getPosition: ->
-        { top, left } = @$el.offset()
-        width = @$el.width()
-        height = @$el.height()
-        x = left + width / 2
-        y = top + height / 2
-        return { x:x, y:y }
  
     _renderTokens: ->
         @_ui.tokens.empty()
@@ -194,7 +145,8 @@ class StringInput extends View
         'focus      .StringInput_input'         : '_fireFocus'
 
     _focusInput: ->
-        @_ui.input.focus()
+        if @_is_enabled
+            @_ui.input.focus()
 
     _fireBlur: ->
         @trigger('blur', this)
@@ -206,7 +158,7 @@ class StringInput extends View
         @value = _.without(@value, token)
         @_renderTokens()
         @raw_value = @value.join(@_options.tokenize)
-        @_options.action(this, @value, @raw_value)
+        @trigger('change', this, @value, @raw_value)
  
     _processPaste: (e) ->
         _.defer =>
@@ -217,7 +169,7 @@ class StringInput extends View
                 incoming_value = _.map incoming_value, (x) -> x.trim()
                 @value.push(incoming_value...)
                 @_renderTokens()
-            @_options.action(this, @value, @raw_value)
+            @trigger('change', this, @value, @raw_value)
         return
  
     _handleInput: (e) ->
@@ -235,7 +187,7 @@ class StringInput extends View
                         incoming_char = incoming_value.pop()
                         incoming_value = incoming_value.join('')
                         was_token_delimiter = true
-                    console.log was_token_delimiter, incoming_value
+
                     if was_token_delimiter or was_token_trigger
                         incoming_value = incoming_value.trim()
                         @_ui.input.val('')
@@ -243,19 +195,19 @@ class StringInput extends View
                             @raw_value += incoming_char
                             @value.push(incoming_value)
                             @_renderTokens()
-                            @_options.action(this, @value, @raw_value)
+                            @trigger('change', this, @value, @raw_value)
                 else
                     if e.which is KEYCODES.DELETE
                         prev_token = @value.pop()
                         @_renderTokens()
                         @_ui.input.val(prev_token)
                         @raw_value = @value.join(@_options.tokenize)
-                        @_options.action(this, @value, @raw_value)
+                        @trigger('change', this, @value, @raw_value)
                 @_updatePlaceholder()
         else
             _.defer =>
                 @raw_value = @value = @_ui.input.val()
-                @_options.action(this, @value, @raw_value)
+                @trigger('change', this, @value, @raw_value)
         return
 
 KEYCODES =

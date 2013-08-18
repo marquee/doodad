@@ -1,0 +1,115 @@
+<script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+<link rel="stylesheet" href="../lib/Doodad.css">
+<script src="../lib/Doodad.js"></script>
+
+<style>
+    .example_code {
+        white-space: pre;
+        font-family: Menlo, monospace;
+        font-size: 14px;
+        display: block;
+    }
+</style>
+
+<h1>Doodad.StringInput</h1>
+
+<div class="example">
+    <h2>Basic input</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'Some String'
+            placeholder: 'Placeholder'
+            on:
+                change: (self, val) ->
+                    @_demo_text(val)
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+<div class="example">
+    <h2>Disabled input</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'Some String'
+            value: 'Immutable field'
+            enabled: false
+            on:
+                change: (self, val) ->
+                    @_demo_text(val)
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+<div class="example">
+    <h2>Multiline input</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'Some Text'
+            multiline: true
+            value: 'Multiline\ntext'
+            on:
+                change: (self, val) ->
+                    @_demo_text(val)
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+<div class="example">
+    <h2>Tokenized input</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'Some Tokens'
+            placeholder: 'Enter tags (press enter)'
+            tokenize: true
+            on:
+                change: (self, val) ->
+                    @_demo_text(val.toString())
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+
+
+
+<script>
+    window.doodads = [];
+</script>
+
+<script type="text/coffeescript">
+    examples = $('.example')
+    examples.find('h2').after """
+        <div class="example_app">
+            <div class="output"></div>
+        </div>
+    """
+    _.each doodads, (doodad_set, i) ->
+        console.log doodad_set, i
+        $example_el = $(examples[i])
+        unless _.isArray(doodad_set)
+            doodad_set = [doodad_set]
+        example_timeout = null
+        _.each doodad_set, (doodad_instance) ->
+            # Add the doodad_instance to the DOM
+            $example_el.find('.example_app').prepend(doodad_instance.render())
+
+            doodad_instance._demo_text = (val) ->
+                $example_el.find('.output').text(val)
+
+
+</script>

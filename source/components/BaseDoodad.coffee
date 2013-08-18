@@ -69,6 +69,14 @@ class BaseDoodad extends View
     # Returns true if enabled, false if disabled.
     isEnabled: -> @_is_enabled
 
-
+    # Public: Toggle the enabled/disabled state.
+    #
+    # Returns true if enabled, false if disabled.
+    toggleEnabled: ->
+        if @_is_enabled
+            @disable()
+        else
+            @enable()
+        return @_is_enabled
 
 module.exports = BaseDoodad
