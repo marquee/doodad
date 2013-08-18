@@ -15,6 +15,7 @@
         "coffee-script": "1.x.x",
         "mocha": "*",
         "should": "*",
+        "spin": "*",
         "sqwish": "0.2.x",
         "uglify-js": "2.x.x",
         "walker": "1.0.3"
@@ -24,12 +25,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/alecperkins/active-markdown.git"
+        "url": "git://github.com/alecperkins/doodad.git"
     },
     "author": "Alec Perkins <alec@droptype.com>",
     "license": {
         "type": "Unlicense",
-        "url": "https://raw.github.com/alecperkins/active-markdown/master/UNLICENSE"
+        "url": "https://raw.github.com/alecperkins/doodad/master/UNLICENSE"
     },
     "contributors": [
         {

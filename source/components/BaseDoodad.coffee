@@ -5,7 +5,11 @@
 
 class BaseDoodad extends View
     @__doc__ = """
-    Public: The base view for all Doodad components.
+    Public: The base view for all Doodad components. Provides methods for
+            getting the size & position, hiding & showing, and enabling &
+            disabling. The enable and disable only set an attribute and don't
+            actually handle any disabling.
+
     """
 
     initialize: ->

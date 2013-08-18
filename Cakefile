@@ -209,6 +209,20 @@ _minifyJS = (js_script_code) ->
     min_code = compressed_ast.print_to_string()
     return min_code
 
+jsSourcePrefix = (source) ->
+    return """
+    /*
+
+    Doodad.
+
+    Contains a copy of spin.js, http://fgnass.github.io/spin.js
+    Copyright (c) 2011-2013 Felix Gnass
+    Licensed under the MIT license
+
+    */
+
+    #{ source }
+    """
 
 
 # Given a child process, add listeners to its stdout, stderr, and exit output.
