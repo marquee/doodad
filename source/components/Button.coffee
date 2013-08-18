@@ -99,22 +99,6 @@ class Button extends BaseDoodad
         super()
         @_setInactive()
 
-    # Public: Check the enabled status.
-    # 
-    # Returns true if enabled, false if disabled.
-    isEnabled: -> @_is_enabled
-
-    # Public: Toggle the enabled/disabled state.
-    #
-    # Returns true if enabled, false if disabled.
-    toggleEnabled: ->
-        console.log 'Button.toggleEnabled'
-        if @_is_enabled
-            @disable()
-        else
-            @enable()
-        return @_is_enabled
-
     # Private: Set the button as active (shows the spinner).
     #
     # Returns nothing.
