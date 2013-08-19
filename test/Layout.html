@@ -1,0 +1,52 @@
+<style>
+    html, body, #app {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<body>
+
+    <div id="app"></div>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+    <link rel="stylesheet" href="../lib/Doodad.css">
+    <script src="../lib/Doodad.js"></script>
+
+    <script type="text/coffeescript">
+        { Layout } = window.Doodad
+
+        l = new Layout
+            el: $('#app')
+            row_first: true
+            layout: [
+                [50, ['flex']]
+                ['flex', [50, 200, 'flex']]
+            ]
+        l.render()
+
+        l2 = new Layout
+            row_first: true
+            layout: [
+                [50, ['flex']]
+                [50, ['flex']]
+                ['flex', ['flex']]
+            ]
+        l3 = new Layout
+            row_first: true
+            layout: [
+                [50, ['flex']]
+                ['flex', ['flex']]
+            ]
+        l.setPanelContent(1,1,l2)
+        l.setPanelContent(1,2,l3)
+
+        # TODO: Create cascading resize_with: 'parent'
+        _.defer -> $(window).trigger('resize')
+    </script>
+</body>
