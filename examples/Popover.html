@@ -18,18 +18,57 @@
 <h1>Doodad.Popover</h1>
 
 <div class="example">
-    <h2>Basic popover (flag-type)</h2>
+    <h2>Basic popover (flag-type, top-left origin)</h2>
     <script type="text/coffeescript" class="example_code">
         popover = new Doodad.Popover
             contents: [
                 new Doodad.Button
                     label: 'Do Stuff'
                     spinner: true
-                    action: (self) -> setTimeout(self.enable, 1000)
+                    action: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
                 new Doodad.Button
-                    label: 'Do Other Stuff'
+                    label: 'Do Stuff Then Close'
                     spinner: true
-                    action: (self) -> setTimeout(self.enable, 1000)
+                    action: (self) ->
+                        setTimeout ->
+                            self.enable()
+                            popover.hide()
+                        , 1000
+            ]
+        button = new Doodad.Button
+            label: 'Show Flag Popover'
+            action: popover.toggle
+            class: 'warning'
+        doodads.push(button)
+    </script>
+</div>
+
+
+<div class="example">
+    <h2>Basic popover (flag-type)</h2>
+    <script type="text/coffeescript" class="example_code">
+        popover = new Doodad.Popover
+            type: 'flag'
+            origin: 'left-top'
+            contents: [
+                new Doodad.Button
+                    label: 'Do Stuff'
+                    spinner: true
+                    action: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+                new Doodad.Button
+                    label: 'Do Stuff Then Close'
+                    spinner: true
+                    action: (self) ->
+                        setTimeout ->
+                            self.enable()
+                            popover.hide()
+                        , 1000
             ]
         button = new Doodad.Button
             label: 'Show Flag Popover'
@@ -46,6 +85,8 @@
         modal = new Doodad.Popover
             type: 'modal'
             contents: [
+                new Doodad.Tags.P
+                    content: 'Some filler text and stuff.'
                 new Doodad.Button
                     label: 'Close Modal'
                     action: ->

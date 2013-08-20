@@ -87,11 +87,13 @@ class Popover extends BaseDoodad
         h_delta -= padding
         if w_delta < 50
             w_delta = 50
+        
+        bottom = ''
         if h_delta < 50
             bottom = top = 50
         else if h_delta > 100
             top = 100
-            bottom = h_delta + (h_delta - 100)
+        
 
         @ui.contents.css
             left    : w_delta

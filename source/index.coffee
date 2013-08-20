@@ -1,6 +1,7 @@
 BaseDoodad  = require './BaseDoodad'
 
 Spinner     = require './subcomponents/Spinner'
+Tags        = require './subcomponents/Tags'
 
 Button      = require './components/Button'
 Select      = require './components/Select'
@@ -21,6 +22,7 @@ Doodad =
     Select      : Select
     Spinner     : Spinner
     StringInput : StringInput
+    Tags        : Tags
     # Toggle      : Toggle
     VERSION     : '{X VERSION X}'
 
