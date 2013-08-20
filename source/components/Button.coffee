@@ -5,17 +5,33 @@ Spinner = require '../subcomponents/Spinner'
 
 
 
-DOC_URL = 'http://example.com/'
-
-
 class Button extends BaseDoodad
-    @__doc__ = """
-    A basic button class. See #{ DOC_URL }button/
-    """
+    @__doc__ = '<Link to button docs>'
 
     tagName: 'BUTTON'
     className: 'Button'
 
+    # Public: A button. Given an action function, it calls the function whenever
+    #         it gets clicked. It can have a spinner, which causes the button to
+    #         automatically go into a disabled state until told otherwise.
+    #
+    #     new Button
+    #         label: 'Click Me!'
+    #         action: (self) -> # do stuff
+    #
+    #     new Button
+    #         type: 'icon'
+    #         label: 'Title text'
+    #         action: (self) -> # do stuff
+    #
+    #     new Button
+    #         type: 'icon+text'
+    #         label: 'Click Me!'
+    #         spinner: true
+    #         action: (self) ->
+    #             # do stuff
+    #             self.enable()
+    #
     initialize: (options) ->
         super()
         @_options = _.extend {},

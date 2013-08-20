@@ -148,7 +148,7 @@
         p_node = new Doodad.Tags.P
             content: model_1.get('text_content')
         model_1.on 'change:text_content', ->
-            p_node.setContent(model_1.get('text_content'))
+            p_node.addContent(model_1.get('text_content'))
 
         model_2 = new Backbone.Model
             text_content: 'Other dynamic content'
@@ -161,7 +161,7 @@
             label: 'Change Model'
             action: ->
                 x = new Date()
-                model_1.set('text_content', "Changed: #{ x.getTime() }")
+                model_1.set('text_content', "Added: #{ x.getTime() }")
                 model_2.set('text_content', "Even text nodes: #{ x.getTime() }")
         doodads.push([p_node, text_node, new Doodad.Tags.BR(), button])
 

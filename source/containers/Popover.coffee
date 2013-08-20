@@ -67,33 +67,40 @@ class Popover extends BaseDoodad
         @$el.append(@ui.contents)
         return @el
 
+    # Public:   Set the position of the popover depending on its type.
+    #
+    # Returns nothing.
     setPosition: (args...) ->
         if @_options.type is 'modal'
             @_setModalPosition(args...)
         else
             @_setFlagPosition(args...)
 
+    # Private:  Center the popover in the window, keeping it a nice distance
+    #           from the edges. It positions itself toward the top, which
+    #           looks nicer, and keeps itself within the window.
+    #
+    # Returns nothing.
     _setModalPosition: ->
-        console.log 'center it, yo'
-        width = @ui.contents.width()
-        height = @ui.contents.height()
+        width   = @ui.contents.width()
+        height  = @ui.contents.height()
         $w = $(window)
         w_delta = ($w.width() - width) / 2
         h_delta = ($w.height() - height) / 2
-        console.log $w.width(), width, w_delta
-        console.log $w.height(), height, h_delta
+
+        # Grab the padding of the contents to factor into calculations.
         padding = parseInt(@ui.contents.css('padding'))
         w_delta -= padding
         h_delta -= padding
+
         if w_delta < 50
             w_delta = 50
-        
+
         bottom = ''
         if h_delta < 50
             bottom = top = 50
         else if h_delta > 100
             top = 100
-        
 
         @ui.contents.css
             left    : w_delta
@@ -101,9 +108,11 @@ class Popover extends BaseDoodad
             top     : top
             bottom  : bottom
 
-
+    # Private:  Position the popover at the specified position, orienting
+    #           based on its origin setting.
+    #
+    # Returns nothing.
     _setFlagPosition: ({x,y}) =>
-        console.log x, y
 
         offset_x = 0
         offset_y = 0

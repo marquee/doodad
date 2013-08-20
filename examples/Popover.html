@@ -48,11 +48,12 @@
 
 
 <div class="example">
-    <h2>Basic popover (flag-type)</h2>
+    <h2>Basic popover (flag-type, a little shy)</h2>
     <script type="text/coffeescript" class="example_code">
         popover = new Doodad.Popover
             type: 'flag'
             origin: 'left-top'
+            close_on_outside: true
             contents: [
                 new Doodad.Button
                     label: 'Do Stuff'
