@@ -55,7 +55,8 @@ class Popover extends BaseDoodad
 
     _setClasses: ->
         super()
-        @$el.addClass("#{ @className }-#{ @_options.origin }")
+        if @_options.type is 'flag'
+            @$el.addClass("#{ @className }-#{ @_options.origin }")
 
     render: =>
         @$el.empty()
