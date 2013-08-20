@@ -1,4 +1,4 @@
-BaseDoodad = require './BaseDoodad'
+BaseDoodad = require '../BaseDoodad'
 
 ###
 

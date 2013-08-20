@@ -9,7 +9,7 @@
 # spinner.slowDown()  # -0.1
 # spinner.bindTo(element_that_emits_progress)
 
-BaseDoodad = require '../components/BaseDoodad'
+BaseDoodad = require '../BaseDoodad'
 
 SpinJS = require 'spin'
 
@@ -37,17 +37,6 @@ class Spinner extends BaseDoodad
                 @start()
             else
                 @stop()
-
-    # Private: Apply the necessary classes to the element.
-    #
-    # Returns nothing.
-    _setClasses: ->
-        class_list = @_options.type.split('+')
-        if @_options.variant?.length > 0
-            class_list.push(@_options.variant.split(' ')...)
-        class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
-        class_list.push(@_options.extra_classes...)
-        @$el.addClass(class_list.join(' '))
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.

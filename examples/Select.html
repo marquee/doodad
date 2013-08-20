@@ -3,8 +3,8 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
 
-<link rel="stylesheet" href="../lib/Doodad.css">
-<script src="../lib/Doodad.js"></script>
+<link rel="stylesheet" href="../lib/doodad.css">
+<script src="../lib/doodad.js"></script>
 
 <style>
     .example_code {
@@ -27,7 +27,7 @@
             action: (this_select) =>
                 @text("layout.align: #{ this_select.value }")
             default: 'align-left'
-            options: [
+            choices: [
                 {
                     label: 'Left'
                     value: 'left'
@@ -53,6 +53,82 @@
 </div>
 
 
+<div class="example">
+    <h2>Basic select, redux</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.Select
+            type: 'grid'
+            height: 2 # autofills width
+            required: true
+            action: (this_select) =>
+                @text("Layout set to #{ this_select.value }")
+            choices: [
+                {
+                    label: 'Left'
+                    value: 'left'
+                    class: 'align-left'
+                    default: true
+                }
+                {
+                    label: 'Center'
+                    value: 'center'
+                    class: 'align-center'
+                }
+                {
+                    label: 'Right'
+                    value: 'right'
+                    class: 'align-right'
+                }
+                {
+                    label: 'Justify'
+                    value: 'justify'
+                    class: 'align-right'
+                }
+            ]
+        </script>
+</div>
+
+<div class="example">
+    <h2>Drop select</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.Select
+            type: 'drop'
+            required: false
+            placeholder: 'Uncategorized'
+            label: 'Category:'
+            action: (this_select) ->
+                @text("Picked #{ this_select.value }")
+            choices: [
+                {
+                    label: 'Category 1'
+                    value: 'category-1'
+                }
+                {
+                    label: 'Category 2'
+                    value: 'category-2'
+                    default: true
+                }
+                {
+                    label: 'Category 3'
+                    value: 'category-3'
+                }
+                {
+                    label: 'Category 4'
+                    value: 'category-4'
+                }
+                {
+                    label: 'Category 5'
+                    value: 'category-5'
+                }
+                {
+                    label: 'New Category'
+                    value: (self) ->
+                        console.log 'generate custom form'
+                        # on button click, self.setValue()
+                }
+            ]
+    </script>
+</div>
 
 
 
@@ -92,7 +168,6 @@
         $example_el = $(examples[i])
         unless _.isArray(doodad_set)
             doodad_set = [doodad_set]
-        example_timeout = null
         _.each doodad_set, (doodad_instance) ->
             # Add the doodad_instance to the DOM
             $example_el.find('.example_app').prepend(doodad_instance.render())
@@ -102,10 +177,7 @@
             old_action = doodad_instance._options.action
             doodad_instance._options.action = (inst) ->
                 old_action.call($example_el.find('.output'), inst)
-                clearTimeout(example_timeout)
-                example_timeout = setTimeout ->
-                    $example_el.find('.output').text('')
-                , 2000
+
 
 
 </script>

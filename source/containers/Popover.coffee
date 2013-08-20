@@ -7,6 +7,7 @@
 #     label: 'Item 1'
 
 # popover = new Popover
+#     type: 'flag'
 #     origin: 'top-left' # <edge>-<position>
 #                        #
 #                        #          top-left       top-center       top-right
@@ -31,37 +32,75 @@
 
 
 
-{ View } = Backbone
+BaseDoodad = require '../BaseDoodad'
 
-class Popover extends View
+class Popover extends BaseDoodad
     className: 'Popover'
     initialize: (options) ->
+        super(arguments...)
         @_options = _.extend {},
-            origin   : ''
+            type     : 'flag' # or 'modal
             contents : []
             width    : 500
             offset   : [0,0]
             close_on_outside: false
         , options
 
+        if @_options.type is 'flag' and not @_options.origin?
+            @_options.origin = 'top-left'
+
         @_setClasses()
 
         @_is_showing = false
 
     _setClasses: ->
+        super()
         @$el.addClass("#{ @className }-#{ @_options.origin }")
 
     render: =>
-        @$el.html """
-            <div class="Popover_contents"></div>
-        """
-        @_$contents = @$el.find('.Popover_contents')
-        @_$contents.css(width: @_options.width)
+        @$el.empty()
+        @ui = {}
+        @ui.contents = $('<div class="Popover_contents"></div>')
+        @ui.contents.css(width: @_options.width)
         _.each @_options.contents, (item) =>
-            @_$contents.append(item.render())
+            @ui.contents.append(item.render())
+        @$el.append(@ui.contents)
         return @el
 
-    setPosition: ({x,y}) =>
+    setPosition: (args...) ->
+        if @_options.type is 'modal'
+            @_setModalPosition(args...)
+        else
+            @_setFlagPosition(args...)
+
+    _setModalPosition: ->
+        console.log 'center it, yo'
+        width = @ui.contents.width()
+        height = @ui.contents.height()
+        $w = $(window)
+        w_delta = ($w.width() - width) / 2
+        h_delta = ($w.height() - height) / 2
+        console.log $w.width(), width, w_delta
+        console.log $w.height(), height, h_delta
+        padding = parseInt(@ui.contents.css('padding'))
+        w_delta -= padding
+        h_delta -= padding
+        if w_delta < 50
+            w_delta = 50
+        if h_delta < 50
+            bottom = top = 50
+        else if h_delta > 100
+            top = 100
+            bottom = h_delta + (h_delta - 100)
+
+        @ui.contents.css
+            left    : w_delta
+            right   : w_delta
+            top     : top
+            bottom  : bottom
+
+
+    _setFlagPosition: ({x,y}) =>
         console.log x, y
 
         offset_x = 0
@@ -72,11 +111,11 @@ class Popover extends View
                 when 'left'
                     offset_x = 0
                 when 'right'
-                    offset_x = @_$contents.width()
+                    offset_x = @ui.contents.width()
                 when 'top'
                     offset_y = 0
                 when 'bottom'
-                    offset_y = @_$contents.height()
+                    offset_y = @ui.contents.height()
 
         [edge, position] = @_options.origin.split('-')
 
@@ -84,9 +123,9 @@ class Popover extends View
         strToPos(position)
 
         if edge is 'center'
-            offset_y = @_$contents.height() / 2
+            offset_y = @ui.contents.height() / 2
         if position is 'center'
-            offset_x = @_$contents.width() / 2
+            offset_x = @ui.contents.width() / 2
 
         console.log edge, position, offset_x, offset_y, @_options.offset
 
@@ -96,17 +135,21 @@ class Popover extends View
         @$el.css
             left: x + @_options.offset[0]# - offset_x
             top: y + @_options.offset[1]# - offset_y
-        @_$contents.css
+        @ui.contents.css
             left: 0 - offset_x
             top: 0 - offset_y
 
-    show: =>
+    show: (trigger=null) =>
         console.log 'showing popover'
         @_is_showing = true
         $('body').append(@render())
         if @_options.close_on_outside
             _.defer =>
                 $(window).one('click', @hide)
+        @ui.contents.css('opacity', 0)
+        _.defer =>
+            @setPosition(trigger?.getPosition())
+            @ui.contents.css('opacity', 1)
 
     hide: =>
         console.log 'hiding popover'
@@ -117,16 +160,16 @@ class Popover extends View
         if @_is_showing
             @hide()
         else
-            _.defer =>
-                @setPosition(trigger.getPosition())
-            @show()
+            @show(trigger)
         return @_is_showing
 
     events:
-        'click': '_trapClick'
+        'click *'   : '_trapClick'
+        'click'     : 'hide'
 
-    _trapClick: (e) ->
-        e.stopPropagation()
+    setContents: (els...) ->
+
+    addContent: (els...) ->
 
 
 module.exports = Popover

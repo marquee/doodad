@@ -1,8 +1,11 @@
+BaseDoodad = require '../BaseDoodad'
+
 $window = $(window)
 
-class Panel extends Backbone.View
+class Panel extends BaseDoodad
     className: 'Panel'
     initialize: (@_layout) ->
+        super(arguments...)
     render: ->
         console.log 'Panel.render'
         return @el

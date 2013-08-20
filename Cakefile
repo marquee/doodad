@@ -14,14 +14,14 @@ SOURCE_FOLDER   = path.join(PROJECT_ROOT, 'source/')
 BUILD_FOLDER    = path.join(PROJECT_ROOT, 'build/')
 OUTPUT_FOLDER   = path.join(PROJECT_ROOT, 'lib/')
 
-JS_LIB_NAME             = "Doodad-#{ VERSION }.js"
-CSS_LIB_NAME            = "Doodad-#{ VERSION }.css"
-MIN_JS_LIB_NAME         = "Doodad-#{ VERSION }-min.js"
-MIN_CSS_LIB_NAME        = "Doodad-#{ VERSION }-min.css"
-JS_BARE_LIB_NAME        = "Doodad.js"
-CSS_BARE_LIB_NAME       = "Doodad.css"
-MIN_JS_BARE_LIB_NAME    = "Doodad-min.js"
-MIN_CSS_BARE_LIB_NAME   = "Doodad-min.css"
+JS_LIB_NAME             = "doodad-#{ VERSION }.js"
+CSS_LIB_NAME            = "doodad-#{ VERSION }.css"
+MIN_JS_LIB_NAME         = "doodad-#{ VERSION }-min.js"
+MIN_CSS_LIB_NAME        = "doodad-#{ VERSION }-min.css"
+JS_BARE_LIB_NAME        = "doodad.js"
+CSS_BARE_LIB_NAME       = "doodad.css"
+MIN_JS_BARE_LIB_NAME    = "doodad-min.js"
+MIN_CSS_BARE_LIB_NAME   = "doodad-min.css"
 
 
 
@@ -77,7 +77,9 @@ task 'build:scripts', '', (opts) ->
 task 'build:sass', '', (opts) ->
     lines_to_concatenate = []
     file_list = []
-    ['misc', 'subcomponents', 'components'].forEach (folder) ->
+    folders_to_process = ['misc', 'subcomponents', 'components', 'containers']
+    num_folders_processed = 0
+    folders_to_process.forEach (folder) ->
         path_to_walk = path.join(SOURCE_FOLDER, folder)
         w = Walker(path_to_walk)
         w.on 'file', (f, stat) ->
@@ -99,7 +101,10 @@ task 'build:sass', '', (opts) ->
                             return ''
                         return line
                     lines_to_concatenate.push(contents...)
-            fs.writeFileSync(path.join(OUTPUT_FOLDER, 'Doodad.sass'), lines_to_concatenate.join('\n'))
+            num_folders_processed += 1
+            if num_folders_processed is folders_to_process.length
+                lines_to_concatenate.unshift("/* Doodad v#{ VERSION } */")
+                fs.writeFileSync(path.join(OUTPUT_FOLDER, 'doodad.sass'), lines_to_concatenate.join('\n'))
 
 
 
@@ -209,11 +214,18 @@ _minifyJS = (js_script_code) ->
     min_code = compressed_ast.print_to_string()
     return min_code
 
+build_date = new Date()
+doodad_source_prefix = """
+    Doodad v#{ VERSION }
+    Public Domain, https://github.com/droptype/doodad
+    #{ build_date.getFullYear() }-#{ build_date.getMonth() + 1 }-#{ build_date.getDate() }
+    
+"""
+
 jsSourcePrefix = (source) ->
     return """
     /*
-
-    Doodad.
+    #{ doodad_source_prefix }
 
     Contains a copy of spin.js, http://fgnass.github.io/spin.js
     Copyright (c) 2011-2013 Felix Gnass

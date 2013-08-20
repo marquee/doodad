@@ -8,15 +8,18 @@ $Popover_background_color   : white             !default
 $Popover_triangle_size      : 10px              !default
 $Popover_padding            : 10px              !default
 $Popover_border_radius      : 10px              !default
+$Popover_modal_mask_color   : rgba(0,0,0,0.5)   !default
+
 
 .Popover
-    position    : absolute
+    position: absolute
     .Popover_contents
         position: absolute
         border      : $Popover_border_size solid $Popover_border_color
         +border-radius($Popover_border_radius)
         background-color  : $Popover_background_color
         padding: $Popover_padding
+        //overflow: scroll
         &::before, &::after
             content: ""
             position: absolute
@@ -90,5 +93,12 @@ $Popover_border_radius      : 10px              !default
             top                 : -1 * $Popover_border_size + $border_radius_adjustment
             border-right-color  : $Popover_border_color
 
-
+.Popover-modal
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: $Popover_modal_mask_color
+    .Popover_contents
+        +single-box-shadow($blur: 1px)
 

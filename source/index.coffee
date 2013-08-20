@@ -1,15 +1,20 @@
-AppBar      = require './components/AppBar'
-Button      = require './components/Button'
-Popover     = require './components/Popover'
-Select      = require './components/Select'
-StringInput = require './components/StringInput'
-# Toggle      = require './components/Toggle'
-Layout      = require './components/Layout'
+BaseDoodad  = require './BaseDoodad'
 
 Spinner     = require './subcomponents/Spinner'
 
+Button      = require './components/Button'
+Select      = require './components/Select'
+StringInput = require './components/StringInput'
+
+AppBar      = require './containers/AppBar'
+Layout      = require './containers/Layout'
+Popover     = require './containers/Popover'
+
+
+
 Doodad =
     AppBar      : AppBar
+    BaseDoodad  : BaseDoodad
     Button      : Button
     Layout      : Layout
     Popover     : Popover

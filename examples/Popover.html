@@ -13,49 +13,48 @@
         font-size: 14px;
         display: block;
     }
-    .example-DISABLED {
-        display: none;
-    }
 </style>
 
-<h1>Doodad.Spinner</h1>
+<h1>Doodad.Popover</h1>
 
 <div class="example">
-    <h2>Basic spinner, inactive</h2>
+    <h2>Basic popover (flag-type)</h2>
     <script type="text/coffeescript" class="example_code">
-        doodads.push new Doodad.Spinner()
+        popover = new Doodad.Popover
+            contents: [
+                new Doodad.Button
+                    label: 'Do Stuff'
+                    spinner: true
+                    action: (self) -> setTimeout(self.enable, 1000)
+                new Doodad.Button
+                    label: 'Do Other Stuff'
+                    spinner: true
+                    action: (self) -> setTimeout(self.enable, 1000)
+            ]
+        button = new Doodad.Button
+            label: 'Show Flag Popover'
+            action: popover.toggle
+            class: 'warning'
+        doodads.push(button)
     </script>
 </div>
 
-<div class="example">
-    <h2>Basic spinner, activate/deactivate</h2>
-    <script type="text/coffeescript" class="example_code">
-        spinner = new Doodad.Spinner()
-        doodads.push(spinner)
-        setInterval ->
-            if spinner.isActive()
-                spinner.stop()
-            else
-                spinner.start()
-        , 2500
-    </script>
-</div>
 
 <div class="example">
-    <h2>Basic spinner, preactivated</h2>
+    <h2>Modal popover</h2>
     <script type="text/coffeescript" class="example_code">
-        doodads.push new Doodad.Spinner
-            active: true
-    </script>
-</div>
-
-<div class="example-DISABLED">
-    <h2>Slow spinner</h2>
-    <script type="text/coffeescript" class="example_code">
-        # spinner = new Doodad.Spinner()
-        # doodads.push(spinner)
-        # spinner.start()
-        # spinner.slowDown()
+        modal = new Doodad.Popover
+            type: 'modal'
+            contents: [
+                new Doodad.Button
+                    label: 'Close Modal'
+                    action: ->
+                        modal.hide()
+            ]
+        button = new Doodad.Button
+            label: 'Show Modal'
+            action: modal.toggle
+        doodads.push(button)
     </script>
 </div>
 
@@ -77,9 +76,10 @@
         $example_el = $(examples[i])
         unless _.isArray(doodad_set)
             doodad_set = [doodad_set]
-        example_timeout = null
         _.each doodad_set, (doodad_instance) ->
             # Add the doodad_instance to the DOM
             $example_el.find('.example_app').prepend(doodad_instance.render())
+
+
 
 </script>

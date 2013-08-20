@@ -1,5 +1,5 @@
 
-BaseDoodad = require './BaseDoodad'
+BaseDoodad = require '../BaseDoodad'
 
 Spinner = require '../subcomponents/Spinner'
 

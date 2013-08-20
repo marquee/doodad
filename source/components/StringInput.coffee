@@ -1,4 +1,4 @@
-BaseDoodad = require './BaseDoodad'
+BaseDoodad = require '../BaseDoodad'
  
 # si = new StringInput
 #     placeholder: 'tags, comma-separated'
