@@ -12,7 +12,7 @@ PROJECT_ROOT = path.join(path.dirname(fs.realpathSync(__filename)))
 
 SOURCE_FOLDER   = path.join(PROJECT_ROOT, 'source/')
 BUILD_FOLDER    = path.join(PROJECT_ROOT, 'build/')
-OUTPUT_FOLDER   = path.join(PROJECT_ROOT, 'lib/')
+OUTPUT_FOLDER   = path.join(PROJECT_ROOT, 'dist/')
 
 JS_LIB_NAME             = "doodad-#{ VERSION }.js"
 CSS_LIB_NAME            = "doodad-#{ VERSION }.css"

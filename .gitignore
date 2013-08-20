@@ -1,5 +1,5 @@
 .sass-cache/*
 build/*
-lib/*
+dist/*
 .DS_store
 node_modules/*
