@@ -107,7 +107,10 @@ class BaseDoodad extends View
         # Prefix the primary classes
         class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
 
-        class_list.push(@_options.extra_classes...)
+        if _.isArray(@_options.extra_classes)
+            class_list.push(@_options.extra_classes...)
+        else
+            class_list.push(@_options.extra_classes)
 
         @$el.addClass(class_list.join(' '))
 
