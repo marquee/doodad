@@ -84,10 +84,8 @@ class Button extends BaseDoodad
         @_setClasses()
 
         if @_options.label
-            if @_options.type is 'icon'
-                @$el.attr('title', @_options.label)
-            else
-                @$el.text(@_options.label)
+            @$el.append('<span class="Button_label"></span>')
+            @setLabel(@_options.label)
         if @_options.type in ['icon', 'icon+text']
             @$el.prepend('<div class="Button_icon_display"></div>')
         if @_options.spinner
@@ -139,6 +137,17 @@ class Button extends BaseDoodad
         @_options.action(this)
         return
 
+    # Public: Set the text label of the button.
+    #
+    # label - the String value of the label
+    #
+    # Returns self for chaining.
+    setLabel: (label) =>
+        if @_options.type is 'icon'
+            @$el.attr('title', label)
+        else
+            @$el.find('.Button_label').text(label)
+        return this
 
 
 module.exports = Button

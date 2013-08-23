@@ -67,6 +67,18 @@
 </div>
 
 <div class="example">
+    <h2>Dynamic label buttons</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.Button
+            type: 'icon+text'
+            label: "Do something"
+            action: (this_button) ->
+                @text("Something done!")
+                this_button.setLabel('Do something again!')
+    </script>
+</div>
+
+<div class="example">
     <h2>Spinner buttons</h2>
     <script type="text/coffeescript" class="example_code">
         doodads.push ['icon', 'text', 'icon+text'].map (type) ->
