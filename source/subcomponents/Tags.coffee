@@ -159,9 +159,10 @@ class Tag extends BaseDoodad
                     @addContent(options.content...)
                 else
                     @addContent(options.content)
-                delete options.content
+
         for k, v of options
-            @$el.attr(k,v)
+            unless k in ['model', 'content', 'extra_classes']
+                @$el.attr(k,v)
 
     # Public: Add content to the Tag.
     #
