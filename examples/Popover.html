@@ -101,6 +101,58 @@
 </div>
 
 
+<div class="example">
+    <h2>Confirm or dismiss popover</h2>
+    <script type="text/coffeescript" class="example_code">
+        select = new Doodad.Select
+            required: true
+            action: ->
+            css:
+                'z-index': 3
+            choices: [
+                {
+                    label: 'Choice 1'
+                    value: 'choice-1'
+                }
+                {
+                    label: 'Choice 2'
+                    value: 'choice-2'
+                }
+                {
+                    label: 'Choice 3'
+                    value: 'choice-3'
+                }
+            ]
+        modal = new Doodad.Popover
+            type: 'modal'
+            title: 'I am dismissable'
+            css:
+                'z-index': 2
+            content: [
+                select,
+                new Doodad.Tags.P
+                    content: 'Some filler text and stuff.'
+            ]
+            confirm: 'Okay'
+            dismiss: 'Nevermind'
+        button = new Doodad.Button
+            label: 'Show Modal'
+            action: modal.toggle
+        status = new Doodad.Tags.P()
+        modal.on 'dismiss', ->
+            status.setContent('Dismissed')
+        modal.on 'confirm', ->
+            status.setContent("Confirmed - #{ select.value }")
+        window.X = status
+        doodads.push([button, status])
+    </script>
+</div>
+
+
+
+
+
+
 
 <script>
     window.doodads = [];

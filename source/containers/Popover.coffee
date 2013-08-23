@@ -33,6 +33,7 @@
 
 
 BaseDoodad = require '../BaseDoodad'
+Button = require '../components/Button'
 
 class Popover extends BaseDoodad
     className: 'Popover'
@@ -53,6 +54,8 @@ class Popover extends BaseDoodad
         if @_options.type is 'flag' and not @_options.origin?
             @_options.origin = 'top-left'
 
+        @on(event, handler) for event, handler of @_options.on
+
         @_setClasses()
 
         @_is_showing = false
@@ -67,8 +70,35 @@ class Popover extends BaseDoodad
         @ui = {}
         @ui.content = $('<div class="Popover_content"></div>')
         @ui.content.css(width: @_options.width)
+        if @_options.title
+            @ui.content.append("""<div class="Popover_title">#{ @_options.title }</div>""")
         _.each @_options.content, (item) =>
             @ui.content.append(item.render())
+        if @_options.dismiss or @_options.confirm
+            @ui.controls = $('<div class="Popover_controls"></div>')
+            console.log @_options.confirm, @_options.dismiss
+            if @_options.dismiss
+                unless @_options.dismiss.render?
+                    @_options.dismiss = new Button
+                        label: @_options.dismiss
+                        action: =>
+                            @trigger('dismiss')
+                            @hide()
+                        extra_classes: 'Popover_dismiss'
+                @ui.controls.append(@_options.dismiss.render())
+
+            if @_options.confirm
+                unless @_options.confirm.render?
+                    @_options.confirm = new Button
+                        label: @_options.confirm
+                        action: =>
+                            @trigger('confirm')
+                            @hide()
+                        class: 'friendly'
+                        extra_classes: 'Popover_confirm'
+                @ui.controls.append(@_options.confirm.render())
+
+            @ui.content.append(@ui.controls)
         @$el.append(@ui.content)
         return @el
 
