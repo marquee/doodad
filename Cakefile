@@ -68,7 +68,10 @@ task 'build:scripts', '', (opts) ->
         b.add(path.join(index_file))
         output_file = path.join(OUTPUT_FOLDER, JS_BARE_LIB_NAME)
         output_stream = fs.createWriteStream(output_file)
-        b.bundle().pipe(output_stream)
+        b.bundle (err, src) ->
+            src = jsSourcePrefix(src)
+            fs.writeFile output_file, src, (err) ->
+                throw err if err?
         # unminified = fs.readFileSync(output_file).toString())
         # minified = _minifyJS(unminified)
         # fs.writeFile(path.join(OUTPUT_FOLDER, MIN_JS_BARE_LIB_NAME), minified, ->)
