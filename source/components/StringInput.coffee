@@ -126,7 +126,8 @@ class StringInput extends BaseDoodad
                     </span>
                 """
             $el.find('.StringInput_token_value').text(token)
-            $el.find('.StringInput_token_remove').on 'click', =>
+            $el.find('.StringInput_token_remove').on 'click', (e) =>
+                e.stopPropagation()
                 @_removeToken(token)
             @_ui.tokens.append($el)
  
