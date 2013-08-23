@@ -147,10 +147,10 @@ class Tag extends BaseDoodad
     @_default_child = TextNode
 
     initialize: (options={}) ->
-        super(arguments...)
         @_options = _.extend
             type: ''
         , options
+        super(@_options)
 
         unless @constructor._takes_content?
             throw new Error('Doodad.Tag classes require a @_takes_content class property')

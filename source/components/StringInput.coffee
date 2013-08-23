@@ -32,7 +32,8 @@ class StringInput extends BaseDoodad
             value           : ''
             on              : {}
         , options
- 
+        super(@_options)
+
         @raw_value = ''
         if @_options.tokenize
             @value = if @_options.value then @_options.value else []

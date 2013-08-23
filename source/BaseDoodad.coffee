@@ -15,6 +15,8 @@ class BaseDoodad extends View
     initialize: (options) ->
         @_is_enabled = true
 
+        if options.css
+            @_setCSS(options.css)
         # TODO: DRY up the child classes using something like:
         # @_options = @_validateOptions(options)
         # @_configure()
@@ -114,5 +116,13 @@ class BaseDoodad extends View
                 class_list.push(@_options.extra_classes)
 
         @$el.addClass(class_list.join(' '))
+
+    # Private: Set extra CSS rules (useful for z-index, etc)
+    #
+    # css - an object with key-value CSS properties to set using $().css()
+    #
+    # Returns nothing
+    _setCSS: (css_rules) ->
+        @$el.css(css_rules)
 
 module.exports = BaseDoodad

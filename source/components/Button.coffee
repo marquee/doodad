@@ -33,7 +33,7 @@ class Button extends BaseDoodad
     #             self.enable()
     #
     initialize: (options) ->
-        super()
+        super(arguments...)
         @_options = _.extend {},
             type            : 'text'
             label           : null
@@ -71,14 +71,9 @@ class Button extends BaseDoodad
     #
     # Returns nothing.
     _setClasses: ->
-        class_list = @_options.type.split('+')
+        super()
         if @_options.spinner
-            class_list.push('spinner')
-        if @_options.class?.length > 0
-            class_list.push(@_options.class.split(' ')...)
-        class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
-        class_list.push(@_options.extra_classes...)
-        @$el.addClass(class_list.join(' '))
+            @$el.addClass('Button-spinner')
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.

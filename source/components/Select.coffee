@@ -34,7 +34,7 @@ class Select extends BaseDoodad
     className: 'Select'
 
     initialize: (options) ->
-        super()
+        super(arguments...)
         @_options = _.extend {},
             type            : 'drop'
             width           : null
