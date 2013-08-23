@@ -93,9 +93,11 @@ class StringInput extends BaseDoodad
                     </label>
                 """
         @_ui.input = @$el.find('.StringInput_input')
-         
+
         if @_options.tokenize
             @_renderTokens()
+        else
+            @_ui.input.val(@value)
         @delegateEvents()
         return @el
  
