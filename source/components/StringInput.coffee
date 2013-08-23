@@ -138,10 +138,10 @@ class StringInput extends BaseDoodad
             @_ui.input.attr('placeholder',@_options.placeholder)
  
     events:
-        'keydown    .StringInput_input' : '_handleInput'
-        'paste      .StringInput_input' : '_processPaste'
-        'click      .StringInput_token_form': '_focusInput'
-        'blur       .StringInput_input' : '_fireBlur'
+        'keydown    .StringInput_input'         : '_handleInput'
+        'paste      .StringInput_input'         : '_processPaste'
+        'click      .StringInput_token_form'    : '_focusInput'
+        'blur       .StringInput_input'         : '_fireBlur'
         'focus      .StringInput_input'         : '_fireFocus'
 
     _focusInput: ->
