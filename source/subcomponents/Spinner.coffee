@@ -43,7 +43,6 @@ class Spinner extends BaseDoodad
     #
     # Returns nothing.
     render: =>
-        console.log 'Spinner.render'
         @_setClasses()
         return @el
 
@@ -56,7 +55,6 @@ class Spinner extends BaseDoodad
             color = '#fff'
 
         { width, height } = @getSize()
-        console.log width, height
 
         options = _.extend {
                 radius: width / 4
@@ -65,7 +63,6 @@ class Spinner extends BaseDoodad
                 color: color
                 className: ''
             }, options
-        console.log options
 
         @_spinner = new SpinJS(options)
         @_spinner.spin(@el)
@@ -74,14 +71,12 @@ class Spinner extends BaseDoodad
         return @_active
 
     start: =>
-        console.log 'Spinner.start'
         @$el.addClass("#{ @className }-active")
         @_active = true
         @_setUpSpinner(speed: @_rate)
         return this
 
     stop: =>
-        console.log 'Spinner.stop'
         clearInterval(@_rotation_interval)
         @$el.removeClass("#{ @className }-active")
         @_active = false

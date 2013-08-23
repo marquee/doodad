@@ -156,7 +156,6 @@ class Popover extends BaseDoodad
             top: 0 - offset_y
 
     show: (trigger=null) =>
-        console.log 'showing popover'
         @_is_showing = true
         $('body').append(@render())
         if @_options.close_on_outside
@@ -168,7 +167,6 @@ class Popover extends BaseDoodad
             @ui.content.css('opacity', 1)
 
     hide: =>
-        console.log 'hiding popover'
         @_is_showing = false
         @$el.detach()
 

@@ -85,7 +85,6 @@ class Button extends BaseDoodad
     #
     # Returns nothing.
     render: ->
-        console.log 'Button.render'
         @$el.empty()
         @_setClasses()
 
@@ -136,7 +135,6 @@ class Button extends BaseDoodad
     #
     # Returns nothing.
     _handleClick: (e) =>
-        console.log 'click!'
         e?.stopPropagation()
 
         if @_options.spinner
