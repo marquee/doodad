@@ -21,7 +21,7 @@
     <h2>Basic popover (flag-type, top-left origin)</h2>
     <script type="text/coffeescript" class="example_code">
         popover = new Doodad.Popover
-            contents: [
+            content: [
                 new Doodad.Button
                     label: 'Do Stuff'
                     spinner: true
@@ -54,7 +54,7 @@
             type: 'flag'
             origin: 'left-top'
             close_on_outside: true
-            contents: [
+            content: [
                 new Doodad.Button
                     label: 'Do Stuff'
                     spinner: true
@@ -85,7 +85,7 @@
     <script type="text/coffeescript" class="example_code">
         modal = new Doodad.Popover
             type: 'modal'
-            contents: [
+            content: [
                 new Doodad.Tags.P
                     content: 'Some filler text and stuff.'
                 new Doodad.Button
