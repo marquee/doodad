@@ -20,7 +20,7 @@
 #                        # left-bottom                                       right-bottom
 #                        #        bottom-left       bottom-center      bottom-right
 #
-#     contents: [
+#     content: [
 #         button1
 #     ]
 
@@ -40,10 +40,14 @@ class Popover extends BaseDoodad
         super(arguments...)
         @_options = _.extend {},
             type     : 'flag' # or 'modal
-            contents : []
+            content  : []
             width    : 500
             offset   : [0,0]
             close_on_outside: false
+            title    : null
+            dismiss  : null
+            confirm  : null
+            on       : {}
         , options
 
         if @_options.type is 'flag' and not @_options.origin?
@@ -61,11 +65,11 @@ class Popover extends BaseDoodad
     render: =>
         @$el.empty()
         @ui = {}
-        @ui.contents = $('<div class="Popover_contents"></div>')
-        @ui.contents.css(width: @_options.width)
-        _.each @_options.contents, (item) =>
-            @ui.contents.append(item.render())
-        @$el.append(@ui.contents)
+        @ui.content = $('<div class="Popover_content"></div>')
+        @ui.content.css(width: @_options.width)
+        _.each @_options.content, (item) =>
+            @ui.content.append(item.render())
+        @$el.append(@ui.content)
         return @el
 
     # Public:   Set the position of the popover depending on its type.
@@ -83,14 +87,14 @@ class Popover extends BaseDoodad
     #
     # Returns nothing.
     _setModalPosition: ->
-        width   = @ui.contents.width()
-        height  = @ui.contents.height()
+        width   = @ui.content.width()
+        height  = @ui.content.height()
         $w = $(window)
         w_delta = ($w.width() - width) / 2
         h_delta = ($w.height() - height) / 2
 
-        # Grab the padding of the contents to factor into calculations.
-        padding = parseInt(@ui.contents.css('padding'))
+        # Grab the padding of the content to factor into calculations.
+        padding = parseInt(@ui.content.css('padding'))
         w_delta -= padding
         h_delta -= padding
 
@@ -103,7 +107,7 @@ class Popover extends BaseDoodad
         else if h_delta > 100
             top = 100
 
-        @ui.contents.css
+        @ui.content.css
             left    : w_delta
             right   : w_delta
             top     : top
@@ -123,11 +127,11 @@ class Popover extends BaseDoodad
                 when 'left'
                     offset_x = 0
                 when 'right'
-                    offset_x = @ui.contents.width()
+                    offset_x = @ui.content.width()
                 when 'top'
                     offset_y = 0
                 when 'bottom'
-                    offset_y = @ui.contents.height()
+                    offset_y = @ui.content.height()
 
         [edge, position] = @_options.origin.split('-')
 
@@ -135,9 +139,9 @@ class Popover extends BaseDoodad
         strToPos(position)
 
         if edge is 'center'
-            offset_y = @ui.contents.height() / 2
+            offset_y = @ui.content.height() / 2
         if position is 'center'
-            offset_x = @ui.contents.width() / 2
+            offset_x = @ui.content.width() / 2
 
         console.log edge, position, offset_x, offset_y, @_options.offset
 
@@ -147,7 +151,7 @@ class Popover extends BaseDoodad
         @$el.css
             left: x + @_options.offset[0]# - offset_x
             top: y + @_options.offset[1]# - offset_y
-        @ui.contents.css
+        @ui.content.css
             left: 0 - offset_x
             top: 0 - offset_y
 
@@ -158,10 +162,10 @@ class Popover extends BaseDoodad
         if @_options.close_on_outside
             _.defer =>
                 $(window).one('click', @hide)
-        @ui.contents.css('opacity', 0)
+        @ui.content.css('opacity', 0)
         _.defer =>
             @setPosition(trigger?.getPosition())
-            @ui.contents.css('opacity', 1)
+            @ui.content.css('opacity', 1)
 
     hide: =>
         console.log 'hiding popover'
