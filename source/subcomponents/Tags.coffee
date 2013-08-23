@@ -164,6 +164,8 @@ class Tag extends BaseDoodad
             unless k in ['model', 'content', 'extra_classes']
                 @$el.attr(k,v)
 
+        @_setClasses()
+
     # Public: Add content to the Tag.
     #
     # contents...   - one or more String or Tag arguments to be added as
