@@ -141,13 +141,15 @@ class Popover extends BaseDoodad
         if edge is 'center'
             offset_y = @ui.content.height() / 2
         if position is 'center'
-            offset_x = @ui.content.width() / 2
+            if edge in ['top', 'bottom']
+                offset_x = @ui.content.width() / 2
+            else
+                offset_y = @ui.content.height() / 2
+
 
         console.log edge, position, offset_x, offset_y, @_options.offset
 
         # TODO: Allow @_options.offset to be a function, that's given the triggering element
-
-        # TODO: Allow for growing from right based on origin: <div class="Popover-anchor">
         @$el.css
             left: x + @_options.offset[0]# - offset_x
             top: y + @_options.offset[1]# - offset_y
