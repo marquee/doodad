@@ -97,7 +97,7 @@ task 'build:sass', '', (opts) ->
                     contents = fs.readFileSync(f).toString()
                     contents = contents.split('\n')
                     contents = contents.map (line) ->
-                        if line.indexOf("@import './") is 0
+                        if line.indexOf("@import './") is 0 or line.indexOf("@import '../") is 0
                             return ''
                         return line
                     lines_to_concatenate.push(contents...)
