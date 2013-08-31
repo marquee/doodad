@@ -166,13 +166,15 @@ class StringInput extends BaseDoodad
  
     _processPaste: (e) ->
         _.defer =>
+            incoming_value = @_ui.input.val()
             if @_options.tokenize?
-                incoming_value = @_ui.input.val()
                 @_ui.input.val('')
                 incoming_value = incoming_value.split(@_options.tokenize)
                 incoming_value = _.map incoming_value, (x) -> x.trim()
                 @value.push(incoming_value...)
                 @_renderTokens()
+            else
+                @raw_value = @value = incoming_value
             @trigger('change', this, @value, @raw_value)
         return
  
