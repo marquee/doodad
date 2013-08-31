@@ -27,6 +27,7 @@ class Spinner extends BaseDoodad
             active          : false
             extra_classes   : []
             size            : null
+            auto_hide       : true
         , options
         super(@_options)
 
@@ -74,6 +75,8 @@ class Spinner extends BaseDoodad
         @$el.addClass("#{ @className }-active")
         @_active = true
         @_setUpSpinner(speed: @_rate)
+        if @_options.auto_hide
+            @show()
         return this
 
     stop: =>
@@ -81,6 +84,8 @@ class Spinner extends BaseDoodad
         @$el.removeClass("#{ @className }-active")
         @_active = false
         @_setUpSpinner(speed: 0)
+        if @_options.auto_hide
+            @hide()
         return this
 
     # TODO: rate control
