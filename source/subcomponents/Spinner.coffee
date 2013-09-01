@@ -33,6 +33,8 @@ class Spinner extends BaseDoodad
 
         @_rate = 1
         @render()
+        if @_options.auto_hide and @_options.active
+            @hide()
         _.defer =>
             if @_options.active
                 @start()
@@ -67,6 +69,9 @@ class Spinner extends BaseDoodad
 
         @_spinner = new SpinJS(options)
         @_spinner.spin(@el)
+        @$el.children().css
+            left: '50%'
+            top: '50%'
 
     isActive: =>
         return @_active
