@@ -80,13 +80,14 @@ class Select extends BaseDoodad
 
     events:
         'click .Select_value' : '_showChoices'
+        'click .Select_label' : '_showChoices'
 
     _showChoices: ->
         # Keep it invisible until it is positioned.
         @ui.choices.css
             opacity: 0
+            left: @ui.value.position().left
         @ui.choices.removeAttr('data-hidden')
-
 
         # Align the currently selected choice to the middle of the form.
         _.defer =>

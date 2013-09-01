@@ -20,7 +20,7 @@ $Select_choice_selected_background: rgba($default_color, 0.2)
     height: $Select_height
     position: relative
     [data-hidden="true"]
-        display: none
+        visibility: hidden
 
 
 .Select_label, .Select_choices, .Select_value
@@ -36,7 +36,7 @@ $Select_choice_selected_background: rgba($default_color, 0.2)
     +box-sizing(border-box)
     min-width: $Select_choices_min_width
 
-.Select_choice, .Select_value
+.Select_choice, .Select_value, .Select_label
     cursor: pointer
 
 .Select_choice-null
