@@ -35,24 +35,31 @@
 BaseDoodad = require '../BaseDoodad'
 Button = require '../components/Button'
 
+# Track all the popovers active, so soloing is possible. The popovers are
+# tracked by their cid ()
+active_popovers = {}
+
+
 class Popover extends BaseDoodad
     className: 'Popover'
     initialize: (options) ->
         super(arguments...)
         @_options = _.extend {},
-            type     : 'flag' # or 'modal
-            content  : []
-            width    : 500
-            offset   : [0,0]
-            close_on_outside: false
-            title    : null
-            dismiss  : null
-            confirm  : null
-            on       : {}
+            type                : 'flag' # or 'modal
+            content             : []
+            width               : 500
+            offset              : [0,0]
+            close_on_outside    : false
+            title               : null
+            dismiss             : null
+            confirm             : null
+            solo                : true
+            on                  : {}
         , options
 
-        if @_options.type is 'flag' and not @_options.origin?
-            @_options.origin = 'top-left'
+        if @_options.type is 'flag'
+            if not @_options.origin?
+                @_options.origin = 'top-left'
 
         @on(event, handler) for event, handler of @_options.on
 
@@ -189,10 +196,17 @@ class Popover extends BaseDoodad
 
     show: (trigger=null) =>
         @_is_showing = true
+        active_popovers[@cid] = this
+        console.log active_popovers
         $('body').append(@render())
         if @_options.close_on_outside
             _.defer =>
                 $(window).one('click', @hide)
+        if @_options.solo
+            console.log 'closing others!', @cid
+            _.each active_popovers, (popover) =>
+                if popover? and popover.cid isnt @cid
+                    popover.hide()
         @ui.content.css('opacity', 0)
         _.defer =>
             @setPosition(trigger?.getPosition())
@@ -200,6 +214,7 @@ class Popover extends BaseDoodad
 
     hide: =>
         @_is_showing = false
+        active_popovers[@cid] = null
         @$el.detach()
 
     toggle: (trigger) =>
@@ -213,9 +228,7 @@ class Popover extends BaseDoodad
         'click *'   : '_trapClick'
         'click'     : 'hide'
 
-    setContents: (els...) ->
 
-    addContent: (els...) ->
 
 
 module.exports = Popover

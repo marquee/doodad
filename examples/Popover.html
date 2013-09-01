@@ -81,6 +81,39 @@
 
 
 <div class="example">
+    <h2>Solo popover</h2>
+    <script type="text/coffeescript" class="example_code">
+        popover = new Doodad.Popover
+            type: 'flag'
+            origin: 'bottom-left'
+            solo: true
+            content: [
+                new Doodad.Button
+                    label: 'Do Stuff'
+                    spinner: true
+                    action: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+                new Doodad.Button
+                    label: 'Do Stuff Then Close'
+                    spinner: true
+                    action: (self) ->
+                        setTimeout ->
+                            self.enable()
+                            popover.hide()
+                        , 1000
+            ]
+        button = new Doodad.Button
+            label: 'Show Flag Popover'
+            action: popover.toggle
+            class: 'warning'
+        doodads.push(button)
+    </script>
+</div>
+
+
+<div class="example">
     <h2>Modal popover</h2>
     <script type="text/coffeescript" class="example_code">
         modal = new Doodad.Popover
