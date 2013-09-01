@@ -8,8 +8,18 @@ BaseDoodad = require '../BaseDoodad'
 # > ['Some Value', 'other', 'values']
 # si.raw_value
 # > 'Some Value,other,values'
- 
- 
+
+
+parseLimit = (limit) ->
+    if limit[0] is '~'
+        limit = parseInt(limit[1..])
+        soft = true
+    else
+        limit = parseInt(limit)
+        soft = false
+    return [soft, limit]
+
+
 class StringInput extends BaseDoodad
     @__doc__ = """
     """
@@ -29,6 +39,8 @@ class StringInput extends BaseDoodad
             placeholder     : ''
             label           : ''
             extra_classes   : []
+            char_limit      : null
+            word_limit      : null
             value           : ''
             on              : {}
         , options
@@ -41,6 +53,11 @@ class StringInput extends BaseDoodad
             @_current_token = ''
         else
             @value = @_options.value
+
+        if @_options.char_limit
+            [@_options.limit_is_soft, @_options.char_limit] = parseLimit(@_options.char_limit)
+        else if @_options.word_limit
+            [@_options.limit_is_soft, @_options.word_limit] = parseLimit(@_options.word_limit)
 
         @on(event, handler) for event, handler of @_options.on
 
@@ -97,6 +114,10 @@ class StringInput extends BaseDoodad
         if @_options.tokenize
             @_renderTokens()
         else
+            if @_options.char_limit or @_options.word_limit
+                @_ui.limit_counter = $('<span class="StringInput_counter"></span>')
+                @$el.find('.StringInput_label').append(@_ui.limit_counter)
+                @_updateCharCount()
             @_ui.input.val(@value)
         @delegateEvents()
         return @el
@@ -116,8 +137,28 @@ class StringInput extends BaseDoodad
         @_ui.input.removeAttr('disabled')
         super()
 
- 
- 
+    _calcLimit: ->
+        if @_options.char_limit
+            limit = @_options.char_limit
+            count = @value.length
+        else 
+            limit = @_options.word_limit
+            count = @value.match(/[\d\w_-]+/g)?.length or 0
+        @over_limit = count > limit
+        return [@over_limit, count, limit]
+
+    _updateCharCount: ->
+        [over_limit, count, limit] = @_calcLimit()
+        @_ui.limit_counter.text("#{ count }/#{ limit }")
+        @_ui.limit_counter.removeClass('StringInput_counter-warn StringInput_counter-over')
+        if over_limit
+            @_ui.limit_counter.addClass('StringInput_counter-over')
+        else if count > limit * 0.8
+            @_ui.limit_counter.addClass('StringInput_counter-warn')
+
+        return [over_limit, count, limit]
+
+
     _renderTokens: ->
         @_ui.tokens.empty()
         # TODO: Make each token a view, use Collection to manage?
@@ -143,7 +184,7 @@ class StringInput extends BaseDoodad
  
     events:
         'keydown    .StringInput_input'         : '_handleInput'
-        'paste      .StringInput_input'         : '_processPaste'
+        'paste      .StringInput_input'         : '_handleInput'
         'click      .StringInput_token_form'    : '_focusInput'
         'blur       .StringInput_input'         : '_fireBlur'
         'focus      .StringInput_input'         : '_fireFocus'
@@ -211,9 +252,21 @@ class StringInput extends BaseDoodad
                         @trigger('change', this, @value, @raw_value)
                 @_updatePlaceholder()
         else
+            previous_value = @value
             _.defer =>
                 @raw_value = @value = @_ui.input.val()
+                if @_options.char_limit or @_options.word_limit
+                    [over_limit, count, limit] = @_calcLimit()
+                    if over_limit and not @_options.limit_is_soft
+                        @raw_value = @value = previous_value
+                        @_ui.input.val(previous_value)
+                    @_updateCharCount()
                 @trigger('change', this, @value, @raw_value)
+
+        # Command-/Control-X, which only takes effect after the keyup, so
+        # reprocess the input.
+        if e.which is 88 and e.metaKey
+            _.defer => @_handleInput(e)
         return
 
 KEYCODES =

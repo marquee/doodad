@@ -86,6 +86,62 @@
 
 
 
+<div class="example">
+    <h2>Limited input, characters</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'Only a little bit of text'
+            char_limit: 100
+            on:
+                change: (self, val) ->
+                    @_demo_text(val)
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+
+
+<div class="example">
+    <h2>Limited input, words</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'A few words'
+            word_limit: 20
+            multiline: true
+            on:
+                change: (self, val) ->
+                    @_demo_text(val)
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+
+
+<div class="example">
+    <h2>Softly limited input, words</h2>
+    <script type="text/coffeescript" class="example_code">
+        doodads.push new Doodad.StringInput
+            label: 'A few words'
+            word_limit: '~20'
+            multiline: true
+            on:
+                change: (self, val) ->
+                    @_demo_text(val)
+                blur: (self, val) ->
+                    @_demo_text('blurred')
+                focus: (self, val) ->
+                    @_demo_text('focused')
+    </script>
+</div>
+
+
+
 
 <script>
     window.doodads = [];
