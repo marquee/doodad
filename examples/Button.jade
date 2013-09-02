@@ -11,6 +11,63 @@ block content
                 action: (this_button) ->
                     @text('Something done!')
 
+    .example
+        h2 Classy buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
+                return new Doodad.Button
+                    type: 'text'
+                    class: class_
+                    label: "Do something \#{ class_ }"
+                    action: (this_button) ->
+                        @text("Something \#{ class_ } done!")
+
+    .example
+        h2 Iconic buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
+                return new Doodad.Button
+                    type: 'icon'
+                    class: class_
+                    label: "Do something \#{ class_ }"
+                    action: (this_button) ->
+                        @text("Something \#{ class_ } done!")
+
+    .example
+        h2 Iconic label buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
+                return new Doodad.Button
+                    type: 'icon+text'
+                    class: class_
+                    label: "Do something \#{ class_ }"
+                    action: (this_button) ->
+                        @text("Something \#{ class_ } done!")
+
+    .example
+        h2 Dynamic label buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Button
+                type: 'icon+text'
+                label: "Do something"
+                action: (this_button) ->
+                    @text("Something done!")
+                    this_button.setLabel('Do something again!')
+
+    .example
+        h2 Spinner buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push ['icon', 'text', 'icon+text'].map (type) ->
+                return new Doodad.Button
+                    type: type
+                    label: "Do something"
+                    spinner: true
+                    action: (this_button) ->
+                        @text("Doing something!")
+                        setTimeout =>
+                            this_button.enable()
+                        , 2000
+
 
     script(type='text/coffeescript').
         window.instanceSetup = ($example_el, doodad_instance) ->

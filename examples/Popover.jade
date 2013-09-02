@@ -1,0 +1,155 @@
+extend _base
+
+block content
+    h1 Doodad.Popover
+    .example
+        h2 Basic popover (flag-type, top-left origin)
+        script.example_code(type='text/coffeescript').
+            popover = new Doodad.Popover
+                content: [
+                    new Doodad.Button
+                        label: 'Do Stuff'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                            , 1000
+                    new Doodad.Button
+                        label: 'Do Stuff Then Close'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                                popover.hide()
+                            , 1000
+                ]
+            button = new Doodad.Button
+                label: 'Show Flag Popover'
+                action: popover.toggle
+                class: 'warning'
+            doodads.push(button)
+
+
+    .example
+        h2 Basic popover (flag-type, a little shy)
+        script.example_code(type='text/coffeescript').
+            popover = new Doodad.Popover
+                type: 'flag'
+                origin: 'left-top'
+                close_on_outside: true
+                content: [
+                    new Doodad.Button
+                        label: 'Do Stuff'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                            , 1000
+                    new Doodad.Button
+                        label: 'Do Stuff Then Close'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                                popover.hide()
+                            , 1000
+                ]
+            button = new Doodad.Button
+                label: 'Show Flag Popover'
+                action: popover.toggle
+                class: 'warning'
+            doodads.push(button)
+
+    .example
+        h2 Promiscuous popover
+        script.example_code(type='text/coffeescript').
+            popover = new Doodad.Popover
+                type: 'flag'
+                origin: 'bottom-left'
+                solo: false
+                content: [
+                    new Doodad.Button
+                        label: 'Do Stuff'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                            , 1000
+                    new Doodad.Button
+                        label: 'Do Stuff Then Close'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                                popover.hide()
+                            , 1000
+                ]
+            button = new Doodad.Button
+                label: 'Show Flag Popover'
+                action: popover.toggle
+                class: 'warning'
+            doodads.push(button)
+
+    .example
+        h2 Modal popover
+        script.example_code(type='text/coffeescript').
+            modal = new Doodad.Popover
+                type: 'modal'
+                content: [
+                    new Doodad.Tags.P
+                        content: 'Some filler text and stuff.'
+                    new Doodad.Button
+                        label: 'Close Modal'
+                        action: ->
+                            modal.hide()
+                ]
+            button = new Doodad.Button
+                label: 'Show Modal'
+                action: modal.toggle
+            doodads.push(button)
+
+    .example
+        h2 Confirm or dismiss popover
+        script.example_code(type='text/coffeescript').
+            select = new Doodad.Select
+                required: true
+                action: ->
+                css:
+                    'z-index': 3
+                choices: [
+                    {
+                        label: 'Choice 1'
+                        value: 'choice-1'
+                    }
+                    {
+                        label: 'Choice 2'
+                        value: 'choice-2'
+                    }
+                    {
+                        label: 'Choice 3'
+                        value: 'choice-3'
+                    }
+                ]
+            modal = new Doodad.Popover
+                type: 'modal'
+                title: 'I am dismissable'
+                css:
+                    'z-index': 2
+                content: [
+                    select,
+                    new Doodad.Tags.P
+                        content: 'Some filler text and stuff.'
+                ]
+                confirm: 'Okay'
+                dismiss: 'Nevermind'
+            button = new Doodad.Button
+                label: 'Show Modal'
+                action: modal.toggle
+            status = new Doodad.Tags.P()
+            modal.on 'dismiss', ->
+                status.setContent('Dismissed')
+            modal.on 'confirm', ->
+                status.setContent("Confirmed - \#{ select.value }")
+            window.X = status
+            doodads.push([button, status])
+

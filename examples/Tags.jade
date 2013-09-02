@@ -1,0 +1,130 @@
+extend _base
+
+block content
+
+    .example
+        h2 Simple Tags
+        script.example_code(type='text/coffeescript').
+            tags = []
+            tags.push new Doodad.Tags.H1
+                content: 'Some heading 1 content'
+
+            tags.push new Doodad.Tags.H2
+                content: 'Some heading 2 content'
+
+            tags.push new Doodad.Tags.H3
+                content: 'Some heading 3 content'
+
+            tags.push new Doodad.Tags.H4
+                content: 'Some heading 4 content'
+
+            tags.push new Doodad.Tags.H5
+                content: 'Some heading 5 content'
+
+            tags.push new Doodad.Tags.H6
+                content: 'Some heading 6 content'
+
+            tags.push new Doodad.Tags.P
+                content: 'Some paragraph content'
+
+            tags.push new Doodad.Tags.DIV
+                content: 'Some div content'
+
+            tags.push new Doodad.Tags.SPAN
+                content: 'Some span content'
+
+            tags.push new Doodad.Tags.EM
+                content: 'Some em content'
+
+            tags.push new Doodad.Tags.STRONG
+                content: 'Some strong content'
+            doodads.push(tags)
+
+
+    .example
+        h2 Tags-On-Tags
+        script.example_code(type='text/coffeescript').
+            tags = []
+            tags.push new Doodad.Tags.DIV
+                content: [
+                    'Some text content '
+                    new Doodad.Tags.EM
+                        content: 'some em content'
+                    ' more text content '
+                    new Doodad.Tags.STRONG
+                        content: 'some strong content'
+                    new Doodad.Tags.SPAN
+                        content: ' some span content.'
+                ]
+            doodads.push(tags)
+
+
+    .example
+        h2 Tags know their appropriate children
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Tags.UL
+                content: [
+                    'A list item'
+                    new Doodad.Tags.LI
+                        content: new Doodad.Tags.EM
+                            content: 'An em inside a list item'
+                    'Another list item'
+                ]
+
+
+    .example
+        h2 Attributes get passed through
+        script.example_code(type='text/coffeescript').
+            tags = []
+            tags.push new Doodad.Tags.A
+                content: 'A link'
+                href: 'http://example.com'
+            tags.push new Doodad.Tags.IMG
+                title: 'Some kittens'
+                src: 'http://placekitten.com/300/200/'
+                'data-2x': 'http://placekitten.com/600/400/'
+            doodads.push(tags)
+
+
+    .example
+        h2 Doodads-On-Tags
+        script.example_code(type='text/coffeescript').
+            tags = []
+            tags.push new Doodad.Tags.P
+                content: [
+                    'Some text content '
+                    new Doodad.Button
+                        label: 'Button!'
+                        action: ->
+                    ' more text content '
+                    new Doodad.Tags.STRONG
+                        content: 'some strong content'
+                ]
+            doodads.push(tags)
+
+
+    .example
+        h2 Tags and models
+        script.example_code(type='text/coffeescript').
+            model_1 = new Backbone.Model
+                text_content: 'Some dynamic content'
+            p_node = new Doodad.Tags.P
+                content: model_1.get('text_content')
+            model_1.on 'change:text_content', ->
+                p_node.addContent(model_1.get('text_content'))
+
+            model_2 = new Backbone.Model
+                text_content: 'Other dynamic content'
+            text_node = new Doodad.Tags.TextNode
+                content: model_2.get('text_content')
+            model_2.on 'change:text_content', ->
+                text_node.setContent(model_2.get('text_content'))
+
+            button = new Doodad.Button
+                label: 'Change Model'
+                action: ->
+                    x = new Date()
+                    model_1.set('text_content', "Added: \#{ x.getTime() }")
+                    model_2.set('text_content', "Even text nodes: \#{ x.getTime() }")
+            doodads.push([p_node, text_node, new Doodad.Tags.BR(), button])
+

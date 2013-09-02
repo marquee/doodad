@@ -1,0 +1,54 @@
+extend _base
+
+block content
+    h1 Doodad.Select
+
+    .example
+        h2 Drop select
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Select
+                type: 'drop'
+                required: false
+                placeholder: 'Uncategorized'
+                label: 'Category:'
+                action: (this_select) ->
+                    @text("Picked \#{ this_select.value }")
+                choices: [
+                    {
+                        label: 'Category 1'
+                        value: 'category-1'
+                    }
+                    {
+                        label: 'Category 2'
+                        value: 'category-2'
+                        default: true
+                    }
+                    {
+                        label: 'Category 3'
+                        value: 'category-3'
+                    }
+                    {
+                        label: 'Category 4'
+                        value: 'category-4'
+                    }
+                    {
+                        label: 'Category 5'
+                        value: 'category-5'
+                    }
+                    {
+                        label: 'New Category'
+                        value: (self) ->
+                            console.log 'generate custom form'
+                            # on button click, self.setValue()
+                    }
+                ]
+
+
+
+    script(type='text/coffeescript').
+        window.instanceSetup = ($example_el, doodad_instance) ->
+            # Patch the action to use the output element as `this`, and have
+            # it reset after two seconds.
+            old_action = doodad_instance._options.action
+            doodad_instance._options.action = (inst) ->
+                old_action.call($example_el.find('.output'), inst)

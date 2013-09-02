@@ -1,0 +1,37 @@
+extend _base
+
+block content
+    h1 Doodad.Spinner
+
+    .example
+        h2 Basic spinner, inactive
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Spinner
+                auto_hide: false
+
+    .example
+        h2 Basic spinner, activate/deactivate
+        script.example_code(type='text/coffeescript').
+            spinner = new Doodad.Spinner()
+            doodads.push(spinner)
+            setInterval ->
+                if spinner.isActive()
+                    spinner.stop()
+                else
+                    spinner.start()
+            , 2500
+
+    .example
+        h2 Basic spinner, preactivated
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Spinner
+                active: true
+
+    .example-DISABLED
+        h2 Slow spinner
+        script.example_code(type='text/coffeescript').
+            # spinner = new Doodad.Spinner()
+            # doodads.push(spinner)
+            # spinner.start()
+            # spinner.slowDown()
+
