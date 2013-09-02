@@ -1,0 +1,22 @@
+@import 'compass/css3'
+
+$Progress_min_height: 5px !default
+$Progress_light_color: rgba(255,255,255,0.5)
+$Progress_dark_color: rgba(0,0,0,0.5)
+
+.Progress
+    position: relative
+    min-height: $Progress_min_height
+    .Progress_bar
+        position: absolute
+        top: 0
+        left: 0
+        bottom: 0
+
+.Progress-light
+    .Progress_bar
+        background: $Progress_light_color
+
+.Progress-dark
+    .Progress_bar
+        background: $Progress_dark_color

@@ -1,5 +1,6 @@
 BaseDoodad  = require './BaseDoodad'
 
+Progress    = require './subcomponents/Progress'
 Spinner     = require './subcomponents/Spinner'
 Tags        = require './subcomponents/Tags'
 
@@ -19,6 +20,7 @@ Doodad =
     Button      : Button
     Layout      : Layout
     Popover     : Popover
+    Progress    : Progress
     Select      : Select
     Spinner     : Spinner
     StringInput : StringInput
