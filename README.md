@@ -43,8 +43,12 @@ new Button
 
 ## Usage
 
-Include the `doodad.js` and `doodad.css` files in the page. Doodad requires
-Zepto or jQuery, Underscore, and Backbone.
+Include the [`doodad.js`](http://cdn.droptype.com/doodad/doodad-0.1.0-min.js) and
+[`doodad.css`](http://cdn.droptype.com/doodad/doodad-0.1.0-min.css) files in the
+page. Doodad requires [Zepto](http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js)
+or [jQuery](//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js),
+[Underscore](//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js),
+and [Backbone](//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js).
 
 All elements support an `extra_classes` option, which is a string or list of
 strings to add to the element’s `className`.
