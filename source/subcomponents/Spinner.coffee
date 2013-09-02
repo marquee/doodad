@@ -57,7 +57,10 @@ class Spinner extends BaseDoodad
         else
             color = '#fff'
 
-        { width, height } = @getSize()
+        # { width, height } = @getSize()
+
+        width = parseInt(@$el.css('width').replace('px', ''))
+        height = parseInt(@$el.css('height').replace('px', ''))
 
         options = _.extend {
                 radius: width / 4
