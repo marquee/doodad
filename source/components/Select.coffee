@@ -177,8 +177,8 @@ class Select extends BaseDoodad
         @$el.append(@ui.value)
         @$el.append(@ui.choices)
     
-    setValue: (value, label=null) ->
-        console.log 'Select.setValue', value, label
+    # setValue: (value, label=null) ->
+    #     console.log 'Select.setValue', value, label
 
 
 module.exports = Select

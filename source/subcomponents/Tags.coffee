@@ -1,10 +1,4 @@
 ###
-Sometimes you do just need a simple tag. The classes in the Tags module provide 
-wrappers for the standard HTML tags, like P, DIV, H1, and so on, that implement
-the functions that let them interoperate with Doodads. (Only certain tags are
-implemented, mainly the content-oriented ones. Input-oriented tags are of
-course handled by the regular Doodads.)
-
 They also provide convenient points to bind data changes, eg:
     
     p_node = new Doodad.Tags.P
@@ -18,7 +12,7 @@ For Tags that contain content (ie non-self-closing), pass them strings:
     new Doodad.Tags.P
         content: 'Some text'
 
-Or lists of strings, other Tags, or other Doodads (or really anything that
+or lists of strings, other Tags, or other Doodads (or really anything that
 implements a `.render()` method that returns an element to be appended):
 
     new Doodad.Tags.H1
@@ -62,8 +56,6 @@ Additional attributes used are added as HTML attributes:
         content: 'Link Content'
     link.setContent('other content')
     link.addContent('foo')
-
-
 
 TODO:
 
