@@ -1,0 +1,47 @@
+doctype 5
+html
+    head
+        title Doodad v#{ VERSION } Examples: #{ example_name }
+        meta(charset='utf-8')
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js')
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js')
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js')
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js')
+        link(rel='stylesheet',href='../doodad-#{ VERSION }.css')
+        script(src='../doodad-#{ VERSION }.js')
+        style.
+            .example_code {
+                white-space: pre;
+                font-family: Menlo, monospace;
+                font-size: 14px;
+                display: block;
+            }
+    body
+        block content
+
+
+        script.
+            window.doodads = [];
+
+
+        script(type='text/coffeescript').
+            examples = $('.example')
+            examples.find('h2').after """
+                <div class="example_app">
+                    <div class="output"></div>
+                </div>
+            """
+
+            window.exampleSetup?()
+
+            _.each doodads, (doodad_set, i) ->
+                console.log doodad_set, i
+                $example_el = $(examples[i])
+                unless _.isArray(doodad_set)
+                    doodad_set = [doodad_set]
+                doodad_set.reverse()
+                example_timeout = null
+                _.each doodad_set, (doodad_instance) ->
+                    # Add the doodad_instance to the DOM
+                    $example_el.find('.example_app').prepend(doodad_instance.render())
+                    window.instanceSetup?($example_el, doodad_instance)

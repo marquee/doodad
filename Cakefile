@@ -5,6 +5,7 @@ fs                  = require 'fs'
 Walker              = require 'walker'
 Sqwish              = require 'sqwish'
 UglifyJS            = require 'uglify-js'
+jade                = require 'jade'
 
 VERSION = JSON.parse(fs.readFileSync('package.json')).version
 
@@ -13,16 +14,14 @@ PROJECT_ROOT = path.join(path.dirname(fs.realpathSync(__filename)))
 SOURCE_FOLDER   = path.join(PROJECT_ROOT, 'source/')
 BUILD_FOLDER    = path.join(PROJECT_ROOT, 'build/')
 OUTPUT_FOLDER   = path.join(PROJECT_ROOT, 'dist/')
+EXAMPLE_SOURCE_FOLDER = path.join(PROJECT_ROOT, 'examples/')
+EXAMPLE_OUTPUT_FOLDER = path.join(OUTPUT_FOLDER, 'examples/')
 
 JS_LIB_NAME             = "doodad-#{ VERSION }.js"
 CSS_LIB_NAME            = "doodad-#{ VERSION }.css"
+SASS_LIB_NAME           = "doodad-#{ VERSION }.sass"
 MIN_JS_LIB_NAME         = "doodad-#{ VERSION }-min.js"
 MIN_CSS_LIB_NAME        = "doodad-#{ VERSION }-min.css"
-JS_BARE_LIB_NAME        = "doodad.js"
-CSS_BARE_LIB_NAME       = "doodad.css"
-MIN_JS_BARE_LIB_NAME    = "doodad-min.js"
-MIN_CSS_BARE_LIB_NAME   = "doodad-min.css"
-
 
 
 TO_COPY = ['images',]     # relative to SOURCE_FOLDER
@@ -56,6 +55,26 @@ task 'flush_static', 'Empty the static directory', (opts) ->
     { quiet } = opts
     flushStatic()
 
+task 'build:examples', '', (opts) ->
+    fs.readdir EXAMPLE_SOURCE_FOLDER, (err, files) ->
+        files.forEach (file) ->
+            filename_parts = file.split('.')
+            if filename_parts.pop() is 'jade' and file[0] isnt '_'
+                options =
+                    VERSION: VERSION
+                    example_name: filename_parts.join('.')
+                jade.renderFile path.join(EXAMPLE_SOURCE_FOLDER, file), options, (err, data) ->
+                    throw err if err?
+                    filename_parts.push('html')
+                    outfile = filename_parts.join('.')
+                    fs.writeFile path.join(EXAMPLE_OUTPUT_FOLDER, outfile), data, (err) ->
+                        console.log 'wrote', outfile
+                        throw err if err?
+
+
+# var html = jade.renderFile('path/to/file.jade', options);
+
+
 task 'build:scripts', '', (opts) ->
     coffee_builder = spawn 'coffee', ['--output', BUILD_FOLDER, '--compile', SOURCE_FOLDER]
     captureOutput coffee_builder, 'COFFEE', ->
@@ -66,15 +85,13 @@ task 'build:scripts', '', (opts) ->
         browserify = require 'browserify'
         b = browserify()
         b.add(path.join(index_file))
-        output_file = path.join(OUTPUT_FOLDER, JS_BARE_LIB_NAME)
+        output_file = path.join(OUTPUT_FOLDER, JS_LIB_NAME)
         output_stream = fs.createWriteStream(output_file)
         b.bundle (err, src) ->
-            src = jsSourcePrefix(src)
-            fs.writeFile output_file, src, (err) ->
+            fs.writeFile output_file, jsSourcePrefix(src), (err) ->
                 throw err if err?
-        # unminified = fs.readFileSync(output_file).toString())
-        # minified = _minifyJS(unminified)
-        # fs.writeFile(path.join(OUTPUT_FOLDER, MIN_JS_BARE_LIB_NAME), minified, ->)
+            minified = _minifyJS(src)
+            fs.writeFile(path.join(OUTPUT_FOLDER, MIN_JS_LIB_NAME), jsSourcePrefix(minified), ->)
 
 
 task 'build:sass', '', (opts) ->
@@ -106,8 +123,8 @@ task 'build:sass', '', (opts) ->
                     lines_to_concatenate.push(contents...)
             num_folders_processed += 1
             if num_folders_processed is folders_to_process.length
-                lines_to_concatenate.unshift("/* Doodad v#{ VERSION } */")
-                fs.writeFileSync(path.join(OUTPUT_FOLDER, 'doodad.sass'), lines_to_concatenate.join('\n'))
+                lines_to_concatenate = sassSourcePrefix(lines_to_concatenate.join('\n'))
+                fs.writeFileSync(path.join(OUTPUT_FOLDER, SASS_LIB_NAME), lines_to_concatenate)
 
 
 
@@ -121,6 +138,7 @@ task 'build', 'Compile the static source (coffee/sass) and put it into static/',
         copyFolders ->
             invoke 'build:scripts'
             invoke 'build:sass'
+            invoke 'build:examples'
 
             compassOptions = ['compile', '--force']
 
@@ -136,8 +154,9 @@ task 'build', 'Compile the static source (coffee/sass) and put it into static/',
             compass_builder = spawn 'compass', compassOptions
             captureOutput compass_builder, 'COMPASS', ->
                 unminified = fs.readFileSync(path.join(BUILD_FOLDER, 'index.css')).toString()
-                # minified = Sqwish.minify(unminified)
-                fs.writeFile(path.join(OUTPUT_FOLDER, CSS_BARE_LIB_NAME), unminified, ->)
+                minified = Sqwish.minify(unminified)
+                fs.writeFile(path.join(OUTPUT_FOLDER, CSS_LIB_NAME), cssSourcePrefix(unminified), ->)
+                fs.writeFile(path.join(OUTPUT_FOLDER, MIN_CSS_LIB_NAME), cssSourcePrefix(minified), ->)
 
 
 task 'watch', 'Build, then watch the static source (coffee/sass) for changes', (opts) ->
@@ -194,6 +213,7 @@ flushStatic = (cb) ->
     after2 =  ->
         fs.mkdirSync(BUILD_FOLDER)
         fs.mkdirSync(OUTPUT_FOLDER)
+        fs.mkdirSync(EXAMPLE_OUTPUT_FOLDER)
         cb?()
 
     # The folder may not exist and removing it causes an error.
@@ -222,8 +242,23 @@ doodad_source_prefix = """
     Doodad v#{ VERSION }
     Public Domain, https://github.com/droptype/doodad
     #{ build_date.getFullYear() }-#{ build_date.getMonth() + 1 }-#{ build_date.getDate() }
-    
 """
+sassSourcePrefix = (source) ->
+    return """
+    // Doodad v#{ VERSION }
+    // Public Domain, https://github.com/droptype/doodad
+    // #{ build_date.getFullYear() }-#{ build_date.getMonth() + 1 }-#{ build_date.getDate() }
+    
+    #{ source }
+    """
+
+cssSourcePrefix = (source) ->
+    return """
+    /*
+    #{ doodad_source_prefix }
+    */
+    #{ source }
+    """
 
 jsSourcePrefix = (source) ->
     return """
@@ -233,7 +268,6 @@ jsSourcePrefix = (source) ->
     Contains a copy of spin.js, http://fgnass.github.io/spin.js
     Copyright (c) 2011-2013 Felix Gnass
     Licensed under the MIT license
-
     */
 
     #{ source }

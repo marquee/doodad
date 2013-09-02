@@ -1,0 +1,26 @@
+extend _base
+
+block content
+    h1 Doodad.Button
+
+    .example
+        h2 Basic button
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Button
+                label: 'Do Something'
+                action: (this_button) ->
+                    @text('Something done!')
+
+
+    script(type='text/coffeescript').
+        window.instanceSetup = ($example_el, doodad_instance) ->
+            # Patch the action to use the output element as `this`, and have
+            # it reset after two seconds.
+            old_action = doodad_instance._options.action
+            doodad_instance._options.action = (inst) ->
+                old_action.call($example_el.find('.output'), inst)
+                clearTimeout(example_timeout)
+                example_timeout = setTimeout ->
+                    $example_el.find('.output').text('')
+                , 2000
+            console.log 'patched', doodad_instance
