@@ -171,8 +171,8 @@ class Tag extends BaseDoodad
     # Returns self for chaining.
     addContent: (contents...) =>
         _.each contents, (child_content) =>
-            if _.isString(child_content)
-                child = new @constructor._default_child(content: child_content)
+            if _.isString(child_content) or _.isNumber(child_content)
+                child = new @constructor._default_child(content: child_content.toString())
             else
                 child = child_content
             @_contents.push(child)

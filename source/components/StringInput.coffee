@@ -62,8 +62,6 @@ class StringInput extends BaseDoodad
         @on(event, handler) for event, handler of @_options.on
 
         @render()
-        unless @_options.enabled
-            @disable() 
 
     # Private: Apply the necessary classes to the element.
     #
@@ -72,7 +70,11 @@ class StringInput extends BaseDoodad
         class_list = []
         # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
         if @_options.tokenize?
-            class_list.push('StringInput_tokenize')
+            class_list.push('StringInput-tokenize')
+
+        if @_options.multiline
+            class_list.push('StringInput-multiline')
+
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
  
@@ -97,15 +99,15 @@ class StringInput extends BaseDoodad
             @_ui.tokens = @$el.find('.StringInput_tokens')
         else if @_options.multiline
             @$el.html """
-                    <label class="StringInput_label">
-                        #{ @_options.label }
+                    <label>
+                        <span class="StringInput_label">#{ @_options.label }</span>
                         <textarea class="StringInput_input" placeholder="#{ @_options.placeholder }"></textarea>
                     </label>
                 """
         else
             @$el.html """
-                    <label class="StringInput_label">
-                        #{ @_options.label }
+                    <label>
+                        <span class="StringInput_label">#{ @_options.label }</span>
                         <input class="StringInput_input" placeholder="#{ @_options.placeholder }">
                     </label>
                 """
@@ -116,10 +118,12 @@ class StringInput extends BaseDoodad
         else
             if @_options.char_limit or @_options.word_limit
                 @_ui.limit_counter = $('<span class="StringInput_counter"></span>')
-                @$el.find('.StringInput_label').append(@_ui.limit_counter)
+                @$el.find('label').append(@_ui.limit_counter)
                 @_updateCharCount()
             @_ui.input.val(@value)
         @delegateEvents()
+        unless @_options.enabled
+            @disable()
         return @el
  
     # Public: Set the StringInput state to disabled.

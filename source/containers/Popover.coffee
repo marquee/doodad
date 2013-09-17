@@ -57,7 +57,7 @@ class Popover extends BaseDoodad
             on                  : {}
         , options
 
-        if @_options.type is 'flag'
+        if @_options.type.indexOf('flag') isnt -1
             if not @_options.origin?
                 @_options.origin = 'top-left'
 
@@ -69,7 +69,7 @@ class Popover extends BaseDoodad
 
     _setClasses: ->
         super()
-        if @_options.type is 'flag'
+        if @_options.type.indexOf('flag') isnt -1
             @$el.addClass("#{ @className }-#{ @_options.origin }")
 
     render: =>
@@ -83,7 +83,6 @@ class Popover extends BaseDoodad
             @ui.content.append(item.render())
         if @_options.dismiss or @_options.confirm
             @ui.controls = $('<div class="Popover_controls"></div>')
-            console.log @_options.confirm, @_options.dismiss
             if @_options.dismiss
                 unless @_options.dismiss.render?
                     @_options.dismiss = new Button
@@ -209,7 +208,10 @@ class Popover extends BaseDoodad
                     popover.hide()
         @ui.content.css('opacity', 0)
         _.defer =>
-            @setPosition(trigger?.getPosition())
+            if @_options.type.indexOf('fixed') is -1
+                @setPosition(trigger?.getPosition())
+            else
+                @setPosition(trigger?.getScreenPosition())
             @ui.content.css('opacity', 1)
 
     hide: =>

@@ -5,155 +5,114 @@ block content
 
 
     .example
-        h2 Basic popover (flag-type, top-left origin)
+        h2 Basic input
         script.example_code(type='text/coffeescript').
-            popover = new Doodad.Popover
-                content: [
-                    new Doodad.Button
-                        label: 'Do Stuff'
-                        spinner: true
-                        action: (self) ->
-                            setTimeout ->
-                                self.enable()
-                            , 1000
-                    new Doodad.Button
-                        label: 'Do Stuff Then Close'
-                        spinner: true
-                        action: (self) ->
-                            setTimeout ->
-                                self.enable()
-                                popover.hide()
-                            , 1000
-                ]
-            button = new Doodad.Button
-                label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
-            doodads.push(button)
-
+            doodads.push new Doodad.StringInput
+                label: 'Some String'
+                placeholder: 'Placeholder'
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
 
     .example
-        h2 Basic popover (flag-type, a little shy)
+        h2 Disabled input
         script.example_code(type='text/coffeescript').
-            popover = new Doodad.Popover
-                type: 'flag'
-                origin: 'left-top'
-                close_on_outside: true
-                content: [
-                    new Doodad.Button
-                        label: 'Do Stuff'
-                        spinner: true
-                        action: (self) ->
-                            setTimeout ->
-                                self.enable()
-                            , 1000
-                    new Doodad.Button
-                        label: 'Do Stuff Then Close'
-                        spinner: true
-                        action: (self) ->
-                            setTimeout ->
-                                self.enable()
-                                popover.hide()
-                            , 1000
-                ]
-            button = new Doodad.Button
-                label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
-            doodads.push(button)
-
+            doodads.push new Doodad.StringInput
+                label: 'Some String'
+                value: 'Immutable field'
+                enabled: false
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
 
     .example
-        h2 Solo popover
+        h2 Multiline input
         script.example_code(type='text/coffeescript').
-            popover = new Doodad.Popover
-                type: 'flag'
-                origin: 'bottom-left'
-                solo: true
-                content: [
-                    new Doodad.Button
-                        label: 'Do Stuff'
-                        spinner: true
-                        action: (self) ->
-                            setTimeout ->
-                                self.enable()
-                            , 1000
-                    new Doodad.Button
-                        label: 'Do Stuff Then Close'
-                        spinner: true
-                        action: (self) ->
-                            setTimeout ->
-                                self.enable()
-                                popover.hide()
-                            , 1000
-                ]
-            button = new Doodad.Button
-                label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
-            doodads.push(button)
-
+            doodads.push new Doodad.StringInput
+                label: 'Some Text'
+                multiline: true
+                value: 'Multiline\ntext'
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
 
     .example
-        h2 Modal popover
+        h2 Tokenized input
         script.example_code(type='text/coffeescript').
-            modal = new Doodad.Popover
-                type: 'modal'
-                content: [
-                    new Doodad.Tags.P
-                        content: 'Some filler text and stuff.'
-                    new Doodad.Button
-                        label: 'Close Modal'
-                        action: ->
-                            modal.hide()
-                ]
-            button = new Doodad.Button
-                label: 'Show Modal'
-                action: modal.toggle
-            doodads.push(button)
-
+            doodads.push new Doodad.StringInput
+                label: 'Some Tokens'
+                placeholder: 'Enter tags (press enter)'
+                tokenize: true
+                on:
+                    change: (self, val) ->
+                        @demo_text(val.toString())
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
 
     .example
-        h2 Confirm or dismiss popover
+        h2 Limited input, characters
         script.example_code(type='text/coffeescript').
-            select = new Doodad.Select
-                required: true
-                action: ->
-                css:
-                    'z-index': 3
-                choices: [
-                    {
-                        label: 'Choice 1'
-                        value: 'choice-1'
-                    }
-                    {
-                        label: 'Choice 2'
-                        value: 'choice-2'
-                    }
-                    {
-                        label: 'Choice 3'
-                        value: 'choice-3'
-                    }
-                ]
-            modal = new Doodad.Popover
-                type: 'modal'
-                title: 'I am dismissable'
-                css:
-                    'z-index': 2
-                content: [
-                    select,
-                    new Doodad.Tags.P
-                        content: 'Some filler text and stuff.'
-                ]
-                confirm: 'Okay'
-                dismiss: 'Nevermind'
-            button = new Doodad.Button
-                label: 'Show Modal'
-                action: modal.toggle
-            status = new Doodad.Tags.P()
-            modal.on 'dismiss', ->
-                status.setContent('Dismissed')
-            modal.on 'confirm', ->
-                status.setContent("Confirmed - \#{ select.value }")
-            window.X = status
-            doodads.push([button, status])
+            doodads.push new Doodad.StringInput
+                label: 'Only a little bit of text'
+                char_limit: 100
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Limited input, words
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringInput
+                label: 'A few words'
+                word_limit: 20
+                multiline: true
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Softly limited input, words
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringInput
+                label: 'A few words'
+                word_limit: '~20'
+                multiline: true
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    script(type='text/coffeescript').
+        _.each doodads, (doodad_set, i) ->
+            $example_el = $($('.example').get(i))
+            unless _.isArray(doodad_set)
+                doodad_set = [doodad_set]
+            _.each doodad_set, (doodad_instance) ->    
+                doodad_instance.demo_text = (val) ->
+                    $example_el.find('.output').text(val)
+    

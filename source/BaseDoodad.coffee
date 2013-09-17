@@ -22,10 +22,9 @@ class BaseDoodad extends View
         # @_configure()
         # @_setClasses()
 
-    # Public: Get the center position of the element.
+    # Public: Get the center position of the element relative to the document.
     #
-    # Returns an object with the x and y coordinates of the center, relative
-    # to the document.
+    # Returns an object with the x and y coordinates of the center.
     getPosition: =>
         { top, left } = @$el.offset()
         width = @$el.width()
@@ -33,6 +32,16 @@ class BaseDoodad extends View
         x = left + width / 2
         y = top + height / 2
         return { x:x, y:y }
+
+
+    # Public: Get the center position of the element relative to the screen.
+    #
+    # Returns an object with the x and y coordinates of the center.
+    getScreenPosition: =>
+        pos = @getPosition()
+        pos.y -= $(window).scrollTop()
+        return pos
+
 
     # Public: Get the dimensions of the entire element.
     #
@@ -102,7 +111,10 @@ class BaseDoodad extends View
     _setClasses: ->
 
         # Create the primary classes from the type
-        class_list = @_options.type.split('+')
+        class_list = []
+
+        for c in @_options.type.split('+')
+            class_list.push(c.split('-')...)
         if @_options.class?.length > 0
             class_list.push(@_options.class.split(' ')...)
 
