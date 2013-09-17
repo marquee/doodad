@@ -12,11 +12,32 @@ block content
                     @text('Something done!')
 
     .example
+        h2 Bare button
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Button
+                label: 'Do Something'
+                type: 'text-bare'
+                action: (this_button) ->
+                    @text('Something done!')
+
+
+    .example
         h2 Classy buttons
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
                     type: 'text'
+                    class: class_
+                    label: "Do something \#{ class_ }"
+                    action: (this_button) ->
+                        @text("Something \#{ class_ } done!")
+
+    .example
+        h2 Classy, naked buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
+                return new Doodad.Button
+                    type: 'text-bare'
                     class: class_
                     label: "Do something \#{ class_ }"
                     action: (this_button) ->
@@ -45,6 +66,17 @@ block content
                         @text("Something \#{ class_ } done!")
 
     .example
+        h2 Naken Icon buttons
+        script.example_code(type='text/coffeescript').
+            doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
+                return new Doodad.Button
+                    type: 'icon-bare'
+                    class: class_
+                    label: "Do something \#{ class_ }"
+                    action: (this_button) ->
+                        @text("Something \#{ class_ } done!")
+
+    .example
         h2 Dynamic label buttons
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
@@ -57,7 +89,7 @@ block content
     .example
         h2 Spinner buttons
         script.example_code(type='text/coffeescript').
-            doodads.push ['icon', 'text', 'icon+text'].map (type) ->
+            doodads.push ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
                 return new Doodad.Button
                     type: type
                     label: "Do something"

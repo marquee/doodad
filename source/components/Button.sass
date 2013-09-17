@@ -8,6 +8,7 @@ $Button_icon_width      : 26px !default
 $Button_icon_height     : 26px !default
 $Button_spinner_width   : 22px !default
 $Button_spinner_height  : 22px !default
+$Button_bare_weight     : 700 !default
 
 $Button_internal_padding: 7px !default
 $Button_label_padding: 10px !default
@@ -37,7 +38,7 @@ $Button_font_size: 14px !default
         width: $Button_icon_width
         height: $Button_icon_height
         display: block
-    +transition-property('padding-right, background')
+    +transition-property('padding-right, background, color')
     +transition-duration(0.2s)
     &.Button-spinner
         .Spinner
@@ -93,74 +94,129 @@ $Button_action_disabled_background      : $disabled_color !default
 
 // TODO: move this to theme
 .Button
-    +border-radius($Button_border_radius)
-    background: $Button_default_background
-    color: $Button_font_color
     font-family: $Button_font_family
     font-size: $Button_font_size
     border: 0
-    &:hover:not(:disabled)
-        background: $Button_default_hover_background
-    &:active:not(:disabled)
-        background: $Button_default_active_background
-    &:disabled
-        background: $Button_default_disabled_background
-
-    $icon_dangerous_image: $icon_dangerous_light_image !default
-    $icon_warning_image: $icon_warning_light_image !default
-    $icon_friendly_image: $icon_friendly_light_image !default
-    $icon_action_image: $icon_action_light_image !default
-    $icon_default_image: $icon_default_light_image !default
-
-
 
     .Button_icon_display
-        background-image: $icon_default_image
         +background-size(contain)
         background-repeat: no-repeat
         background-position: center
 
+    &:not(.Button-bare)
+        +border-radius($Button_border_radius)
+        background: $Button_default_background
+        color: $Button_font_color
+        &:hover:not(:disabled)
+            background: $Button_default_hover_background
+        &:active:not(:disabled)
+            background: $Button_default_active_background
+        &:disabled
+            background: $Button_default_disabled_background
+
+        $icon_dangerous_image: $icon_dangerous_light_image !default
+        $icon_warning_image: $icon_warning_light_image !default
+        $icon_friendly_image: $icon_friendly_light_image !default
+        $icon_action_image: $icon_action_light_image !default
+        $icon_default_image: $icon_default_light_image !default
+
+        .Button_icon_display
+            background-image: $icon_default_image
+
+        &.Button-friendly
+            background: $Button_friendly_background
+            &:hover:not(:disabled)
+                background: $Button_friendly_hover_background
+            &:active:not(:disabled)
+                background: $Button_friendly_active_background
+            &:disabled
+                background: $Button_friendly_disabled_background
+            .Button_icon_display
+                background-image: $icon_friendly_image
+
+        &.Button-dangerous
+            background: $Button_dangerous_background
+            &:hover:not(:disabled)
+                background: $Button_dangerous_hover_background
+            &:active:not(:disabled)
+                background: $Button_dangerous_active_background
+            &:disabled
+                background: $Button_dangerous_disabled_background
+            .Button_icon_display
+                background-image: $icon_dangerous_image
+
+        &.Button-warning
+            background: $Button_warning_background
+            &:hover:not(:disabled)
+                background: $Button_warning_hover_background
+            &:active:not(:disabled)
+                background: $Button_warning_active_background
+            &:disabled
+                background: $Button_warning_disabled_background
+            .Button_icon_display
+                background-image: $icon_warning_image
+
+        &.Button-action
+            background: $Button_action_background
+            &:hover:not(:disabled)
+                background: $Button_action_hover_background
+            &:active:not(:disabled)
+                background: $Button_action_active_background
+            &:disabled
+                background: $Button_action_disabled_background
+            .Button_icon_display
+                background-image: $icon_action_image
+
+
+.Button.Button-bare
+    $icon_bare_dangerous_image: $icon_dangerous_dark_image !default
+    $icon_bare_warning_image: $icon_warning_dark_image !default
+    $icon_bare_friendly_image: $icon_friendly_dark_image !default
+    $icon_bare_action_image: $icon_action_dark_image !default
+    $icon_bare_default_image: $icon_default_dark_image !default
+    background: transparent
+    color: $default_color
+    font-weight: $Button_bare_weight
+    -webkit-font-smoothing: antialiased
+    &:hover, &:active
+        background: transparent
+    &:hover:not(:disabled)
+        color: lighten($default_color, 10)
+    &:active:not(:disabled)
+        color: darken($default_color, 10)
+    &:disabled
+        color: $disabled_color
+    .Button_icon_display
+        background-image: $icon_bare_default_image
     &.Button-friendly
-        background: $Button_friendly_background
+        color: $friendly_color
         &:hover:not(:disabled)
-            background: $Button_friendly_hover_background
+            color: lighten($friendly_color, 10)
         &:active:not(:disabled)
-            background: $Button_friendly_active_background
-        &:disabled
-            background: $Button_friendly_disabled_background
+            color: darken($friendly_color, 10)
         .Button_icon_display
-            background-image: $icon_friendly_image
-
+            background-image: $icon_bare_friendly_image
     &.Button-dangerous
-        background: $Button_dangerous_background
+        color: $dangerous_color
         &:hover:not(:disabled)
-            background: $Button_dangerous_hover_background
+            color: lighten($dangerous_color, 10)
         &:active:not(:disabled)
-            background: $Button_dangerous_active_background
-        &:disabled
-            background: $Button_dangerous_disabled_background
+            color: darken($dangerous_color, 10)
         .Button_icon_display
-            background-image: $icon_dangerous_image
-
+            background-image: $icon_bare_dangerous_image
     &.Button-warning
-        background: $Button_warning_background
+        color: $warning_color
         &:hover:not(:disabled)
-            background: $Button_warning_hover_background
+            color: lighten($warning_color, 10)
         &:active:not(:disabled)
-            background: $Button_warning_active_background
-        &:disabled
-            background: $Button_warning_disabled_background
+            color: darken($warning_color, 10)
         .Button_icon_display
-            background-image: $icon_warning_image
-
+            background-image: $icon_bare_warning_image
     &.Button-action
-        background: $Button_action_background
+        color: $action_color
         &:hover:not(:disabled)
-            background: $Button_action_hover_background
+            color: lighten($action_color, 10)
         &:active:not(:disabled)
-            background: $Button_action_active_background
-        &:disabled
-            background: $Button_action_disabled_background
+            color: darken($action_color, 10)
         .Button_icon_display
-            background-image: $icon_action_image
-
+            background-image: $icon_bare_action_image

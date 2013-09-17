@@ -52,7 +52,7 @@ class Button extends BaseDoodad
 
         if @_options.spinner
             @_spinner = new Spinner
-                variant: 'light'
+                variant: if @_options.type.indexOf('bare') is -1 then 'light' else 'dark'
         @render()
 
     # Private: Check that the required options were passed to the constructor.
@@ -60,7 +60,7 @@ class Button extends BaseDoodad
     #
     # Returns nothing.
     _validateOptions: ->
-        if not @_options.type in ['text', 'icon', 'icon+text']
+        if not @_options.type in ['text', 'icon', 'icon+text', 'text-bare', 'icon-bare', 'icon+text-bare']
             throw new Error "Button type must be one of 'text', 'icon', 'icon+text', got #{ @_options.type }."
         if @_options.type is 'text' and not @_options.label
             throw new Error "Buttons of type='text' MUST have a label set."
@@ -86,7 +86,7 @@ class Button extends BaseDoodad
         if @_options.label
             @$el.append('<span class="Button_label"></span>')
             @setLabel(@_options.label)
-        if @_options.type in ['icon', 'icon+text']
+        if @_options.type.indexOf('icon') isnt -1
             @$el.prepend('<div class="Button_icon_display"></div>')
         if @_options.spinner
             @$el.append(@_spinner.render())
@@ -143,7 +143,7 @@ class Button extends BaseDoodad
     #
     # Returns self for chaining.
     setLabel: (label) =>
-        if @_options.type is 'icon'
+        if @_options.type in ['icon', 'icon-bare']
             @$el.attr('title', label)
         else
             @$el.find('.Button_label').text(label)

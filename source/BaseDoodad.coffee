@@ -102,7 +102,10 @@ class BaseDoodad extends View
     _setClasses: ->
 
         # Create the primary classes from the type
-        class_list = @_options.type.split('+')
+        class_list = []
+
+        for c in @_options.type.split('+')
+            class_list.push(c.split('-')...)
         if @_options.class?.length > 0
             class_list.push(@_options.class.split(' ')...)
 
