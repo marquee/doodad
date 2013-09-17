@@ -12,11 +12,11 @@ block content
                 placeholder: 'Placeholder'
                 on:
                     change: (self, val) ->
-                        @_demo_text(val)
+                        @demo_text(val)
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
 
     .example
         h2 Disabled input
@@ -27,11 +27,11 @@ block content
                 enabled: false
                 on:
                     change: (self, val) ->
-                        @_demo_text(val)
+                        @demo_text(val)
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
 
     .example
         h2 Multiline input
@@ -42,11 +42,11 @@ block content
                 value: 'Multiline\ntext'
                 on:
                     change: (self, val) ->
-                        @_demo_text(val)
+                        @demo_text(val)
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
 
     .example
         h2 Tokenized input
@@ -57,11 +57,11 @@ block content
                 tokenize: true
                 on:
                     change: (self, val) ->
-                        @_demo_text(val.toString())
+                        @demo_text(val.toString())
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
 
     .example
         h2 Limited input, characters
@@ -71,11 +71,11 @@ block content
                 char_limit: 100
                 on:
                     change: (self, val) ->
-                        @_demo_text(val)
+                        @demo_text(val)
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
 
     .example
         h2 Limited input, words
@@ -86,11 +86,11 @@ block content
                 multiline: true
                 on:
                     change: (self, val) ->
-                        @_demo_text(val)
+                        @demo_text(val)
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
 
     .example
         h2 Softly limited input, words
@@ -101,8 +101,18 @@ block content
                 multiline: true
                 on:
                     change: (self, val) ->
-                        @_demo_text(val)
+                        @demo_text(val)
                     blur: (self, val) ->
-                        @_demo_text('blurred')
+                        @demo_text('blurred')
                     focus: (self, val) ->
-                        @_demo_text('focused')
+                        @demo_text('focused')
+
+    script(type='text/coffeescript').
+        _.each doodads, (doodad_set, i) ->
+            $example_el = $($('.example').get(i))
+            unless _.isArray(doodad_set)
+                doodad_set = [doodad_set]
+            _.each doodad_set, (doodad_instance) ->    
+                doodad_instance.demo_text = (val) ->
+                    $example_el.find('.output').text(val)
+    
