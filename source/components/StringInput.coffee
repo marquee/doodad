@@ -62,8 +62,6 @@ class StringInput extends BaseDoodad
         @on(event, handler) for event, handler of @_options.on
 
         @render()
-        unless @_options.enabled
-            @disable() 
 
     # Private: Apply the necessary classes to the element.
     #
@@ -124,6 +122,8 @@ class StringInput extends BaseDoodad
                 @_updateCharCount()
             @_ui.input.val(@value)
         @delegateEvents()
+        unless @_options.enabled
+            @disable()
         return @el
  
     # Public: Set the StringInput state to disabled.
