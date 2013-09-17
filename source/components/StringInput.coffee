@@ -101,15 +101,15 @@ class StringInput extends BaseDoodad
             @_ui.tokens = @$el.find('.StringInput_tokens')
         else if @_options.multiline
             @$el.html """
-                    <label class="StringInput_label">
-                        #{ @_options.label }
+                    <label>
+                        <span class="StringInput_label">#{ @_options.label }</span>
                         <textarea class="StringInput_input" placeholder="#{ @_options.placeholder }"></textarea>
                     </label>
                 """
         else
             @$el.html """
-                    <label class="StringInput_label">
-                        #{ @_options.label }
+                    <label>
+                        <span class="StringInput_label">#{ @_options.label }</span>
                         <input class="StringInput_input" placeholder="#{ @_options.placeholder }">
                     </label>
                 """
@@ -120,7 +120,7 @@ class StringInput extends BaseDoodad
         else
             if @_options.char_limit or @_options.word_limit
                 @_ui.limit_counter = $('<span class="StringInput_counter"></span>')
-                @$el.find('.StringInput_label').append(@_ui.limit_counter)
+                @$el.find('label').append(@_ui.limit_counter)
                 @_updateCharCount()
             @_ui.input.val(@value)
         @delegateEvents()
