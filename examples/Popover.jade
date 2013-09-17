@@ -2,6 +2,8 @@ extend _base
 
 block content
     h1 Doodad.Popover
+
+
     .example
         h2 Basic popover (flag-type, top-left origin)
         script.example_code(type='text/coffeescript').
@@ -60,6 +62,7 @@ block content
                 class: 'warning'
             doodads.push(button)
 
+
     .example
         h2 Promiscuous popover
         script.example_code(type='text/coffeescript').
@@ -90,6 +93,7 @@ block content
                 class: 'warning'
             doodads.push(button)
 
+
     .example
         h2 Modal popover
         script.example_code(type='text/coffeescript').
@@ -107,6 +111,36 @@ block content
                 label: 'Show Modal'
                 action: modal.toggle
             doodads.push(button)
+
+
+    .example
+        h2 Fixed popover
+        script.example_code(type='text/coffeescript').
+            popover = new Doodad.Popover
+                type: 'flag-fixed'
+                content: [
+                    new Doodad.Button
+                        label: 'Do Stuff'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                            , 1000
+                    new Doodad.Button
+                        label: 'Do Stuff Then Close'
+                        spinner: true
+                        action: (self) ->
+                            setTimeout ->
+                                self.enable()
+                                popover.hide()
+                            , 1000
+                ]
+            button = new Doodad.Button
+                label: 'Show Flag Popover'
+                action: popover.toggle
+                class: 'warning'
+            doodads.push(button)
+
 
     .example
         h2 Confirm or dismiss popover
