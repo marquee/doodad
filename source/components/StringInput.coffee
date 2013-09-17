@@ -72,7 +72,7 @@ class StringInput extends BaseDoodad
         class_list = []
         # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
         if @_options.tokenize?
-            class_list.push('StringInput_tokenize')
+            class_list.push('StringInput-tokenize')
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
  
