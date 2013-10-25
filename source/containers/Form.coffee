@@ -59,11 +59,18 @@ new Form
 
 BaseDoodad = require '../BaseDoodad'
 Button = require '../components/Button'
+{ DIV, P } = require '../subcomponents/Tags'
 
 # Track all the popovers active, so soloing is possible. The popovers are
 # tracked by their cid ()
 active_popovers = {}
 
+
+class FormLabel extends DIV
+    className: 'FormLabel'
+
+class FormText extends P
+    className: 'FormText'
 
 class Form extends BaseDoodad
     className: 'Form'
@@ -209,6 +216,7 @@ class Form extends BaseDoodad
                 @enable()
                 kwargs.success?(@model)
 
-
+Form.FormLabel = FormLabel
+Form.FormText = FormText
 
 module.exports = Form

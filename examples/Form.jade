@@ -58,6 +58,8 @@ block content
                     new Doodad.Form
                         visible: false
                         content: [
+                            new Doodad.Form.FormLabel
+                                content: 'Nested Form:'
                             new Doodad.StringInput
                                 name: 'other_field'
                                 multiline: true
@@ -77,6 +79,8 @@ block content
                                 label: 'Tokens'
                                 name: 'token_field'
                                 tokenize: true
+                            new Doodad.Form.FormText
+                                content: 'This nested form is hidden by default. It also has a FormLabel and a FormText.'
                         ]
                 ]
 
@@ -139,9 +143,10 @@ block content
     .example
         h2 Form shortcuts
         script.example_code(type='text/coffeescript').
-            { dform, dstringinput, dselect } = Doodad.Shortcuts
+            { dform, dstringinput, dselect, dformlabel, dformtext } = Doodad.Shortcuts
             new_form = dform 'form_name',
                 dstringinput 'some_field'
+                dformlabel 'Additional fields:'
                 dstringinput 'other_field', label: 'Other Field', multiline: true, placeholder: 'Text goes here'
                 dselect 'prop', placeholder: 'A Field', [
                     { label: 'Category 1', value: 'category-1' }
@@ -150,6 +155,8 @@ block content
                 dstringinput
                     label: 'Tokens'
                     tokenize: true
+                dformlabel 'Info'
+                dformtext 'This is some helpful information about the form'
                 new Doodad.Button
                     label: 'Toggle Something'
                     action: ->

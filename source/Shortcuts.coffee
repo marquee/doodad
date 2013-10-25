@@ -31,6 +31,18 @@ module.exports.dstringinput = (name, args...) ->
 
 
 
+module.exports.dformtext = (content) ->
+    return new Form.FormText
+        content: content
+
+
+
+module.exports.dformlabel = (content) ->
+    return new Form.FormLabel
+        content: content
+
+
+
 module.exports.dselect = (name, args...) ->
     options = {}
     unless _.isString(name)
