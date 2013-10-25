@@ -113,8 +113,10 @@ class BaseDoodad extends View
         # Create the primary classes from the type
         class_list = []
 
-        for c in @_options.type.split('+')
-            class_list.push(c.split('-')...)
+        # Not all Doodads have a type.
+        if @_options.type?.split?
+            for c in @_options.type.split('+')
+                class_list.push(c.split('-')...)
         if @_options.class?.length > 0
             class_list.push(@_options.class.split(' ')...)
 

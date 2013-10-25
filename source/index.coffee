@@ -8,6 +8,7 @@ Select      = require './components/Select'
 StringInput = require './components/StringInput'
 
 AppBar      = require './containers/AppBar'
+Form        = require './containers/Form'
 Layout      = require './containers/Layout'
 Popover     = require './containers/Popover'
 
@@ -17,6 +18,7 @@ Doodad =
     AppBar      : AppBar
     BaseDoodad  : BaseDoodad
     Button      : Button
+    Form        : Form
     Layout      : Layout
     Popover     : Popover
     Select      : Select

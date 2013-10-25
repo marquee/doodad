@@ -1,0 +1,38 @@
+extend _base
+
+block content
+    h1 Doodad.Form
+
+
+    .example
+        h2 Basic form
+        script.example_code(type='text/coffeescript').
+            new_form = new Doodad.Form
+                content: [
+                    new Doodad.StringInput
+                        name: 'some_field'
+                        label: 'Some Field'
+                    new Doodad.StringInput
+                        name: 'other_field'
+                        multiline: true
+                    new Doodad.Select
+                        placeholder: 'A Field'
+                        choices: [
+                            {
+                                label: 'Category 1'
+                                value: 'category-1'
+                            }
+                            {
+                                label: 'Category 2'
+                                value: 'category-2'
+                            }
+                        ]
+                ]
+            console.log new_form 
+            button = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue()))
+            doodads.push([new_form, button])
+
+

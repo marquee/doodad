@@ -273,6 +273,9 @@ class StringInput extends BaseDoodad
             _.defer => @_handleInput(e)
         return
 
+    getValue: ->
+        return @value
+
 KEYCODES =
     DELETE  : 8
     TAB     : 9

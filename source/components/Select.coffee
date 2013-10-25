@@ -115,7 +115,7 @@ class Select extends BaseDoodad
         @ui.choices.attr('data-hidden', true)
         @ui.value.removeAttr('data-hidden')
         unless opts.silent
-            @_options.action(this, @value, choice.label)
+            @_options.action?(this, @value, choice.label)
 
     _renderGrid: ->
         @$el.html """
@@ -179,6 +179,9 @@ class Select extends BaseDoodad
     
     # setValue: (value, label=null) ->
     #     console.log 'Select.setValue', value, label
+
+    getValue: ->
+        return @value
 
 
 module.exports = Select
