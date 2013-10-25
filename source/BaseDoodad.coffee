@@ -12,11 +12,27 @@ class BaseDoodad extends View
 
     """
 
+    # # Enabling this crazy shit makes the Doodad component behave like an
+    # # Array-like jQuery/Zepto object, so $('div').append(doodad_instance) works.
+    # constructor: ->
+    #     super(arguments...)
+    #     self = []
+    #     self.__proto__ = this
+    #     self[0] = @el
+    #     return self
+
     initialize: (options) ->
+        @name = options.name
         @_is_enabled = true
 
         if options.css
             @_setCSS(options.css)
+
+        options.visible ?= true
+        if options.visible
+            @show()
+        else
+            @hide()
         # TODO: DRY up the child classes using something like:
         # @_options = @_validateOptions(options)
         # @_configure()
@@ -56,6 +72,7 @@ class BaseDoodad extends View
     #
     # Returns self for chaining.
     hide: =>
+        @is_visible = false
         @$el.hide()
         return this
 
@@ -63,7 +80,18 @@ class BaseDoodad extends View
     #
     # Returns self for chaining.
     show: =>
+        @is_visible = true
         @$el.show()
+        return this
+
+    # Public: Toggle the visibility of the element.
+    #
+    # Returns self for chaining.
+    toggle: =>
+        if @is_visible
+            @hide()
+        else
+            @show()
         return this
 
     # Public: Set the element state to disabled.
