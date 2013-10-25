@@ -82,34 +82,62 @@ class Form extends BaseDoodad
 
         @_captureFields()
 
+
     render: =>
         @$el.empty()
         @ui = {}
         @ui.content = $('<div class="Form_content"></div>')
-        _.each @_options.content, (item, i) =>
-            console.log item, i
-            @ui.content.append(item.el)
+        if @_options.layout
+            @$el.addClass('Form-autolayout')
+            used = {}
+            _.each @_options.layout, (row) =>
+                $row = $('<div class="Form_content_row"></div>')
+                _.each row, (cell) =>
+                    $cell = $('<div class="Form_content_cell"></div>')
+                    $cell.css
+                        width: "#{ 100/row.length }%"
+                    _.each cell, (field_name) =>
+                        unless used[field_name]
+                            $cell.append(@components[field_name].render())
+                            used[field_name] = true
+                        else
+                            console.error "Component \"#{ field_name }\" already used in layout for", this
+                    $row.append($cell)
+                @ui.content.append($row)
+
+            # Check for unused components and warn that they weren’t used.
+            _.each @components, (field, field_name) =>
+                unless used[field_name]
+                    console.warn "Component \"#{ field_name }\" not used in layout for", this
+
+        else
+            _.each @_options.content, (item, i) =>
+                @ui.content.append(item.render())
         @$el.append(@ui.content)
         return @el
 
-    # Internal: gather the fields of this form into a `@fields` object so that
-    # the fields may be accessed directly, eg `form.fields.field_1`. Nested
-    # forms are also included in the fields object.
+    # Internal: gather the components of this form into a `@components` object
+    # and if it’s a field (has a getValue), a `@fields` object, so that the
+    # fields may be accessed directly, eg `form.fields.field_1`. Nested forms
+    # are also included in the fields object. These references are used by the
+    # layout, if specified.
     #
     # The fields are referenced by name. If the field or form does not have a
     # name, it is assigned a sequential one, starting from either 'field_1' or
     # 'form_1', based on its position in the `content` list, relative to its
     # type.
     #
-    # Components without a `.getValue` method are ignored, allowing for
-    # buttons and other elements to be in the form.
+    # Components without a `.getValue` method are ignored by fields, allowing
+    # for buttons and other elements to be in the form.
     #
     # Returns nothing.
     _captureFields: ->
         console.log 'Form::_captureFields'
         @fields = {}
+        @components = {}
         num_fields = 0
         num_forms = 0
+        component_index = {}
         _.each @_options.content, (field, i) =>
             if field.getValue?
                 if field instanceof Form
@@ -122,6 +150,12 @@ class Form extends BaseDoodad
                     type = 'field'
                 field_name = if field.name then field.name else "#{ type }_#{ index }"
                 @fields[field_name] = field
+            else
+                name = field.className.toLowerCase()
+                component_index[name] ?= 0
+                component_index[name] += 1
+                field_name = if field.name then field.name else "#{ name }_#{ component_index[name] }"
+            @components[field_name] = field
         return
 
     # Public: get the value of the form, pulling the values from each of its
@@ -132,7 +166,6 @@ class Form extends BaseDoodad
     #
     # Returns an Object of the field name/value pairs.
     getValue: (kwargs={}) ->
-        console.log 'Form::getValue'
         kwargs.flatten ?= true
         values = {}
         _.each @fields, (field, field_name) ->

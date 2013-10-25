@@ -32,7 +32,6 @@ block content
                         name: 'token_field'
                         tokenize: true
                 ]
-            console.log new_form 
             button = new Doodad.Button
                 label: 'Submit Form'
                 action: ->
@@ -80,7 +79,7 @@ block content
                                 tokenize: true
                         ]
                 ]
-            console.log new_form 
+
             button1 = new Doodad.Button
                 label: 'Submit Form'
                 action: ->
@@ -91,3 +90,46 @@ block content
                     alert(JSON.stringify(new_form.getValue(flatten: false),null,4))
             doodads.push([new_form, button1, button2])
 
+
+    .example
+        h2 Form layout
+        script.example_code(type='text/coffeescript').
+            new_form = new Doodad.Form
+                layout: [
+                    [ ['some_field']                           ]
+                    [ ['other_field'],['field_3', 'button_1']  ]
+                    # [ ['token_field']                        ] # disabled to show warning
+                    [ ['some_field']                           ] # duplicated to show error
+                ]
+                content: [
+                    new Doodad.StringInput
+                        name: 'some_field'
+                        label: 'Some Field'
+                    new Doodad.StringInput
+                        name: 'other_field'
+                        multiline: true
+                    new Doodad.Select
+                        placeholder: 'A Field'
+                        choices: [
+                            {
+                                label: 'Category 1'
+                                value: 'category-1'
+                            }
+                            {
+                                label: 'Category 2'
+                                value: 'category-2'
+                            }
+                        ]
+                    new Doodad.StringInput
+                        label: 'Tokens'
+                        name: 'token_field'
+                        tokenize: true
+                    new Doodad.Button
+                        label: 'Toggle Something'
+                        action: ->
+                ]
+            button1 = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue(),null,4))
+            doodads.push([new_form, button1])

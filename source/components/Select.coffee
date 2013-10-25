@@ -98,12 +98,10 @@ class Select extends BaseDoodad
             @ui.choices.css
                 top: -1 * top
                 opacity: ''
-            console.log top, left
             @ui.value.attr('data-hidden', true)
 
 
     _setChoice: (choice, opts={}) =>
-        console.log 'setting choice', choice.value
         @ui.choices.find('[data-selected]').removeAttr('data-selected')
         if _.isFunction(choice.value)
             @value = choice.value(this)
@@ -152,7 +150,6 @@ class Select extends BaseDoodad
                 @_setChoice(choice)
 
         _.each @_options.choices, (choice) =>
-            console.log choice
             makeChoiceEl(choice)
             if choice.default
                 has_default = true
