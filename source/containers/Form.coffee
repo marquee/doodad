@@ -70,9 +70,9 @@ class Form extends BaseDoodad
     initialize: (options) ->
         super(arguments...)
         @_options = _.extend {},
-            content             : []
-            layout              : null
-            on                  : {}
+            content : []
+            layout  : null
+            on      : {}
         , options
 
         @on(event, handler) for event, handler of @_options.on
@@ -92,36 +92,57 @@ class Form extends BaseDoodad
         @$el.append(@ui.content)
         return @el
 
+    # Internal: gather the fields of this form into a `@fields` object so that
+    # the fields may be accessed directly, eg `form.fields.field_1`. Nested
+    # forms are also included in the fields object.
+    #
+    # The fields are referenced by name. If the field or form does not have a
+    # name, it is assigned a sequential one, starting from either 'field_1' or
+    # 'form_1', based on its position in the `content` list, relative to its
+    # type.
+    #
+    # Components without a `.getValue` method are ignored, allowing for
+    # buttons and other elements to be in the form.
+    #
+    # Returns nothing.
     _captureFields: ->
         console.log 'Form::_captureFields'
         @fields = {}
-        console.log @_options.content
+        num_fields = 0
+        num_forms = 0
         _.each @_options.content, (field, i) =>
-            console.log field.name, field
-            field_name = if field.name then field.name else "field_#{ i }"
-            @fields[field_name] = field
+            if field.getValue?
+                if field instanceof Form
+                    num_forms += 1
+                    index = num_forms
+                    type = 'form'
+                else
+                    num_fields += 1
+                    index = num_fields
+                    type = 'field'
+                field_name = if field.name then field.name else "#{ type }_#{ index }"
+                @fields[field_name] = field
+        return
 
-    getValue: ->
+    # Public: get the value of the form, pulling the values from each of its
+    # contained fields and any nested forms.
+    #
+    # kwargs -
+    #       flatten - (Boolean:true) whether or not to flatten the nested forms
+    #
+    # Returns an Object of the field name/value pairs.
+    getValue: (kwargs={}) ->
         console.log 'Form::getValue'
+        kwargs.flatten ?= true
         values = {}
         _.each @fields, (field, field_name) ->
-            values[field_name] = field.getValue()
-            console.log field_name, field, values[field_name]
-        console.log values
+            field_value = field.getValue()
+            if field instanceof Form and kwargs.flatten
+                _.extend(values, field_value)
+            else
+                values[field_name] = field.getValue()
         return values
 
 
 
-
 module.exports = Form
-
-
-
-
-
-
-
-
-
-
-
