@@ -12,7 +12,7 @@ Form        = require './containers/Form'
 Layout      = require './containers/Layout'
 Popover     = require './containers/Popover'
 
-
+Shortcuts   = require './Shortcuts'
 
 Doodad =
     AppBar      : AppBar
@@ -22,6 +22,7 @@ Doodad =
     Layout      : Layout
     Popover     : Popover
     Select      : Select
+    Shortcuts   : Shortcuts
     Spinner     : Spinner
     StringInput : StringInput
     Tags        : Tags

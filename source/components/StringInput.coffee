@@ -180,7 +180,6 @@ class StringInput extends BaseDoodad
             @_ui.tokens.append($el)
  
     _updatePlaceholder: ->
-        console.log '_updatePlaceholder', @value.length
         if @value.length > 0
             @_ui.input.attr('placeholder','')
         else
