@@ -176,6 +176,39 @@ class Form extends BaseDoodad
                 values[field_name] = field.getValue()
         return values
 
+    enable: =>
+        _.each @components, (c) ->
+            c.enable()
+        return super()
+
+    disable: =>
+        _.each @components, (c) ->
+            c.disable()
+        return super()
+
+    # Public: save the values of this form to the specified model, using the
+    # names of the fields as property names.
+    #
+    # kwargs - an Object or success callback as Function
+    #     if Object,
+    #       - success: (Function:null) called when the model completes saving
+    #       - flatten: (Boolean:true) flatten any nested forms
+    #
+    # Returns nothing.
+    save: (kwargs={}) ->
+        unless @model?
+            throw new Error("Form does not have a model specified")
+        if _.isFunction(kwargs)
+            kwargs =
+                success: kwargs
+        kwargs.flatten ?= true
+        values = @getValue(flatten: kwargs.flatten)
+        @disable()
+        @model.save values,
+            success: =>
+                @enable()
+                kwargs.success?(@model)
+
 
 
 module.exports = Form

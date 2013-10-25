@@ -158,3 +158,25 @@ block content
                 action: ->
                     alert(JSON.stringify(new_form.getValue(),null,4))
             doodads.push([new_form, button1])
+
+    .example
+        h2 Form saving
+        script.example_code(type='text/coffeescript').
+            { dform, dstringinput, dselect } = Doodad.Shortcuts
+            model1 = new DummyModel
+                some_field: 'Initial Value'
+            new_form = dform 'form_name', model: model1,
+                dstringinput 'some_field', value: model1.get('some_field')
+                dstringinput 'other_field', label: 'Other Field', multiline: true, placeholder: 'Text goes here'
+                dselect 'prop', placeholder: 'A Field', [
+                    { label: 'Category 1', value: 'category-1' }
+                    { label: 'Category 2', value: 'category-2' }
+                ]
+            button1 = new Doodad.Button
+                label: 'Save Form'
+                spinner: true
+                action: (self) ->
+                    new_form.save ->
+                        self.enable()
+                        alert("model attributes:\n\n" + JSON.stringify(model1.attributes, null, 4))
+            doodads.push([new_form, button1])

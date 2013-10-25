@@ -21,6 +21,19 @@ html
                 display: none;
             }
     body
+
+        script(type='text/coffeescript').
+
+            class window.DummyModel extends Backbone.Model
+                save: (values, opts) =>
+                    console.log 'Pretending to save…'
+                    @set(values)
+                    setTimeout ->
+                        console.log 'Saved!'
+                        opts.success?()
+                    , 750
+
+
         block content
 
 
