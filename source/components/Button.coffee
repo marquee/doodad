@@ -90,6 +90,8 @@ class Button extends BaseDoodad
             @$el.prepend('<div class="Button_icon_display"></div>')
         if @_options.spinner
             @$el.append(@_spinner.render())
+            if @_options.spinner is 'replace'
+                @$el.addClass('Button-spinner-replace')
         @delegateEvents()
         return @el
 

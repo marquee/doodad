@@ -23,7 +23,7 @@ class Spinner extends BaseDoodad
     initialize: (options) ->
         @_options = _.extend {},
             type            : 'arrows'
-            variant         : 'dark'
+            color           : '#000'
             active          : false
             extra_classes   : []
             size            : null
@@ -52,11 +52,6 @@ class Spinner extends BaseDoodad
     _setUpSpinner: (options) =>
         @_spinner?.stop()
 
-        if @_options.variant is 'dark'
-            color = '#000'
-        else
-            color = '#fff'
-
         # { width, height } = @getSize()
 
         width = parseInt(@$el.css('width').replace('px', ''))
@@ -66,7 +61,7 @@ class Spinner extends BaseDoodad
                 radius: width / 4
                 length: width / 4 - 1
                 width: 3
-                color: color
+                color: @_options.color
                 className: ''
             }, options
 

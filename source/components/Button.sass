@@ -52,10 +52,18 @@ $Button_font_size: 14px !default
             min-height: $Button_spinner_height
 
         &.active
-            padding-right: $Button_spinner_width + $Button_internal_padding * 2
+            &:not(.Button-spinner-replace)
+                padding-right: $Button_spinner_width + $Button_internal_padding * 2
             .Spinner
                 display: block
                 opacity: 1
+            &.Button-spinner-replace
+                .Button_icon_display
+                    visibility: hidden
+                .Button_label
+                    visibility: hidden
+                .Spinner
+                    right: calc(50% - #{ $Button_spinner_width / 2 })
     &.Button-icon:not(.Button-text).Button-spinner
         &.active
             padding-right: 0
