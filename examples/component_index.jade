@@ -1,0 +1,104 @@
+extend _base
+
+block content
+    h1 Doodad Components
+
+    #components
+
+    script(type='text/coffeescript').
+        components = []
+
+        components.push new Doodad.StringInput
+            label: 'Some Field'
+
+        components.push new Doodad.StringInput
+            label: 'Some Field'
+            enabled: false
+
+        components.push new Doodad.StringInput
+            label: 'Some Field'
+            state:
+                error: true
+
+        components.push new Doodad.StringInput
+            multiline: true
+
+        components.push new Doodad.StringInput
+            label: 'Tags'
+            tokenize: true
+
+        components.push new Doodad.Select
+            placeholder: 'Uncategorized'
+            choices: [
+                {
+                    label: 'Category 1'
+                    value: 'category-1'
+                }
+                {
+                    label: 'Category 2'
+                    value: 'category-2'
+                }
+            ]
+
+        ['text','icon','text+icon','text-bare','icon-bare','text+icon-bare'].forEach (type) ->
+            components.push new Doodad.Button
+                label   : 'Click Me'
+                type    : type
+                spinner : true
+                action  : (self) ->
+                    setTimeout ->
+                        self.enable()
+                    , 1000
+
+        ['text','text+icon','text-bare','text+icon-bare'].forEach (type) ->
+            components.push new Doodad.Button
+                label   : 'Click Me'
+                type    : type
+                spinner : 'replace'
+                action  : (self) ->
+                    setTimeout ->
+                        self.enable()
+                    , 1000
+
+
+
+        components.push new Doodad.Button
+            label: 'Click Me'
+            action: ->
+            enabled: false
+
+        ['text', 'icon', 'icon+text','text-bare','icon-bare'].forEach (type) ->
+            ['action','dangerous','warning','friendly'].forEach (class_) ->
+                components.push new Doodad.Button
+                    label   : 'Click Me'
+                    class   : class_
+                    type    : type
+                    spinner : true
+                    action  : (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+
+
+        $components = $('#components')
+        components.forEach (doodad) ->
+            console.log doodad
+            $components.append(doodad.el)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
