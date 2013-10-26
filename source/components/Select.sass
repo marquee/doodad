@@ -14,6 +14,8 @@ $Select_choices_max_height: 400px
 $Select_choice_hover_background: rgba($default_color, 0.1)
 $Select_choice_selected_background: rgba($default_color, 0.2)
 
+$Select_choices_zindex: 2 !default
+
 .Select
     +box-sizing(border-box)
     position: relative
@@ -29,6 +31,7 @@ $Select_choice_selected_background: rgba($default_color, 0.2)
     min-width: $Select_choices_min_width
     max-height: $Select_choices_max_height
     position: absolute
+    z-index: $Select_choices_zindex
 
 .Select_value
     +box-sizing(border-box)
