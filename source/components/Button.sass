@@ -102,6 +102,29 @@ $Button_action_active_background        : darken($action_color, 10) !default
 $Button_action_disabled_background      : $disabled_color !default
 
 
+
+
+=icon-mask($image)
+    mask: $image
+    -webkit-mask: $image
+    -o-mask: $image
+    -ms-mask: $image
+    mask-size: contain
+    -webkit-mask-size: contain
+    -o-mask-size: contain
+    -ms-mask-size: contain
+    mask-position: center center
+    -webkit-mask-position: center center
+    -o-mask-position: center center
+    -ms-mask-position: center center
+    mask-repeat: no-repeat
+    -webkit-mask-repeat: no-repeat
+    -o-mask-repeat: no-repeat
+    -ms-mask-repeat: no-repeat
+
+
+//     -webkit-mask-image: -webkit-linear-gradient(top, rgba(0,0,0,1), rgba(0,0,0,0))
+
 // TODO: move this to theme
 .Button
     font-family: $Button_font_family
@@ -197,36 +220,45 @@ $Button_action_disabled_background      : $disabled_color !default
     &:disabled
         color: $disabled_color
     .Button_icon_display
-        background-image: $icon_bare_default_image
+        +icon-mask($icon_bare_default_image)
+        background-color: white
     &.Button-friendly
-        color: $friendly_color
+        &:not(:disabled)
+            color: $friendly_color
         &:hover:not(:disabled)
             color: lighten($friendly_color, 10)
         &:active:not(:disabled)
             color: darken($friendly_color, 10)
         .Button_icon_display
-            background-image: $icon_bare_friendly_image
+            +icon-mask($icon_bare_friendly_image)
+            background-color: $friendly_color
     &.Button-dangerous
-        color: $dangerous_color
+        &:not(:disabled)
+            color: $dangerous_color
         &:hover:not(:disabled)
             color: lighten($dangerous_color, 10)
         &:active:not(:disabled)
             color: darken($dangerous_color, 10)
         .Button_icon_display
-            background-image: $icon_bare_dangerous_image
+            +icon-mask($icon_bare_dangerous_image)
+            background-color: $dangerous_color
     &.Button-warning
-        color: $warning_color
+        &:not(:disabled)
+            color: $warning_color
         &:hover:not(:disabled)
             color: lighten($warning_color, 10)
         &:active:not(:disabled)
             color: darken($warning_color, 10)
         .Button_icon_display
-            background-image: $icon_bare_warning_image
+            +icon-mask($icon_bare_warning_image)
+            background-color: $warning_color
     &.Button-action
-        color: $action_color
+        &:not(:disabled)
+            color: $action_color
         &:hover:not(:disabled)
             color: lighten($action_color, 10)
         &:active:not(:disabled)
             color: darken($action_color, 10)
         .Button_icon_display
-            background-image: $icon_bare_action_image
+            +icon-mask($icon_bare_action_image)
+            background-color: $action_color
