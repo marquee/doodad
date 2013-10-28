@@ -61,9 +61,6 @@ BaseDoodad = require '../BaseDoodad'
 Button = require '../components/Button'
 { DIV, P } = require '../subcomponents/Tags'
 
-# Track all the popovers active, so soloing is possible. The popovers are
-# tracked by their cid ()
-active_popovers = {}
 
 
 class FormLabel extends DIV
@@ -93,14 +90,14 @@ class Form extends BaseDoodad
     render: =>
         @$el.empty()
         @ui = {}
-        @ui.content = $('<div class="Form_content"></div>')
+        @ui.content = $('<div class="FormContent"></div>')
         if @_config.layout
-            @$el.addClass('Form-autolayout')
+            @$el.addClass('-autolayout')
             used = {}
             _.each @_config.layout, (row) =>
-                $row = $('<div class="Form_content_row"></div>')
+                $row = $('<div class="FormContentRow"></div>')
                 _.each row, (cell) =>
-                    $cell = $('<div class="Form_content_cell"></div>')
+                    $cell = $('<div class="FormContentCell"></div>')
                     $cell.css
                         width: "#{ 100/row.length }%"
                     _.each cell, (field_name) =>

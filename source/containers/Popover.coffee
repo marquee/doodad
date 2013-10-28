@@ -73,33 +73,43 @@ class Popover extends BaseDoodad
     render: =>
         @$el.empty()
         @ui = {}
-        @ui.content = $('<div class="Popover_content"></div>')
+        @ui.content = $('<div class="PopoverContent"></div>')
         @ui.content.css(width: @_config.width)
         if @_config.title
-            @ui.content.append("""<div class="Popover_title">#{ @_config.title }</div>""")
+            $title = ("""<div class="PopoverTitle"></div>""")
+            $title.text(@_config.title)
+            @ui.content.append($title)
         _.each @_config.content, (item) =>
             @ui.content.append(item.render())
         if @_config.dismiss or @_config.confirm
-            @ui.controls = $('<div class="Popover_controls"></div>')
+            @ui.controls = $('<div class="PopoverControls"></div>')
             if @_config.dismiss
-                unless @_config.dismiss.render?
+                if @_config.dismiss.on?
+                    @_config.dismiss.on 'click', =>
+                        @trigger('dismiss', this)
+                        @hide()
+                else
                     @_config.dismiss = new Button
                         label: @_config.dismiss
-                        action: =>
-                            @trigger('dismiss')
+                        on: click: =>
+                            @trigger('dismiss', this)
                             @hide()
-                        extra_classes: 'Popover_dismiss'
+                @_config.dismiss.$el.addClass('PopoverControl -dismiss')
                 @ui.controls.append(@_config.dismiss.render())
 
             if @_config.confirm
-                unless @_config.confirm.render?
-                    @_config.confirm = new Button
-                        label: @_config.confirm
-                        action: =>
-                            @trigger('confirm')
-                            @hide()
-                        class: 'friendly'
-                        extra_classes: 'Popover_confirm'
+                if @_config.confirm.on?
+                    @_config.confirm.on 'click', =>
+                        @trigger('confirm', this)
+                        @hide()
+                    else
+                        @_config.confirm = new Button
+                            label: @_config.confirm
+                            on: click: =>
+                                @trigger('confirm', this)
+                                @hide()
+                            variant: 'friendly'
+                @_config.dismiss.$el.addClass('PopoverControl -confirm')
                 @ui.controls.append(@_config.confirm.render())
 
             @ui.content.append(@ui.controls)
