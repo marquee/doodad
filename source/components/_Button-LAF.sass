@@ -1,0 +1,191 @@
+
+$Button_border_radius: 0 !default
+$Button_font_color: white !default
+
+$Button_default_background              : $default_color                !default
+$Button_default_hover_background        : lighten($default_color, 10)   !default
+$Button_default_active_background       : darken($default_color, 10)    !default
+$Button_default_disabled_background     : $disabled_color               !default
+
+$Button_friendly_background             : $friendly_color               !default
+$Button_friendly_hover_background       : lighten($friendly_color, 10)  !default
+$Button_friendly_active_background      : darken($friendly_color, 10)   !default
+$Button_friendly_disabled_background    : $disabled_color               !default
+
+$Button_dangerous_background            : $dangerous_color              !default
+$Button_dangerous_hover_background      : lighten($dangerous_color, 10) !default
+$Button_dangerous_active_background     : darken($dangerous_color, 10)  !default
+$Button_dangerous_disabled_background   : $disabled_color               !default
+
+$Button_warning_background              : $warning_color                !default
+$Button_warning_hover_background        : lighten($warning_color, 10)   !default
+$Button_warning_active_background       : darken($warning_color, 10)    !default
+$Button_warning_disabled_background     : $disabled_color               !default
+
+$Button_action_background               : $action_color                 !default
+$Button_action_hover_background         : lighten($action_color, 10)    !default
+$Button_action_active_background        : darken($action_color, 10)     !default
+$Button_action_disabled_background      : $disabled_color               !default
+
+
+
+
+=icon-mask($image)
+    mask                    : $image
+    -webkit-mask            : $image
+    -o-mask                 : $image
+    -ms-mask                : $image
+    mask-size               : contain
+    -webkit-mask-size       : contain
+    -o-mask-size            : contain
+    -ms-mask-size           : contain
+    mask-position           : center center
+    -webkit-mask-position   : center center
+    -o-mask-position        : center center
+    -ms-mask-position       : center center
+    mask-repeat             : no-repeat
+    -webkit-mask-repeat     : no-repeat
+    -o-mask-repeat          : no-repeat
+    -ms-mask-repeat         : no-repeat
+
+
+
+.Button
+    border      : 0
+    font-family : $Button_font_family
+    font-size   : $Button_font_size
+
+    .Button_icon_display
+        +background-size(contain)
+        background-repeat   : no-repeat
+        background-position : center
+
+    &:not(.Button-bare)
+        +border-radius($Button_border_radius)
+        background  : $Button_default_background
+        color       : $Button_font_color
+        &:hover:not(:disabled)
+            background: $Button_default_hover_background
+        &:active:not(:disabled)
+            background: $Button_default_active_background
+        &:disabled
+            background: $Button_default_disabled_background
+
+        $icon_dangerous_image   : $icon_dangerous_light_image   !default
+        $icon_warning_image     : $icon_warning_light_image     !default
+        $icon_friendly_image    : $icon_friendly_light_image    !default
+        $icon_action_image      : $icon_action_light_image      !default
+        $icon_default_image     : $icon_default_light_image     !default
+
+        .Button_icon_display
+            background-image: $icon_default_image
+
+        &.Button-friendly
+            background: $Button_friendly_background
+            &:hover:not(:disabled)
+                background: $Button_friendly_hover_background
+            &:active:not(:disabled)
+                background: $Button_friendly_active_background
+            &:disabled
+                background: $Button_friendly_disabled_background
+            .Button_icon_display
+                background-image: $icon_friendly_image
+
+        &.Button-dangerous
+            background: $Button_dangerous_background
+            &:hover:not(:disabled)
+                background: $Button_dangerous_hover_background
+            &:active:not(:disabled)
+                background: $Button_dangerous_active_background
+            &:disabled
+                background: $Button_dangerous_disabled_background
+            .Button_icon_display
+                background-image: $icon_dangerous_image
+
+        &.Button-warning
+            background: $Button_warning_background
+            &:hover:not(:disabled)
+                background: $Button_warning_hover_background
+            &:active:not(:disabled)
+                background: $Button_warning_active_background
+            &:disabled
+                background: $Button_warning_disabled_background
+            .Button_icon_display
+                background-image: $icon_warning_image
+
+        &.Button-action
+            background: $Button_action_background
+            &:hover:not(:disabled)
+                background: $Button_action_hover_background
+            &:active:not(:disabled)
+                background: $Button_action_active_background
+            &:disabled
+                background: $Button_action_disabled_background
+            .Button_icon_display
+                background-image: $icon_action_image
+
+
+.Button.Button-bare
+    $icon_bare_dangerous_image  : $icon_dangerous_dark_image    !default
+    $icon_bare_warning_image    : $icon_warning_dark_image      !default
+    $icon_bare_friendly_image   : $icon_friendly_dark_image     !default
+    $icon_bare_action_image     : $icon_action_dark_image       !default
+    $icon_bare_default_image    : $icon_default_dark_image      !default
+    background  : transparent
+    color       : $default_color
+    font-weight : $Button_bare_weight
+    -webkit-font-smoothing: antialiased
+    &:hover, &:active
+        background: transparent
+    &:not(:disabled)
+        &:hover
+            color: lighten($default_color, 10)
+        &:active
+            color: darken($default_color, 10)
+    &:disabled
+        color: $disabled_color
+        .Button_icon_display
+            background-color: $disabled_color
+    .Button_icon_display
+        +icon-mask($icon_bare_default_image)
+        background-color: $default_color
+    &.Button-friendly
+        &:not(:disabled)
+            color: $friendly_color
+            &:hover
+                color: lighten($friendly_color, 10)
+            &:active
+                color: darken($friendly_color, 10)
+            .Button_icon_display
+                +icon-mask($icon_bare_friendly_image)
+                background-color: $friendly_color
+    &.Button-dangerous
+        &:not(:disabled)
+            color: $dangerous_color
+            &:hover
+                color: lighten($dangerous_color, 10)
+            &:active
+                color: darken($dangerous_color, 10)
+            .Button_icon_display
+                +icon-mask($icon_bare_dangerous_image)
+                background-color: $dangerous_color
+    &.Button-warning
+        &:not(:disabled)
+            color: $warning_color
+            &:hover
+                color: lighten($warning_color, 10)
+            &:active
+                color: darken($warning_color, 10)
+            .Button_icon_display
+                +icon-mask($icon_bare_warning_image)
+                background-color: $warning_color
+    &.Button-action
+        &:not(:disabled)
+            color: $action_color
+            &:hover
+                color: lighten($action_color, 10)
+            &:active
+                color: darken($action_color, 10)
+            .Button_icon_display
+                +icon-mask($icon_bare_action_image)
+                background-color: $action_color

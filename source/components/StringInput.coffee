@@ -31,6 +31,7 @@ class StringInput extends BaseDoodad
         @_is_enabled = true
         @_options = _.extend {},
             tokenize        : null # true - tokenize on ,
+            delimiter       : null # instead of tokenize, then type: 'token', 'multiline'
             variant         : null
             helptext        : null
             enabled         : true
@@ -70,10 +71,9 @@ class StringInput extends BaseDoodad
         class_list = []
         # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
         if @_options.tokenize?
-            class_list.push('StringInput-tokenize')
-
-        if @_options.multiline
-            class_list.push('StringInput-multiline')
+            class_list.push('-tokenize')
+        else if @_options.multiline
+            class_list.push('-multiline')
 
         class_list.push(@_options.extra_classes...)
         @$el.addClass(class_list.join(' '))
