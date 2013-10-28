@@ -123,14 +123,14 @@ class BaseDoodad extends View
             @enable()
         return @_is_enabled
 
-    # Private: Trap click events by stopping propagation.
+    # Internal: Trap click events by stopping propagation.
     #
     # Returns nothing.
     _trapClick: (e) ->
         e.stopPropagation()
         return
 
-    # Private: Add classes to the el using info from the options. Primary
+    # Internal: Add classes to the el using info from the options. Primary
     #          classes are derived from the type, and get prefixed with the
     #          module name, while the secondary classes in the `extra_classes`
     #          option get added unmodified.
@@ -159,12 +159,59 @@ class BaseDoodad extends View
 
         @$el.addClass(class_list.join(' '))
 
-    # Private: Set extra CSS rules (useful for z-index, etc)
+    # Internal: Set extra CSS rules (useful for z-index, etc)
     #
     # css - an object with key-value CSS properties to set using $().css()
     #
     # Returns nothing
     _setCSS: (css_rules) ->
         @$el.css(css_rules)
+
+    # Public: Set the state of the component, using a data-attribute.
+    #
+    # state - (String) name of the state to set.
+    # value - (Boolean|Number|String|ObjectArray:true) value to set the
+    #           attribute MUST be JSON-serializable (and becomes a string in
+    #           the actual DOM attribute).
+    #
+    # Example:
+    #
+    #     > doodad_instance.setState('active')
+    #     > doodad_instance.$el.attr('data-active')
+    #     "true"
+    #
+    #     > doodad_instance.setState('progress', 50)
+    #     > doodad_instance.$el.attr('data-progress')
+    #     "50"
+    #     > doodad_instance.getState('progress')
+    #     50
+    #
+    # Returns self for chaining.
+    setState: (state, value=true) ->
+        @$el.attr("data-#{ state }", value)
+        return this
+
+    # Public: Get the state of the component.
+    #
+    # state - (String) name of the state to get.
+    #
+    # Returns the state in its original type, using `JSON.parse`, or
+    # `undefined` if not set.
+    getState: (state) ->
+        state_value = @$el.attr("data-#{ state }"
+        if state_value
+            state_value = JSON.parse(state_value)
+        return state_value
+
+    # Public: Unset the state of the component.
+    #
+    # state - (String) name of the state to unset
+    #
+    # Returns self for chaining.
+    unsetState: (state) ->
+        @$el.removeAttr("data-#{ state }")
+        return this
+
+
 
 module.exports = BaseDoodad
