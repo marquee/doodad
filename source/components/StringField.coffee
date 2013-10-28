@@ -44,7 +44,6 @@ class StringField extends BaseDoodad
             variant         : null
             helptext        : null
             enabled         : true
-            multiline       : false
             unique          : false
             placeholder     : ''
             label           : ''
@@ -89,7 +88,7 @@ class StringField extends BaseDoodad
                     </div>
                 """
             @_ui.tokens = @$el.find('.StringFieldTokens')
-        else if @_config.multiline
+        else if @_config.type is 'multiline'
             @$el.html """
                     <label>
                         <span class="StringFieldLabel"></span>
@@ -151,11 +150,11 @@ class StringField extends BaseDoodad
     _updateCharCount: ->
         [over_limit, count, limit] = @_calcLimit()
         @_ui.limit_counter.text("#{ count }/#{ limit }")
-        @_ui.limit_counter.unsetState('over').unsetState('warn')
+        @_ui.limit_counter.unsetState('charcount--over').unsetState('charcount--close')
         if over_limit
-            @_ui.limit_counter.setState('over')
+            @_ui.limit_counter.setState('charcount--over')
         else if count > limit * 0.8
-            @_ui.limit_counter.setState('warn')
+            @_ui.limit_counter.setState('charcount--close')
 
         return [over_limit, count, limit]
 

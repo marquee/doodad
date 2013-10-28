@@ -1,0 +1,61 @@
+
+
+
+
+.StringField
+    margin-bottom: 1em
+
+
+.StringFieldInput
+    font                : inherit
+    border              : 0
+    outline             : 0
+    //width               : 10em
+
+.StringFieldTokenForm, .StringField:not(.-token) .StringFieldInput
+    border-width        : $StringField-border--width
+    border-style        : $StringField-border--style
+    border-color        : $StringField-border--color
+    border-radius       : $StringField-border--radius
+    background-color    : $StringField-background--color
+    
+ 
+.StringFieldToken
+    border-width        : $StringFieldToken-border--width
+    border-style        : $StringFieldToken-border--style
+    border-color        : $StringFieldToken-border--color
+    border-radius       : $StringFieldToken-border--radius
+    background-color    : $StringFieldToken-background--color
+    
+
+.StringFieldToken, .StringFieldInput
+    margin              : 0
+    padding             : 0.25em 0.5em
+ 
+
+.StringField
+    &[data-charcount--close="true"]
+        .StringFieldCounter
+            color: $StringFieldCounter-color--warn
+    &[data-charcount--over="true"]
+        .StringFieldCounter
+            color: $StringFieldCounter-color--over
+
+.StringFieldTokenRemove
+    cursor: pointer
+    opacity: 0.5
+    border: 0
+    background-color: transparent
+    //background-image: $StringField_token_remove_image
+    background-repeat: no-repeat
+    background-size: 100%
+    background-position: center
+    width: 1em
+    height: 1em
+    vertical-align: -0.25em
+    color: transparent
+    &:hover
+        opacity: 1
+        &:active
+            opacity: 0.5
+
