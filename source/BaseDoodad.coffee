@@ -167,7 +167,8 @@ class BaseDoodad extends View
     _setCSS: (css_rules) ->
         @$el.css(css_rules)
 
-    # Public: Set the state of the component, using a data-attribute.
+    # Public: Set the state of the component, using a data-attribute. State is
+    #         stored in `data-`attributes as part of the Shiny Sass technique.
     #
     # state - (String) name of the state to set.
     # value - (Boolean|Number|String|ObjectArray:true) value to set the
@@ -177,14 +178,16 @@ class BaseDoodad extends View
     # Example:
     #
     #     > doodad_instance.setState('active')
+    #     > doodad_instance.getState('active')
+    #     true
     #     > doodad_instance.$el.attr('data-active')
     #     "true"
     #
     #     > doodad_instance.setState('progress', 50)
-    #     > doodad_instance.$el.attr('data-progress')
-    #     "50"
     #     > doodad_instance.getState('progress')
     #     50
+    #     > doodad_instance.$el.attr('data-progress')
+    #     "50"
     #
     # Returns self for chaining.
     setState: (state, value=true) ->
