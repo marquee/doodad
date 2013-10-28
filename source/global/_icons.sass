@@ -1,0 +1,43 @@
+// $Doodad-image_folder: '' !default
+
+// // Dangerous: http://thenounproject.com/noun/dangerous-area/#icon-No4263
+// $DoodadIcon-dangerous: inline-image('#{ $Doodad-image_folder }Icon-dangerous.svg')
+
+// // Warning
+// $DoodadIcon-warning: inline-image('#{ $Doodad-image_folder }Icon-warning.svg')
+
+// // Friendly: http://thenounproject.com/noun/smile/#icon-No7578
+// $DoodadIcon-friendly: inline-image('#{ $Doodad-image_folder }Icon-friendly.svg')
+
+// // Action
+// $DoodadIcon-action: inline-image('#{ $Doodad-image_folder }Icon-action.svg')
+
+// // Default 
+// $DoodadIcon-default: inline-image('#{ $Doodad-image_folder }Icon-default.svg')
+
+// // Close
+// $DoodadIcon-close: inline-image('#{ $Doodad-image_folder }Icon-close.svg')
+
+
+
+// @mixin inline-bg($path)
+//     background-image: inline-image("inline/#{ $path }")
+
+// @mixin icon($name)
+//     background-repeat   : no-repeat
+//     background-position : center
+//     background-size     : contain
+//     @extend %Icon%-#{ $name }
+
+// %Icon
+//     &%-NarrativelyLogo
+//         +inline-bg('NarrativelyLogo.svg')
+//     @each $s in Facebook, Twitter, YouTube
+//         &%-#{ $s }
+//             +inline-bg("Icon--#{ $s }.svg")
+
+//     @each $s in Archive, Previous, Next
+//         &%-#{ $s }
+//             +inline-bg("Icon--#{ $s }@2x.png")
+//             &:hover
+//                 +inline-bg("Icon--#{ $s }--hover@2x.png")

@@ -3,18 +3,14 @@
 @import '../misc/_colors'
 @import '../misc/_icons'
 
-$Button-height           : 50px !default
-$Button-icon--width      : 26px !default
-$Button-icon--height     : 26px !default
-$Button-spinner--width   : 22px !default
-$Button-spinner--height  : 22px !default
-$Button-bare_weight      : 700 !default
 
-$Button-internal_padding : 7px !default
-$Button-label_padding    : 10px !default
+=not-state($state, $value: true)
+    &:not([data-#{ $state }="#{ $value }"])
+        @content
 
-$Button-font--family     : Helvetica, Arial, sans-serif !default
-$Button-font--size       : 14px !default
+=state($state, $value: true)
+    &[data-#{ $state }="#{ $value }"]
+        @content
 
 
 .Button
@@ -44,14 +40,15 @@ $Button-font--size       : 14px !default
         .Spinner
             opacity     : 0
             position    : absolute
-            top         : ($Button-height - $Button_spinner_height) / 2
+            top         : ($Button-height - $Button-spinner--height) / 2
             right       : $Button-internal_padding
             width       : $Button-spinner--width
             min-width   : $Button-spinner--width
             height      : $Button-spinner--height
             min-height  : $Button-spinner--height
 
-        &.active
+
+        +state(active)
             &:not(.Button-spinner-replace)
                 padding-right: $Button-spinner--width + $Button-internal_padding * 2
             .Spinner
@@ -66,7 +63,7 @@ $Button-font--size       : 14px !default
                     right: calc(50% - #{ $Button-spinner--width / 2 })
 
     &:not(.-text).-icon.-spinner
-        &[data-active="true"]
+        +state(active)
             padding-right: 0
             .Spinner
                 right: ($Button-height - $Button-spinner--height) / 2
