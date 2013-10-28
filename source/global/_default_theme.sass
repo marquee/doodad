@@ -1,4 +1,12 @@
 
+$Doodad-font--size          : 14px !default
+$Doodad-border--radius      : 4px !default
+$Doodad-border--style       : solid !default
+$Doodad-border--width       : 1px !default
+$Doodad-border--color       : #ccc !default
+$Doodad-background--color   : white !default
+
+
 //
     $AppBar_z_index         : 10
     $AppBar_background      : rgba(240,240,240,0.8)
@@ -19,14 +27,14 @@ $Button-internal_padding                        : 7px                           
 $Button-label_padding                           : 10px                              !default
 
 $Button-font--family                            : Helvetica, Arial, sans-serif      !default
-$Button-font--size                              : 14px                              !default
-$Button-font--color                             : white                             !default
+$Button-font--size                              : $Doodad-font--size                !default
+$Button-font--color                             : $Doodad-background--color         !default
 $Button-font--weight--bare                      : 700                               !default
 $Button-font--transform                         : uppercase                         !default
-$Button-border--radius                          : 4px                               !default
+$Button-border--radius                          : $Doodad-border--radius            !default
 $Button-border--width                           : 0                                 !default
 $Button-border--color                           : transparent                       !default
-$Button-border--style                           : solid                             !default
+$Button-border--style                           : $Doodad-border--style             !default
 
 
 
@@ -139,17 +147,33 @@ $Button-icon--color--bare--action               : $DColor-action                
 
 
 $StringField-focus--color                       : blue                              !default
-$StringField-background--color                  : white                             !default
-$StringField-border--width                      : 1px                               !default
-$StringField-border--style                      : solid                             !default
-$StringField-border--color                      : #ccc                              !default
-$StringField-border--radius                     : 4px                               !default
+$StringField-background--color                  : $Doodad-background--color         !default
+$StringField-border--width                      : $Doodad-border--width             !default
+$StringField-border--style                      : $Doodad-border--style             !default
+$StringField-border--color                      : $Doodad-border--color             !default
+$StringField-border--color--error               : $DColor-dangerous                 !default
+$StringField-border--radius                     : $Doodad-border--radius            !default
 $StringFieldToken-background--color             : rgba($DColor-default, 0.1)        !default
-$StringFieldToken-border--width                 : 1px                               !default
-$StringFieldToken-border--style                 : solid                             !default
-$StringFieldToken-border--radius                : 4px                               !default
+$StringFieldToken-border--width                 : $Doodad-border--width             !default
+$StringFieldToken-border--style                 : $Doodad-border--style             !default
+$StringFieldToken-border--color                 : $Doodad-border--color             !default
+$StringFieldToken-border--radius                : $Doodad-border--radius            !default
 $StringFieldToken-border--color                 : rgba($DColor-default, 0.2)        !default
 $StringFieldCounter-color--warn                 : $DColor-warning                   !default
 $StringFieldCounter-color--over                 : $DColor-dangerous                 !default
 //$StringField_token_remove_image     : $icon_close_dark !default
 
+
+
+$SelectChoices-min_width                        : 140px                             !default
+$SelectChoices-max_height                       : 400px                             !default
+$SelectChoices-z_index                          : 2                                 !default
+
+$Select-border--radius                          : $Doodad-border--radius            !default
+$Select-border--style                           : $Doodad-border--style             !default
+$Select-border--width                           : $Doodad-border--width             !default
+$Select-border--color                           : $Doodad-border--color             !default
+$Select-background                              : $Doodad-background--color         !default
+$SelectChoice-background--hover                 : rgba($DColor-default, 0.1)        !default
+$SelectChoice-background--selected              : rgba($DColor-default, 0.2)        !default
+$Select-padding                                 : 8px                               !default

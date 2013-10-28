@@ -1,0 +1,42 @@
+
+.SelectChoice, .SelectValue, .SelectLabel
+    cursor: pointer
+
+.SelectValue.-null
+    opacity: 0.7
+    font-style: italic
+
+.SelectChoice
+
+
+    &.-null
+        .SelectChoiceLabel
+            opacity: 0.7
+            font-style: italic
+
+
+
+
+// Theme styles
+.SelectValue, .SelectChoices
+    border-radius       : $Select-border--radius
+    border-style        : $Select-border--style
+    border-width        : $Select-border--width
+    border-color        : $Select-border--color
+    background          : $Select-background
+
+.SelectValue
+    padding: $Select-padding
+
+.SelectChoice
+    padding: $Select-padding
+    &:hover:not([data-selected="true"])
+        background: $SelectChoice-background--hover
+    &[data-selected="true"]
+        background: $SelectChoice-background--selected
+
+.SelectLabel
+    padding: $Select-padding
+    &:empty
+        display: none
+

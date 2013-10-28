@@ -15,12 +15,12 @@ BaseDoodad = require '../BaseDoodad'
 #         {
 #             label: 'Set Align Left'
 #             value: 'left'
-#             class: 'align-left'
+#             classes: 'align-left'
 #         }
 #         {
 #             label: 'Set Align Right'
 #             value: 'right'
-#             class: 'align-right'
+#             classes: ['align-right']
 #         }
 #     ]
 
@@ -34,8 +34,12 @@ class Select extends BaseDoodad
     className: 'Select'
 
     initialize: (options) ->
+        if options.action?
+            console.warn "Select `action` option is deprecated. Use `on: change: ->` event instead."
+            options.on ?= {}
+            options.on.change = options.action
         super(arguments...)
-        @_options = _.extend {},
+        @_config = _.extend {},
             type            : 'drop'
             width           : null
             height          : null
@@ -44,21 +48,10 @@ class Select extends BaseDoodad
             variant         : null
             enabled         : true
             required        : false
-            extra_classes   : []
+            classes         : []
         , options
 
         @render()
-
-    # Private: Apply the necessary classes to the element.
-    #
-    # Returns nothing.
-    _setClasses: ->
-        class_list = @_options.type.split('+')
-        if @_options.class?.length > 0
-            class_list.push(@_options.class.split(' ')...)
-        class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
-        class_list.push(@_options.extra_classes...)
-        @$el.addClass(class_list.join(' '))
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.
@@ -69,7 +62,7 @@ class Select extends BaseDoodad
         @_setClasses()
         @ui = {}
 
-        switch @_options.type
+        switch @_config.type
             when 'drop'
                 @_renderDrop()
             when 'grid'
@@ -79,8 +72,8 @@ class Select extends BaseDoodad
         return @el
 
     events:
-        'click .Select_value' : '_showChoices'
-        'click .Select_label' : '_showChoices'
+        'click .SelectValue' : '_showChoices'
+        'click .SelectLabel' : '_showChoices'
 
     _showChoices: ->
         # Keep it invisible until it is positioned.
@@ -113,43 +106,48 @@ class Select extends BaseDoodad
         @ui.choices.attr('data-hidden', true)
         @ui.value.removeAttr('data-hidden')
         unless opts.silent
-            @_options.action?(this, @value, choice.label)
+            @_config.action?(this, @value, choice.label)
 
     _renderGrid: ->
         @$el.html """
-            <div class="Select_label">Category:</div>
-            <div class="Select_choices">
-                <div class="Select_choice">
-                    <span class="Select_choice_label">Option 1
+            <div class="SelectLabel">Category:</div>
+            <div class="SelectChoices">
+                <div class="SelectChoice">
+                    <span class="SelectChoiceLabel">Option 1
                 </div>
-                <div class="Select_choice" data-selected="true">Option 2</div>
-                <div class="Select_choice">Option 3</div>
-                <div class="Select_choice">Option 4</div>
-                <div class="Select_choice">Option 5</div>
+                <div class="SelectChoice" data-selected="true">Option 2</div>
+                <div class="SelectChoice">Option 3</div>
+                <div class="SelectChoice">Option 4</div>
+                <div class="SelectChoice">Option 5</div>
             </div>
         """
 
     _renderDrop: ->
-        @ui.label = $("<div class='Select_label'>#{ @_options.label }</div>")
-        @ui.value = $("<div class='Select_value'><div>")
-        @ui.choices = $("<div class='Select_choices'></div>")
+        @ui.label = $("<div class='SelectLabel'>#{ @_config.label }</div>")
+        @ui.value = $("<div class='SelectValue'><div>")
+        @ui.choices = $("<div class='SelectChoices'></div>")
 
         has_default = false
 
 
         makeChoiceEl = (choice) =>
             choice.$el = $("""
-                <div class='Select_choice#{ if choice.null_choice then '-null' else '' }'>
-                    <span class='Select_choice_label'>
-                        #{ choice.label }
+                <div class='SelectChoice #{ if choice.null_choice then '-null' else '' }'>
+                    <span class='SelectChoiceLabel'>
                     </span>
                 </div>
             """)
+            if choice.classes?
+                if _.isArray(choice.classes)
+                    choice.$el.addClass(choice.classes.join(' '))
+                else
+                    choice.$el.addClass(choice.classes)
+            choice.$el.find('.SelectChoiceLabel').text(choice.label)
             choice.$el.attr('data-value', choice.value)
             choice.$el.on 'click', =>
                 @_setChoice(choice)
 
-        _.each @_options.choices, (choice) =>
+        _.each @_config.choices, (choice) =>
             makeChoiceEl(choice)
             if choice.default
                 has_default = true
@@ -158,11 +156,11 @@ class Select extends BaseDoodad
 
         # If it doesn't have a default set above, or is not required, add a
         # null choice to the list of choices that sets the value to null.
-        unless has_default and @_options.required
+        unless has_default and @_config.required
             do =>
                 null_choice =
                     null_choice: true
-                    label: @_options.placeholder
+                    label: @_config.placeholder
                     value: null
                 makeChoiceEl(null_choice)
                 @ui.choices.prepend(null_choice.$el)
