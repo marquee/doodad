@@ -140,7 +140,7 @@ class Tag extends BaseDoodad
 
     initialize: (options={}) ->
         @_options = _.extend
-            type: ''
+            type: null
         , options
         super(@_options)
 
@@ -157,7 +157,7 @@ class Tag extends BaseDoodad
                     @addContent(options.content)
 
         for k, v of options
-            unless k in ['model', 'content', 'extra_classes']
+            unless k in ['model', 'content', 'classes', 'variant', 'css']
                 @$el.attr(k,v)
 
         @_setClasses()
@@ -171,12 +171,10 @@ class Tag extends BaseDoodad
     # Returns self for chaining.
     addContent: (contents...) =>
         _.each contents, (child_content) =>
-            if _.isString(child_content) or _.isNumber(child_content)
-                child = new @constructor._default_child(content: child_content.toString())
-            else
-                child = child_content
-            @_contents.push(child)
-            @$el.append(child.render())
+            unless child_content instanceof @constructor._default_child
+                child_content = new @constructor._default_child(content: child_content)
+            @_contents.push(child_content)
+            @$el.append(child_content.render())
         return this
 
     # Public: Set the content of the Tag (replaces existing content).

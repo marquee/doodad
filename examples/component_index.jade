@@ -8,24 +8,24 @@ block content
     script(type='text/coffeescript').
         components = []
 
-        components.push new Doodad.StringInput
+        components.push new Doodad.StringField
             label: 'Some Field'
 
-        components.push new Doodad.StringInput
+        components.push new Doodad.StringField
             label: 'Some Field'
             enabled: false
 
-        components.push new Doodad.StringInput
+        components.push new Doodad.StringField
             label: 'Some Field'
             state:
                 error: true
 
-        components.push new Doodad.StringInput
-            multiline: true
+        components.push new Doodad.StringField
+            type: 'multiline'
 
-        components.push new Doodad.StringInput
+        components.push new Doodad.StringField
             label: 'Tags'
-            tokenize: true
+            type: 'token'
 
         components.push new Doodad.Select
             placeholder: 'Uncategorized'

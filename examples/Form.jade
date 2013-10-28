@@ -9,10 +9,10 @@ block content
         script.example_code(type='text/coffeescript').
             new_form = new Doodad.Form
                 content: [
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         name: 'some_field'
                         label: 'Some Field'
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         name: 'other_field'
                         multiline: true
                     new Doodad.Select
@@ -27,7 +27,7 @@ block content
                                 value: 'category-2'
                             }
                         ]
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         label: 'Tokens'
                         name: 'token_field'
                         tokenize: true
@@ -43,7 +43,7 @@ block content
         script.example_code(type='text/coffeescript').
             new_form = new Doodad.Form
                 content: [
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         name: 'some_field'
                         label: 'Some Field'
                     new Doodad.Button
@@ -60,7 +60,7 @@ block content
                         content: [
                             new Doodad.Form.FormLabel
                                 content: 'Nested Form:'
-                            new Doodad.StringInput
+                            new Doodad.StringField
                                 name: 'other_field'
                                 multiline: true
                             new Doodad.Select
@@ -75,7 +75,7 @@ block content
                                         value: 'category-2'
                                     }
                                 ]
-                            new Doodad.StringInput
+                            new Doodad.StringField
                                 label: 'Tokens'
                                 name: 'token_field'
                                 tokenize: true
@@ -106,10 +106,10 @@ block content
                     [ ['some_field']                           ] # duplicated to show error
                 ]
                 content: [
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         name: 'some_field'
                         label: 'Some Field'
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         name: 'other_field'
                         multiline: true
                     new Doodad.Select
@@ -124,7 +124,7 @@ block content
                                 value: 'category-2'
                             }
                         ]
-                    new Doodad.StringInput
+                    new Doodad.StringField
                         label: 'Tokens'
                         name: 'token_field'
                         tokenize: true

@@ -21,7 +21,7 @@ class Spinner extends BaseDoodad
     className: 'Spinner'
 
     initialize: (options) ->
-        @_options = _.extend {},
+        @_config = _.extend {},
             type            : 'throbber'
             color           : '#000'
             active          : false
@@ -29,14 +29,14 @@ class Spinner extends BaseDoodad
             size            : null
             auto_hide       : true
         , options
-        super(@_options)
+        super(@_config)
 
         @_rate = 1
         @render()
-        if @_options.auto_hide and @_options.active
+        if @_config.auto_hide and @_config.active
             @hide()
         _.defer =>
-            if @_options.active
+            if @_config.active
                 @start()
             else
                 @stop()
@@ -61,7 +61,7 @@ class Spinner extends BaseDoodad
                 radius: width / 4
                 length: width / 4 - 1
                 width: 3
-                color: @_options.color
+                color: @_config.color
                 className: ''
             }, options
 
@@ -78,7 +78,7 @@ class Spinner extends BaseDoodad
         @$el.addClass("#{ @className }-active")
         @_active = true
         @_setUpSpinner(speed: @_rate)
-        if @_options.auto_hide
+        if @_config.auto_hide
             @show()
         return this
 
@@ -87,7 +87,7 @@ class Spinner extends BaseDoodad
         @$el.removeClass("#{ @className }-active")
         @_active = false
         @_setUpSpinner(speed: 0)
-        if @_options.auto_hide
+        if @_config.auto_hide
             @hide()
         return this
 

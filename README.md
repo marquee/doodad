@@ -92,15 +92,15 @@ strings to add to the element’s `className`.
       ]
   ```
 
-* `StringInput` - A single- or multi-line text input
+* `StringField` - A single- or multi-line text input
 
-  The `StringInput` serves as a text input, or a textarea. It can have a
+  The `StringField` serves as a text input, or a textarea. It can have a
   character or word limit that is hard, preventing any additional input, or
   soft, only warning. The input can also be tokenized, with a delimiter or on
   enter.
 
   ```coffeescript
-  new StringInput
+  new StringField
       on: change: (self, value) ->
          console.log(value)
   ```

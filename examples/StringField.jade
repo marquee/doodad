@@ -1,13 +1,13 @@
 extend _base
 
 block content
-    h1 Doodad.StringInput
+    h1 Doodad.StringField
 
 
     .example
         h2 Basic input
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'Some String'
                 placeholder: 'Placeholder'
                 on:
@@ -21,7 +21,7 @@ block content
     .example
         h2 Disabled input
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'Some String'
                 value: 'Immutable field'
                 enabled: false
@@ -36,9 +36,9 @@ block content
     .example
         h2 Multiline input
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'Some Text'
-                multiline: true
+                type: 'multiline'
                 value: 'Multiline\ntext'
                 on:
                     change: (self, val) ->
@@ -51,10 +51,10 @@ block content
     .example
         h2 Tokenized input
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'Some Tokens'
                 placeholder: 'Enter tags (press enter)'
-                tokenize: true
+                type: 'token'
                 on:
                     change: (self, val) ->
                         @demo_text(val.toString())
@@ -66,7 +66,7 @@ block content
     .example
         h2 Limited input, characters
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'Only a little bit of text'
                 char_limit: 100
                 on:
@@ -80,7 +80,7 @@ block content
     .example
         h2 Limited input, words
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'A few words'
                 word_limit: 20
                 multiline: true
@@ -95,10 +95,10 @@ block content
     .example
         h2 Softly limited input, words
         script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.StringInput
+            doodads.push new Doodad.StringField
                 label: 'A few words'
                 word_limit: '~20'
-                multiline: true
+                type: 'multiline'
                 on:
                     change: (self, val) ->
                         @demo_text(val)

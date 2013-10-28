@@ -1,7 +1,7 @@
 
 BaseDoodad  = require './BaseDoodad'
 Select      = require './components/Select'
-StringInput = require './components/StringInput'
+StringField = require './components/StringField'
 Form        = require './containers/Form'
 
 
@@ -27,7 +27,7 @@ module.exports.dstringinput = (name, args...) ->
     options = args[0] or {}
     _.extend options,
         name: name
-    return new StringInput(options)
+    return new StringField(options)
 
 
 

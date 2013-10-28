@@ -5,7 +5,7 @@ Tags        = require './subcomponents/Tags'
 
 Button      = require './components/Button'
 Select      = require './components/Select'
-StringInput = require './components/StringInput'
+StringField = require './components/StringField'
 
 AppBar      = require './containers/AppBar'
 Form        = require './containers/Form'
@@ -13,6 +13,7 @@ Layout      = require './containers/Layout'
 Popover     = require './containers/Popover'
 
 Shortcuts   = require './Shortcuts'
+
 
 Doodad =
     AppBar      : AppBar
@@ -24,7 +25,7 @@ Doodad =
     Select      : Select
     Shortcuts   : Shortcuts
     Spinner     : Spinner
-    StringInput : StringInput
+    StringField : StringField
     Tags        : Tags
     # Toggle      : Toggle
     VERSION     : '{X VERSION X}'

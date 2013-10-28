@@ -1,0 +1,75 @@
+@import 'compass/css3'
+@import '../global/_icons'
+@import '../global/_colors'
+
+$StringField_focus_color            : blue !default
+$StringField_background_color       : white !default
+$StringField_border_size            : 1px   !default
+$StringField_border_color           : #ccc  !default
+$StringField_border_radius          : 4px  !default
+$StringField_token_background_color : rgba($default_color, 0.1) !default
+$StringField_token_border_size      : 1px   !default
+$StringField_token_border_radius    : 4px   !default
+$StringField_token_border_color     : rgba($default_color, 0.2) !default
+$StringField_token_remove_image     : $icon_close_dark !default
+
+.StringField
+    display             : block
+    label
+        display: block
+    margin-bottom: 1em
+.StringField_input
+    font                : inherit
+    border              : 0
+    outline             : 0
+    //width               : 10em
+
+.StringField_token_form, .StringField_tokens
+    display             : block
+ 
+.StringField_token_form, .StringField:not(.StringField-tokenize) .StringField_input
+    border-width        : $StringField_border_size
+    border-style        : solid
+    border-color        : $StringField_border_color
+    background-color    : $StringField_background_color
+    +border-radius($StringField_border_radius)
+ 
+.StringField_token
+    border-width        : $StringField_token_border_size
+    border-style        : solid
+    border-color        : $StringField_token_border_color
+    +border-radius($StringField_token_border_radius)
+    background-color    : $StringField_token_background_color
+    display             : inline-block
+ 
+.StringField_token, .StringField_input
+    margin              : 0
+    padding             : 0.25em 0.5em
+    display             : inline-block
+ 
+.StringField_counter-warn
+    color: $warning_color
+.StringField_counter-over
+    color: $dangerous_color
+
+.StringField-tokenize .StringField_input
+    display: block
+
+.StringField_token_remove
+    cursor: pointer
+    opacity: 0.5
+    border: 0
+    background-color: transparent
+    background-image: $StringField_token_remove_image
+    background-repeat: no-repeat
+    +background-size(100%)
+    background-position: center
+    width: 1em
+    height: 1em
+    display: inline-block
+    vertical-align: -0.25em
+    color: transparent
+    &:hover
+        opacity: 1
+        &:active
+            opacity: 0.5

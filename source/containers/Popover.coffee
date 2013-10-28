@@ -44,7 +44,7 @@ class Popover extends BaseDoodad
     className: 'Popover'
     initialize: (options) ->
         super(arguments...)
-        @_options = _.extend {},
+        @_config = _.extend {},
             type                : 'flag' # or 'modal
             content             : []
             width               : 500
@@ -57,11 +57,9 @@ class Popover extends BaseDoodad
             on                  : {}
         , options
 
-        if @_options.type.indexOf('flag') isnt -1
-            if not @_options.origin?
-                @_options.origin = 'top-left'
-
-        @on(event, handler) for event, handler of @_options.on
+        if @_config.type.indexOf('flag') isnt -1
+            if not @_config.origin?
+                @_config.origin = 'top-left'
 
         @_setClasses()
 
@@ -69,40 +67,40 @@ class Popover extends BaseDoodad
 
     _setClasses: ->
         super()
-        if @_options.type.indexOf('flag') isnt -1
-            @$el.addClass("#{ @className }-#{ @_options.origin }")
+        if @_config.type.indexOf('flag') isnt -1
+            @$el.addClass("#{ @className }-#{ @_config.origin }")
 
     render: =>
         @$el.empty()
         @ui = {}
         @ui.content = $('<div class="Popover_content"></div>')
-        @ui.content.css(width: @_options.width)
-        if @_options.title
-            @ui.content.append("""<div class="Popover_title">#{ @_options.title }</div>""")
-        _.each @_options.content, (item) =>
+        @ui.content.css(width: @_config.width)
+        if @_config.title
+            @ui.content.append("""<div class="Popover_title">#{ @_config.title }</div>""")
+        _.each @_config.content, (item) =>
             @ui.content.append(item.render())
-        if @_options.dismiss or @_options.confirm
+        if @_config.dismiss or @_config.confirm
             @ui.controls = $('<div class="Popover_controls"></div>')
-            if @_options.dismiss
-                unless @_options.dismiss.render?
-                    @_options.dismiss = new Button
-                        label: @_options.dismiss
+            if @_config.dismiss
+                unless @_config.dismiss.render?
+                    @_config.dismiss = new Button
+                        label: @_config.dismiss
                         action: =>
                             @trigger('dismiss')
                             @hide()
                         extra_classes: 'Popover_dismiss'
-                @ui.controls.append(@_options.dismiss.render())
+                @ui.controls.append(@_config.dismiss.render())
 
-            if @_options.confirm
-                unless @_options.confirm.render?
-                    @_options.confirm = new Button
-                        label: @_options.confirm
+            if @_config.confirm
+                unless @_config.confirm.render?
+                    @_config.confirm = new Button
+                        label: @_config.confirm
                         action: =>
                             @trigger('confirm')
                             @hide()
                         class: 'friendly'
                         extra_classes: 'Popover_confirm'
-                @ui.controls.append(@_options.confirm.render())
+                @ui.controls.append(@_config.confirm.render())
 
             @ui.content.append(@ui.controls)
         @$el.append(@ui.content)
@@ -112,7 +110,7 @@ class Popover extends BaseDoodad
     #
     # Returns nothing.
     setPosition: (args...) ->
-        if @_options.type is 'modal'
+        if @_config.type is 'modal'
             @_setModalPosition(args...)
         else
             @_setFlagPosition(args...)
@@ -169,7 +167,7 @@ class Popover extends BaseDoodad
                 when 'bottom'
                     offset_y = @ui.content.height()
 
-        [edge, position] = @_options.origin.split('-')
+        [edge, position] = @_config.origin.split('-')
 
         strToPos(edge)
         strToPos(position)
@@ -183,12 +181,12 @@ class Popover extends BaseDoodad
                 offset_y = @ui.content.height() / 2
 
 
-        console.log edge, position, offset_x, offset_y, @_options.offset
+        console.log edge, position, offset_x, offset_y, @_config.offset
 
-        # TODO: Allow @_options.offset to be a function, that's given the triggering element
+        # TODO: Allow @_config.offset to be a function, that's given the triggering element
         @$el.css
-            left: x + @_options.offset[0]# - offset_x
-            top: y + @_options.offset[1]# - offset_y
+            left: x + @_config.offset[0]# - offset_x
+            top: y + @_config.offset[1]# - offset_y
         @ui.content.css
             left: 0 - offset_x
             top: 0 - offset_y
@@ -198,17 +196,17 @@ class Popover extends BaseDoodad
         active_popovers[@cid] = this
         console.log active_popovers
         $('body').append(@render())
-        if @_options.close_on_outside
+        if @_config.close_on_outside
             _.defer =>
                 $(window).one('click', @hide)
-        if @_options.solo
+        if @_config.solo
             console.log 'closing others!', @cid
             _.each active_popovers, (popover) =>
                 if popover? and popover.cid isnt @cid
                     popover.hide()
         @ui.content.css('opacity', 0)
         _.defer =>
-            if @_options.type.indexOf('fixed') is -1
+            if @_config.type.indexOf('fixed') is -1
                 @setPosition(trigger?.getPosition())
             else
                 @setPosition(trigger?.getScreenPosition())

@@ -32,7 +32,6 @@ class Button extends BaseDoodad
     #             self.enable()
     #
     initialize: (options) ->
-        super(arguments...)
         if options.action?
             console.warn 'Button `action` option is deprecated. Used the `on.click` event option instead.'
             options.on ?= {}
@@ -40,7 +39,9 @@ class Button extends BaseDoodad
         if not options.on?.click? and options.url
             options.on.click = ->
                 window.location = options.url
-        @_options = _.extend {},
+
+        super(arguments...)
+        @_config = _.extend {},
             type            : 'text'
             label           : null
             variant         : null
@@ -54,12 +55,12 @@ class Button extends BaseDoodad
 
         @_validateOptions()
 
-        unless @_options.enabled
+        unless @_config.enabled
             @disable()
 
-        if @_options.spinner
+        if @_config.spinner
             @_spinner = new Spinner
-                color: if @_options.type.indexOf('bare') is -1 then '#fff' else '#000'
+                color: if @_config.type.indexOf('bare') is -1 then '#fff' else '#000'
         @render()
 
     # Private: Check that the required options were passed to the constructor.
@@ -67,9 +68,9 @@ class Button extends BaseDoodad
     #
     # Returns nothing.
     _validateOptions: ->
-        if not @_options.type in ['text', 'icon', 'icon+text', 'text-bare', 'icon-bare', 'icon+text-bare']
-            throw new Error "Button type must be one of 'text', 'icon', 'icon+text', got #{ @_options.type }."
-        if @_options.type is 'text' and not @_options.label
+        if not @_config.type in ['text', 'icon', 'icon+text', 'text-bare', 'icon-bare', 'icon+text-bare']
+            throw new Error "Button type must be one of 'text', 'icon', 'icon+text', got #{ @_config.type }."
+        if @_config.type is 'text' and not @_config.label
             throw new Error "Buttons of type 'text' MUST have a label set."
 
     # Private: Apply the necessary classes to the element.
@@ -77,9 +78,9 @@ class Button extends BaseDoodad
     # Returns nothing.
     _setClasses: ->
         super()
-        if @_options.spinner
+        if @_config.spinner
             @$el.addClass('-spinner')
-            if @_options.spinner is 'replace'
+            if @_config.spinner is 'replace'
                 @$el.addClass('-spinner--replace')
             else
                 @$el.addClass('-spinner--inline')
@@ -92,12 +93,12 @@ class Button extends BaseDoodad
         @$el.empty()
         @_setClasses()
 
-        if @_options.label
+        if @_config.label
             @$el.append('<span class="ButtonLabel"></span>')
-            @setLabel(@_options.label)
-        if @_options.type.indexOf('icon') isnt -1
+            @setLabel(@_config.label)
+        if @_config.type.indexOf('icon') isnt -1
             @$el.prepend('<div class="ButtonIcon"></div>')
-        if @_options.spinner
+        if @_config.spinner
             @$el.append(@_spinner.render())
         @delegateEvents()
         return @el
@@ -139,7 +140,7 @@ class Button extends BaseDoodad
     _handleClick: (e) =>
         e?.stopPropagation()
 
-        if @_options.spinner
+        if @_config.spinner
             @disable()
             @_setActive()
         @trigger('click', this)
@@ -151,7 +152,7 @@ class Button extends BaseDoodad
     #
     # Returns self for chaining.
     setLabel: (label) =>
-        if @_options.type in ['icon', 'icon-bare']
+        if @_config.type in ['icon', 'icon-bare']
             @$el.attr('title', label)
         else
             @$el.find('.ButtonLabel').text(label)

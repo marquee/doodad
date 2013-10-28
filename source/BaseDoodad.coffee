@@ -21,13 +21,14 @@ class BaseDoodad extends View
     #     self[0] = @el
     #     return self
 
-    initialize: (options) ->
+    initialize: (options={}) ->
         if options.class?
             console.warn "#{ @className } `class` option is deprecated. Use the `variant` option instead."
             options.variant = options.class
         if options.extra_classes?
             console.warn "#{ @className } `extra_classes` option is deprecated. Use the `classes` option instead."
             options.classes = options.extra_classes
+        @on(event, handler) for event, handler of options.on
         @name = options.name
         @_is_enabled = true
 
@@ -40,7 +41,7 @@ class BaseDoodad extends View
         else
             @hide()
         # TODO: DRY up the child classes using something like:
-        # @_options = @_validateOptions(options)
+        # @_config = @_validateOptions(options)
         # @_configure()
         # @_setClasses()
 
@@ -148,20 +149,20 @@ class BaseDoodad extends View
         class_list = []
 
         # Not all Doodads have a type.
-        if @_options.type?.split?
-            for c in @_options.type.split('+')
+        if @_config.type?.split?
+            for c in @_config.type.split('+')
                 class_list.push(c.split('-')...)
-        if @_options.variant?.length > 0
-            class_list.push(@_options.variant.split(' ')...)
+        if @_config.variant?.length > 0
+            class_list.push(@_config.variant.split(' ')...)
 
         # Prefix the variants as Shiny variants.
         class_list = _.map class_list, (c) => "-#{ c }"
 
-        if @_options?.classes
-            if _.isArray(@_options?.classes)
-                class_list.push(@_options.classes...)
+        if @_config?.classes
+            if _.isArray(@_config?.classes)
+                class_list.push(@_config.classes...)
             else
-                class_list.push(@_options.classes)
+                class_list.push(@_config.classes)
 
         @$el.addClass(class_list.join(' '))
 

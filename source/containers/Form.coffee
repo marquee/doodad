@@ -21,14 +21,14 @@ dform 'form_name', model: @model,
     dstringinput 'some_property'
 
 dForm 'form_name', model: @model,
-    dStringInput 'property'
-    dStringInput 'other_property', type: 'multiline'
+    dStringField 'property'
+    dStringField 'other_property', type: 'multiline'
     dSelect 'prop', [
             {name: 'Value', value: 'value'}
             {name: 'Value 2', value: 'value2'}
             {name: 'Value 3', value: 'value3'}
         ]
-    dStringInput 'some_property'
+    dStringField 'some_property'
 
 # Equivalent to:
 
@@ -36,9 +36,9 @@ new Form
     name: 'form_name'
     model: @model
     content: [
-        new StringInput
+        new StringField
             name: 'property'
-        new StringInput
+        new StringField
             name: 'other_property'
             type: 'multiline'
         new Select
@@ -48,7 +48,7 @@ new Form
                 {name: 'Value 2', value: 'value2'}
                 {name: 'Value 3', value: 'value3'}
             ]
-        new StringInput
+        new StringField
             name: 'some_property'
     ]
 
@@ -76,13 +76,13 @@ class Form extends BaseDoodad
     className: 'Form'
     initialize: (options) ->
         super(arguments...)
-        @_options = _.extend {},
+        @_config = _.extend {},
             content : []
             layout  : null
             on      : {}
         , options
 
-        @on(event, handler) for event, handler of @_options.on
+        @on(event, handler) for event, handler of @_config.on
 
         @_setClasses()
         @_is_showing = false
@@ -94,10 +94,10 @@ class Form extends BaseDoodad
         @$el.empty()
         @ui = {}
         @ui.content = $('<div class="Form_content"></div>')
-        if @_options.layout
+        if @_config.layout
             @$el.addClass('Form-autolayout')
             used = {}
-            _.each @_options.layout, (row) =>
+            _.each @_config.layout, (row) =>
                 $row = $('<div class="Form_content_row"></div>')
                 _.each row, (cell) =>
                     $cell = $('<div class="Form_content_cell"></div>')
@@ -118,7 +118,7 @@ class Form extends BaseDoodad
                     console.warn "Component \"#{ field_name }\" not used in layout for", this
 
         else
-            _.each @_options.content, (item, i) =>
+            _.each @_config.content, (item, i) =>
                 @ui.content.append(item.render())
         @$el.append(@ui.content)
         return @el
@@ -145,7 +145,7 @@ class Form extends BaseDoodad
         num_fields = 0
         num_forms = 0
         component_index = {}
-        _.each @_options.content, (field, i) =>
+        _.each @_config.content, (field, i) =>
             if field.getValue?
                 if field instanceof Form
                     num_forms += 1

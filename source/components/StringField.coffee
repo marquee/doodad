@@ -1,6 +1,6 @@
 BaseDoodad = require '../BaseDoodad'
  
-# si = new StringInput
+# si = new StringField
 #     placeholder: 'tags, comma-separated'
 #     on_change: ->d
 #     tokenize: ',' # or true for just enter/tab
@@ -20,17 +20,26 @@ parseLimit = (limit) ->
     return [soft, limit]
 
 
-class StringInput extends BaseDoodad
+class StringField extends BaseDoodad
     @__doc__ = """
     """
  
     tagName: 'DIV'
-    className: 'StringInput'
+    className: 'StringField'
  
     initialize: (options) ->
         @_is_enabled = true
-        @_options = _.extend {},
-            tokenize        : null # true - tokenize on ,
+        if options.tokenize?
+            console.warn "StringField `tokenize` option is deprecated. Use `type:'token'` and `delimiter:','` instead."
+            if _.isString(options.tokenize)
+                options.delimiter = options.tokenize
+            options.type = 'token'
+        if options.multiline?
+            console.warn "StringField `multiline` option is deprecated. Used `type:'multiline'` instead."
+            options.type = 'multiline'
+        super(options)
+        @_config = _.extend {},
+            type            : 'singleline'
             delimiter       : null # instead of tokenize, then type: 'token', 'multiline'
             variant         : null
             helptext        : null
@@ -39,45 +48,30 @@ class StringInput extends BaseDoodad
             unique          : false
             placeholder     : ''
             label           : ''
-            extra_classes   : []
+            classes         : []
             char_limit      : null
             word_limit      : null
             value           : ''
             on              : {}
         , options
-        super(@_options)
+
 
         @raw_value = ''
-        if @_options.tokenize
-            @value = if @_options.value then @_options.value else []
-            @raw_value = @value.join(@_options.tokenize)
+        if @_config.type is 'token'
+            @value = if @_config.value then @_config.value else []
+            @raw_value = @value.join(@_config.delimiter)
             @_current_token = ''
         else
-            @value = @_options.value
+            @value = @_config.value
 
-        if @_options.char_limit
-            [@_options.limit_is_soft, @_options.char_limit] = parseLimit(@_options.char_limit)
-        else if @_options.word_limit
-            [@_options.limit_is_soft, @_options.word_limit] = parseLimit(@_options.word_limit)
+        if @_config.char_limit
+            [@_config.limit_is_soft, @_config.char_limit] = parseLimit(@_config.char_limit)
+        else if @_config.word_limit
+            [@_config.limit_is_soft, @_config.word_limit] = parseLimit(@_config.word_limit)
 
-        @on(event, handler) for event, handler of @_options.on
+        @on(event, handler) for event, handler of @_config.on
 
         @render()
-
-    # Private: Apply the necessary classes to the element.
-    #
-    # Returns nothing.
-    _setClasses: ->
-        class_list = []
-        # class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
-        if @_options.tokenize?
-            class_list.push('-tokenize')
-        else if @_options.multiline
-            class_list.push('-multiline')
-
-        class_list.push(@_options.extra_classes...)
-        @$el.addClass(class_list.join(' '))
- 
  
  
     # Public: Add the label to the element.
@@ -86,47 +80,50 @@ class StringInput extends BaseDoodad
     render: ->
         @_setClasses()
         @_ui = {}
-        if @_options.tokenize
+        if @_config.type is 'token'
             @$el.html """
-                    <label class="StringInput_label">
-                        #{ @_options.label }
-                    </label>
-                    <div class="StringInput_token_form">
-                        <div class="StringInput_tokens"></div>
-                        <input class="StringInput_input" placeholder="#{ @_options.placeholder }">
+                    <label class="StringFieldLabel"></label>
+                    <div class="StringFieldTokenForm">
+                        <div class="StringFieldTokens"></div>
+                        <input class="StringFieldInput" placeholder="#{ @_config.placeholder }">
                     </div>
                 """
-            @_ui.tokens = @$el.find('.StringInput_tokens')
-        else if @_options.multiline
+            @_ui.tokens = @$el.find('.StringFieldTokens')
+        else if @_config.multiline
             @$el.html """
                     <label>
-                        <span class="StringInput_label">#{ @_options.label }</span>
-                        <textarea class="StringInput_input" placeholder="#{ @_options.placeholder }"></textarea>
+                        <span class="StringFieldLabel"></span>
+                        <textarea class="StringFieldInput" placeholder="#{ @_config.placeholder }"></textarea>
                     </label>
                 """
         else
             @$el.html """
                     <label>
-                        <span class="StringInput_label">#{ @_options.label }</span>
-                        <input class="StringInput_input" placeholder="#{ @_options.placeholder }">
+                        <span class="StringFieldLabel"></span>
+                        <input class="StringFieldInput" placeholder="#{ @_config.placeholder }">
                     </label>
                 """
-        @_ui.input = @$el.find('.StringInput_input')
+        @_ui.input = @$el.find('.StringFieldInput')
+        @_ui.label = @$el.find('.StringFieldLabel')
+        if @_config.placeholder
+            @_ui.input.attr('placeholder', @_config.placeholder)
+        if @_config.label
+            @_ui.label.text(@_config.label)
 
-        if @_options.tokenize
+        if @_config.type is 'token'
             @_renderTokens()
         else
-            if @_options.char_limit or @_options.word_limit
-                @_ui.limit_counter = $('<span class="StringInput_counter"></span>')
-                @$el.find('label').append(@_ui.limit_counter)
+            if @_config.char_limit or @_config.word_limit
+                @_ui.limit_counter = $('<span class="StringFieldCounter"></span>')
+                @_ui.label.append(@_ui.limit_counter)
                 @_updateCharCount()
             @_ui.input.val(@value)
         @delegateEvents()
-        unless @_options.enabled
+        unless @_config.enabled
             @disable()
         return @el
  
-    # Public: Set the StringInput state to disabled.
+    # Public: Set the StringField state to disabled.
     #
     # Returns nothing.
     disable: ->
@@ -134,7 +131,7 @@ class StringInput extends BaseDoodad
         return super()
         
  
-    # Public: Set the StringInput state to enabled.
+    # Public: Set the StringField state to enabled.
     #
     # Returns nothing.
     enable: ->
@@ -142,11 +139,11 @@ class StringInput extends BaseDoodad
         super()
 
     _calcLimit: ->
-        if @_options.char_limit
-            limit = @_options.char_limit
+        if @_config.char_limit
+            limit = @_config.char_limit
             count = @value.length
         else 
-            limit = @_options.word_limit
+            limit = @_config.word_limit
             count = @value.match(/[\d\w_-]+/g)?.length or 0
         @over_limit = count > limit
         return [@over_limit, count, limit]
@@ -154,11 +151,11 @@ class StringInput extends BaseDoodad
     _updateCharCount: ->
         [over_limit, count, limit] = @_calcLimit()
         @_ui.limit_counter.text("#{ count }/#{ limit }")
-        @_ui.limit_counter.removeClass('StringInput_counter-warn StringInput_counter-over')
+        @_ui.limit_counter.unsetState('over').unsetState('warn')
         if over_limit
-            @_ui.limit_counter.addClass('StringInput_counter-over')
+            @_ui.limit_counter.setState('over')
         else if count > limit * 0.8
-            @_ui.limit_counter.addClass('StringInput_counter-warn')
+            @_ui.limit_counter.setState('warn')
 
         return [over_limit, count, limit]
 
@@ -168,29 +165,29 @@ class StringInput extends BaseDoodad
         # TODO: Make each token a view, use Collection to manage?
         _.each @value, (token) =>
             $el = $ """
-                    <span class='StringInput_token'>
-                        <span class="StringInput_token_value"></span>
-                        <button class="StringInput_token_remove">x</button>
+                    <span class='StringFieldToken'>
+                        <span class="StringFieldTokenValue"></span>
+                        <button class="StringFieldTokenRemove">x</button>
                     </span>
                 """
-            $el.find('.StringInput_token_value').text(token)
-            $el.find('.StringInput_token_remove').on 'click', (e) =>
+            $el.find('.StringFieldTokenValue').text(token)
+            $el.find('.StringFieldTokenRemove').on 'click', (e) =>
                 e.stopPropagation()
                 @_removeToken(token)
             @_ui.tokens.append($el)
  
     _updatePlaceholder: ->
         if @value.length > 0
-            @_ui.input.attr('placeholder','')
+            @_ui.input.attr('placeholder', '')
         else
-            @_ui.input.attr('placeholder',@_options.placeholder)
+            @_ui.input.attr('placeholder', @_config.placeholder)
  
     events:
-        'keydown    .StringInput_input'         : '_handleInput'
-        'paste      .StringInput_input'         : '_handleInput'
-        'click      .StringInput_token_form'    : '_focusInput'
-        'blur       .StringInput_input'         : '_fireBlur'
-        'focus      .StringInput_input'         : '_fireFocus'
+        'keydown    .StringFieldInput'         : '_handleInput'
+        'paste      .StringFieldInput'         : '_handleInput'
+        'click      .StringFieldTokenForm'     : '_focusInput'
+        'blur       .StringFieldInput'         : '_fireBlur'
+        'focus      .StringFieldInput'         : '_fireFocus'
 
     _focusInput: ->
         if @_is_enabled
@@ -205,15 +202,15 @@ class StringInput extends BaseDoodad
     _removeToken: (token) ->
         @value = _.without(@value, token)
         @_renderTokens()
-        @raw_value = @value.join(@_options.tokenize)
+        @raw_value = @value.join(@_config.delimiter)
         @trigger('change', this, @value, @raw_value)
  
     _processPaste: (e) ->
         _.defer =>
             incoming_value = @_ui.input.val()
-            if @_options.tokenize?
+            if @_config.type is 'token'?
                 @_ui.input.val('')
-                incoming_value = incoming_value.split(@_options.tokenize)
+                incoming_value = incoming_value.split(@_config.delimiter)
                 incoming_value = _.map incoming_value, (x) -> x.trim()
                 @value.push(incoming_value...)
                 @_renderTokens()
@@ -224,7 +221,7 @@ class StringInput extends BaseDoodad
  
     _handleInput: (e) ->
         was_token_trigger = e.which in [KEYCODES.ENTER, KEYCODES.TAB]
-        if @_options.tokenize
+        if @_config.type is 'token'
             if was_token_trigger
                 e.preventDefault()
             _.defer =>
@@ -232,7 +229,7 @@ class StringInput extends BaseDoodad
                 if incoming_value.length > 0
                     was_token_delimiter = false
                     incoming_char = ''
-                    if incoming_value[incoming_value.length-1] is @_options.tokenize
+                    if incoming_value[incoming_value.length-1] is @_config.delimiter
                         incoming_value = incoming_value.split('')
                         incoming_char = incoming_value.pop()
                         incoming_value = incoming_value.join('')
@@ -241,7 +238,7 @@ class StringInput extends BaseDoodad
                     if was_token_delimiter or was_token_trigger
                         incoming_value = incoming_value.trim()
                         @_ui.input.val('')
-                        if incoming_value and not (@_options.unique and incoming_value in @value)
+                        if incoming_value and not (@_config.unique and incoming_value in @value)
                             @raw_value += incoming_char
                             @value.push(incoming_value)
                             @_renderTokens()
@@ -251,16 +248,16 @@ class StringInput extends BaseDoodad
                         prev_token = @value.pop()
                         @_renderTokens()
                         @_ui.input.val(prev_token)
-                        @raw_value = @value.join(@_options.tokenize)
+                        @raw_value = @value.join(@_config.delimiter)
                         @trigger('change', this, @value, @raw_value)
                 @_updatePlaceholder()
         else
             previous_value = @value
             _.defer =>
                 @raw_value = @value = @_ui.input.val()
-                if @_options.char_limit or @_options.word_limit
+                if @_config.char_limit or @_config.word_limit
                     [over_limit, count, limit] = @_calcLimit()
-                    if over_limit and not @_options.limit_is_soft
+                    if over_limit and not @_config.limit_is_soft
                         @raw_value = @value = previous_value
                         @_ui.input.val(previous_value)
                     @_updateCharCount()
@@ -280,4 +277,4 @@ KEYCODES =
     TAB     : 9
     ENTER   : 13
 
-module.exports = StringInput
+module.exports = StringField
