@@ -22,6 +22,12 @@ class BaseDoodad extends View
     #     return self
 
     initialize: (options) ->
+        if options.class?
+            console.warn "#{ @className } `class` option is deprecated. Use the `variant` option instead."
+            options.variant = options.class
+        if options.extra_classes?
+            console.warn "#{ @className } `extra_classes` option is deprecated. Use the `classes` option instead."
+            options.classes = options.extra_classes
         @name = options.name
         @_is_enabled = true
 
@@ -145,17 +151,17 @@ class BaseDoodad extends View
         if @_options.type?.split?
             for c in @_options.type.split('+')
                 class_list.push(c.split('-')...)
-        if @_options.class?.length > 0
-            class_list.push(@_options.class.split(' ')...)
+        if @_options.variant?.length > 0
+            class_list.push(@_options.variant.split(' ')...)
 
-        # Prefix the primary classes
-        class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
+        # Prefix the variants as Shiny variants.
+        class_list = _.map class_list, (c) => "-#{ c }"
 
-        if @_options?.extra_classes
-            if _.isArray(@_options?.extra_classes)
-                class_list.push(@_options.extra_classes...)
+        if @_options?.classes
+            if _.isArray(@_options?.classes)
+                class_list.push(@_options.classes...)
             else
-                class_list.push(@_options.extra_classes)
+                class_list.push(@_options.classes)
 
         @$el.addClass(class_list.join(' '))
 
@@ -201,7 +207,7 @@ class BaseDoodad extends View
     # Returns the state in its original type, using `JSON.parse`, or
     # `undefined` if not set.
     getState: (state) ->
-        state_value = @$el.attr("data-#{ state }"
+        state_value = @$el.attr("data-#{ state }")
         if state_value
             state_value = JSON.parse(state_value)
         return state_value
@@ -210,7 +216,7 @@ class BaseDoodad extends View
     #
     # state - (String) name of the state to unset
     #
-    # Returns self for chaining.
+    # Returns self for chaining
     unsetState: (state) ->
         @$el.removeAttr("data-#{ state }")
         return this

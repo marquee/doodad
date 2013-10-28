@@ -1,25 +1,10 @@
 
 
-
-
-
-
-=icon-mask($image)
-    //mask                    : $image
-    -webkit-mask            : $image
-    mask-size               : contain
-    -webkit-mask-size       : contain
-    mask-position           : center center
-    -webkit-mask-position   : center center
-    mask-repeat             : no-repeat
-    -webkit-mask-repeat     : no-repeat
-
-
-
 .Button
     border          : 0
     font-family     : $Button-font--family
     font-size       : $Button-font--size
+    text-transform  : $Button-font--transform
 
     &:not(.-bare)
         border-width    : $Button-border--width
@@ -84,61 +69,66 @@
 
 
 .Button.-bare
-    background  : transparent
-    color       : $Button-color--default
-    font-weight : $Button-font--weight--bare
-    -webkit-font-smoothing: antialiased
+    background              : transparent
+    font-weight             : $Button-font--weight--bare
+    -webkit-font-smoothing  : antialiased
     &:hover, &:active
         background: transparent
+
+    color: $Button-font--color--bare--default
     &:not(:disabled)
         &:hover
-            color: lighten($default_color, 10)
+            color: $Button-font--color--bare--default--hover
         &:active
-            color: darken($default_color, 10)
+            color: $Button-font--color--bare--default--active
     &:disabled
-        color: $disabled_color
+        color: $Button-font--color--bare--default--disabled
         .ButtonIcon
-            background-color: $disabled_color
-    .ButtonIcon
+            background-color: $Button-font--color--bare--default--disabled
+    //.ButtonIcon
         +icon-mask($icon_bare_default_image)
-        background-color: $default_color
+        background-color: $Button-background--default
+
     &.-friendly
         &:not(:disabled)
-            color: $friendly_color
+            color: $Button-font--color--bare--friendly
             &:hover
-                color: lighten($friendly_color, 10)
+                color: $Button-font--color--bare--friendly--hover
             &:active
-                color: darken($friendly_color, 10)
-            .ButtonIcon
+                color: $Button-font--color--bare--friendly--active
+            //.ButtonIcon
                 +icon-mask($icon_bare_friendly_image)
-                background-color: $friendly_color
+                background-color: $Button-font--color--bare--friendly
+
     &.-dangerous
         &:not(:disabled)
-            color: $dangerous_color
+            color: $Button-font--color--bare--dangerous
             &:hover
-                color: lighten($dangerous_color, 10)
+                color: $Button-font--color--bare--dangerous--hover
             &:active
-                color: darken($dangerous_color, 10)
-            .ButtonIcon
+                color: $Button-font--color--bare--dangerous--active
+            //.ButtonIcon
                 +icon-mask($icon_bare_dangerous_image)
                 background-color: $dangerous_color
+
     &.-warning
         &:not(:disabled)
-            color: $warning_color
+            color: $Button-font--color--bare--warning
             &:hover
-                color: lighten($warning_color, 10)
+                color: $Button-font--color--bare--warning--hover
             &:active
-                color: darken($warning_color, 10)
-            .ButtonIcon
+                color: $Button-font--color--bare--warning--active
+            //.ButtonIcon
                 +icon-mask($icon_bare_warning_image)
                 background-color: $warning_color
+
     &.-action
         &:not(:disabled)
-            color: $action_color
+            color: $Button-font--color--bare--action
             &:hover
-                color: lighten($action_color, 10)
+                color: $Button-font--color--bare--action--hover
             &:active
-                color: darken($action_color, 10)
-            .ButtonIcon
+                color: $Button-font--color--bare--action--active
+            //.ButtonIcon
                 +icon-mask($icon_bare_action_image)
                 background-color: $action_color

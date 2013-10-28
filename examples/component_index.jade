@@ -45,7 +45,7 @@ block content
                 label   : 'Click Me'
                 type    : type
                 spinner : true
-                action  : (self) ->
+                on: click: (self) ->
                     setTimeout ->
                         self.enable()
                     , 1000
@@ -55,7 +55,7 @@ block content
                 label   : 'Click Me'
                 type    : type
                 spinner : 'replace'
-                action  : (self) ->
+                on: click: (self) ->
                     setTimeout ->
                         self.enable()
                     , 1000
@@ -64,17 +64,17 @@ block content
 
         components.push new Doodad.Button
             label: 'Click Me'
-            action: ->
+            on: click: ->
             enabled: false
 
         ['text', 'icon', 'icon+text','text-bare','icon-bare'].forEach (type) ->
-            ['action','dangerous','warning','friendly'].forEach (class_) ->
+            ['action','dangerous','warning','friendly'].forEach (variant) ->
                 components.push new Doodad.Button
                     label   : 'Click Me'
-                    class   : class_
+                    variant : variant
                     type    : type
                     spinner : true
-                    action  : (self) ->
+                    on: click: (self) ->
                         setTimeout ->
                             self.enable()
                         , 1000
@@ -82,7 +82,7 @@ block content
 
         $components = $('#components')
         components.forEach (doodad) ->
-            console.log doodad
+            # console.log doodad
             $components.append(doodad.el)
 
 

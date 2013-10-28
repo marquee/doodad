@@ -13,7 +13,7 @@ BaseDoodad = require '../BaseDoodad'
 
 SpinJS = require 'spin'
 
-{ vendorPrefixCSS } = require '../misc/helpers'
+{ vendorPrefixCSS } = require '../global/helpers'
 
 class Spinner extends BaseDoodad
 

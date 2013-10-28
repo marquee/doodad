@@ -1,7 +1,6 @@
 
-BaseDoodad = require '../BaseDoodad'
-
-Spinner = require '../subcomponents/Spinner'
+BaseDoodad  = require '../BaseDoodad'
+Spinner     = require '../subcomponents/Spinner'
 
 
 
@@ -17,32 +16,40 @@ class Button extends BaseDoodad
     #
     #     new Button
     #         label: 'Click Me!'
-    #         action: (self) -> # do stuff
+    #         on: click: (self) -> # do stuff
     #
     #     new Button
     #         type: 'icon'
     #         label: 'Title text'
-    #         action: (self) -> # do stuff
+    #         on: click: (self) -> # do stuff
     #
     #     new Button
     #         type: 'icon+text'
     #         label: 'Click Me!'
     #         spinner: true
-    #         action: (self) ->
+    #         on: click: (self) ->
     #             # do stuff
     #             self.enable()
     #
     initialize: (options) ->
         super(arguments...)
+        if options.action?
+            console.warn 'Button `action` option is deprecated. Used the `on.click` event option instead.'
+            options.on ?= {}
+            options.on.click = options.action
+        if not options.on?.click? and options.url
+            options.on.click = ->
+                window.location = options.url
         @_options = _.extend {},
             type            : 'text'
             label           : null
-            class           : null
+            variant         : null
             helptext        : null
             enabled         : true
             spinner         : false
             progress        : null
-            extra_classes   : []
+            classes         : []
+            on              : {}
         , options
 
         @_validateOptions()
@@ -52,7 +59,7 @@ class Button extends BaseDoodad
 
         if @_options.spinner
             @_spinner = new Spinner
-                variant: if @_options.type.indexOf('bare') is -1 then '#fff' else '#000'
+                color: if @_options.type.indexOf('bare') is -1 then '#fff' else '#000'
         @render()
 
     # Private: Check that the required options were passed to the constructor.
@@ -63,9 +70,7 @@ class Button extends BaseDoodad
         if not @_options.type in ['text', 'icon', 'icon+text', 'text-bare', 'icon-bare', 'icon+text-bare']
             throw new Error "Button type must be one of 'text', 'icon', 'icon+text', got #{ @_options.type }."
         if @_options.type is 'text' and not @_options.label
-            throw new Error "Buttons of type='text' MUST have a label set."
-        if not @_options.action? and not @_options.url?
-            throw new Error "A Button action function or url must be specified."
+            throw new Error "Buttons of type 'text' MUST have a label set."
 
     # Private: Apply the necessary classes to the element.
     #
@@ -73,7 +78,7 @@ class Button extends BaseDoodad
     _setClasses: ->
         super()
         if @_options.spinner
-            @$el.addClass('Button-spinner')
+            @$el.addClass('-spinner')
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.
@@ -84,14 +89,14 @@ class Button extends BaseDoodad
         @_setClasses()
 
         if @_options.label
-            @$el.append('<span class="Button_label"></span>')
+            @$el.append('<span class="ButtonLabel"></span>')
             @setLabel(@_options.label)
         if @_options.type.indexOf('icon') isnt -1
-            @$el.prepend('<div class="Button_icon_display"></div>')
+            @$el.prepend('<div class="ButtonIcon"></div>')
         if @_options.spinner
             @$el.append(@_spinner.render())
             if @_options.spinner is 'replace'
-                @$el.addClass('Button-spinner-replace')
+                @$el.addClass('-spinner--replace')
         @delegateEvents()
         return @el
 
@@ -114,14 +119,14 @@ class Button extends BaseDoodad
     # Returns nothing.
     _setActive: ->
         @_spinner?.start()
-        @$el.addClass('active')
+        @setState('active')
 
     # Private: Set the button as inactive (hides the spinner).
     #
     # Returns nothing.
     _setInactive: ->
         @_spinner?.stop()
-        @$el.removeClass('active')
+        @unsetState('active')
 
     events:
         'click': '_handleClick'
@@ -135,8 +140,7 @@ class Button extends BaseDoodad
         if @_options.spinner
             @disable()
             @_setActive()
-
-        @_options.action(this)
+        @trigger('click', this)
         return
 
     # Public: Set the text label of the button.
@@ -148,7 +152,7 @@ class Button extends BaseDoodad
         if @_options.type in ['icon', 'icon-bare']
             @$el.attr('title', label)
         else
-            @$el.find('.Button_label').text(label)
+            @$el.find('.ButtonLabel').text(label)
         return this
 
 
