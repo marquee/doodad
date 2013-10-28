@@ -22,10 +22,10 @@ class Spinner extends BaseDoodad
 
     initialize: (options) ->
         @_options = _.extend {},
-            type            : 'arrows'
+            type            : 'throbber'
             color           : '#000'
             active          : false
-            extra_classes   : []
+            classes         : []
             size            : null
             auto_hide       : true
         , options

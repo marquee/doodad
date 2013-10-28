@@ -79,6 +79,10 @@ class Button extends BaseDoodad
         super()
         if @_options.spinner
             @$el.addClass('-spinner')
+            if @_options.spinner is 'replace'
+                @$el.addClass('-spinner--replace')
+            else
+                @$el.addClass('-spinner--inline')
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.
@@ -95,8 +99,6 @@ class Button extends BaseDoodad
             @$el.prepend('<div class="ButtonIcon"></div>')
         if @_options.spinner
             @$el.append(@_spinner.render())
-            if @_options.spinner is 'replace'
-                @$el.addClass('-spinner--replace')
         @delegateEvents()
         return @el
 

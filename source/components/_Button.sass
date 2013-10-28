@@ -49,18 +49,22 @@
 
 
         +state(active)
-            &:not(.Button-spinner-replace)
-                padding-right: $Button-spinner--width + $Button-internal_padding * 2
             .Spinner
                 display: block
                 opacity: 1
-            &.Button-spinner-replace
-                .Button_icon_display
-                    visibility: hidden
-                .Button_label
-                    visibility: hidden
-                .Spinner
-                    right: calc(50% - #{ $Button-spinner--width / 2 })
+
+    &.-spinner--inline
+        +state(active)
+            padding-right: $Button-spinner--width + $Button-internal_padding * 2
+
+    &.-spinner--replace
+        +state(active)
+            .ButtonIcon
+                visibility: hidden
+            .ButtonLabel
+                visibility: hidden
+            .Spinner
+                right: calc(50% - #{ $Button-spinner--width / 2 })
 
     &:not(.-text).-icon.-spinner
         +state(active)
