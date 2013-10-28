@@ -52,7 +52,7 @@ class Button extends BaseDoodad
 
         if @_options.spinner
             @_spinner = new Spinner
-                variant: if @_options.type.indexOf('bare') is -1 then 'light' else 'dark'
+                variant: if @_options.type.indexOf('bare') is -1 then '#fff' else '#000'
         @render()
 
     # Private: Check that the required options were passed to the constructor.
