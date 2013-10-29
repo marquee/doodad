@@ -105,6 +105,10 @@ class Select extends BaseDoodad
         @ui.value.text(choice.label)
         @ui.choices.attr('data-hidden', true)
         @ui.value.removeAttr('data-hidden')
+        if choice.null_choice
+            @ui.value.addClass('-null')
+        else
+            @ui.value.removeClass('-null')
         unless opts.silent
             @_config.action?(this, @value, choice.label)
 
@@ -122,6 +126,24 @@ class Select extends BaseDoodad
             </div>
         """
 
+    _makeChoiceEl: (choice) =>
+        choice.$el = $("""
+            <div class='SelectChoice #{ if choice.null_choice then '-null' else '' }'>
+                <span class='SelectChoiceLabel'>
+                </span>
+            </div>
+        """)
+        if choice.classes?
+            if _.isArray(choice.classes)
+                choice.$el.addClass(choice.classes.join(' '))
+            else
+                choice.$el.addClass(choice.classes)
+        choice.$el.find('.SelectChoiceLabel').text(choice.label)
+        choice.$el.attr('data-value', choice.value)
+        choice.$el.on 'click', =>
+            @_setChoice(choice)
+
+
     _renderDrop: ->
         @ui.label = $("<div class='SelectLabel'>#{ @_config.label }</div>")
         @ui.value = $("<div class='SelectValue'><div>")
@@ -129,26 +151,8 @@ class Select extends BaseDoodad
 
         has_default = false
 
-
-        makeChoiceEl = (choice) =>
-            choice.$el = $("""
-                <div class='SelectChoice #{ if choice.null_choice then '-null' else '' }'>
-                    <span class='SelectChoiceLabel'>
-                    </span>
-                </div>
-            """)
-            if choice.classes?
-                if _.isArray(choice.classes)
-                    choice.$el.addClass(choice.classes.join(' '))
-                else
-                    choice.$el.addClass(choice.classes)
-            choice.$el.find('.SelectChoiceLabel').text(choice.label)
-            choice.$el.attr('data-value', choice.value)
-            choice.$el.on 'click', =>
-                @_setChoice(choice)
-
         _.each @_config.choices, (choice) =>
-            makeChoiceEl(choice)
+            @_makeChoiceEl(choice)
             if choice.default
                 has_default = true
                 @_setChoice(choice, silent: true)
@@ -162,7 +166,7 @@ class Select extends BaseDoodad
                     null_choice: true
                     label: @_config.placeholder
                     value: null
-                makeChoiceEl(null_choice)
+                @_makeChoiceEl(null_choice)
                 @ui.choices.prepend(null_choice.$el)
                 # Set the choice if no default was set above.
                 unless has_default
@@ -172,8 +176,19 @@ class Select extends BaseDoodad
         @$el.append(@ui.value)
         @$el.append(@ui.choices)
     
-    # setValue: (value, label=null) ->
-    #     console.log 'Select.setValue', value, label
+    setValue: (value, label=null) ->
+        target_choice = _.find @_config.choices, (choice) -> choice.value is value
+        console.log 'Select.setValue', value, label
+        if not target_choice and label
+            target_choice = 
+                value: value
+                label: label
+            @_config.choices.push(target_choice)
+            @_makeChoiceEl(target_choice)
+            @ui.choices.append(target_choice.$el)
+        @_setChoice(target_choice)
+
+        return this
 
     getValue: ->
         return @value
