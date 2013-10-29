@@ -102,13 +102,13 @@ class Popover extends BaseDoodad
                     @_config.confirm.on 'click', =>
                         @trigger('confirm', this)
                         @hide()
-                    else
-                        @_config.confirm = new Button
-                            label: @_config.confirm
-                            on: click: =>
-                                @trigger('confirm', this)
-                                @hide()
-                            variant: 'friendly'
+                else
+                    @_config.confirm = new Button
+                        label: @_config.confirm
+                        on: click: =>
+                            @trigger('confirm', this)
+                            @hide()
+                        variant: 'friendly'
                 @_config.dismiss.$el.addClass('PopoverControl -confirm')
                 @ui.controls.append(@_config.confirm.render())
 
