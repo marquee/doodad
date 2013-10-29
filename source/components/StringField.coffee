@@ -83,8 +83,8 @@ class StringField extends BaseDoodad
             @$el.html """
                     <label class="StringFieldLabel"></label>
                     <div class="StringFieldTokenForm">
-                        <div class="StringFieldTokens"></div>
                         <input class="StringFieldInput" placeholder="#{ @_config.placeholder }">
+                        <div class="StringFieldTokens"></div>
                     </div>
                 """
             @_ui.tokens = @$el.find('.StringFieldTokens')
@@ -122,6 +122,15 @@ class StringField extends BaseDoodad
             @disable()
         return @el
  
+    # Public: Set the label of the StringField state
+    #
+    # value - (String) the value of the label
+    #
+    # Returns self for chaining.
+    setLabel: (value) ->
+        @_ui.label.text(value)
+        return this
+
     # Public: Set the StringField state to disabled.
     #
     # Returns nothing.
