@@ -1,0 +1,25 @@
+.PopoverControls
+    margin-top      : $Popover-padding
+.PopoverTitle
+    margin-bottom   : $Popover-padding
+    text-align      : center
+
+.Popover.-modal
+    background  : $Popover-modal_mask--color
+    .PopoverContent
+        +single-box-shadow($blur: 1px)
+
+.PopoverContent
+    border-width        : $Popover-border--width
+    border-style        : $Popover-border--style
+    border-color        : $Popover-border--color
+    border-radius       : $Popover-border--radius
+    background-color    : $Popover-background--color
+    padding             : $Popover-padding
+    &::before, &::after
+        border-color        : transparent
+    &::after
+        border-width        : $Popover-triangle--size
+    &::before
+        border-width        : $Popover-triangle--size + $Popover-border--width
+
