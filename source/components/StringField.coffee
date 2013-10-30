@@ -232,7 +232,7 @@ class StringField extends BaseDoodad
     _handleInput: (e) ->
         was_token_trigger = e.which in [KEYCODES.ENTER, KEYCODES.TAB]
         if @_config.type is 'token'
-            if was_token_trigger
+            if was_token_trigger and @_ui.input.val()
                 e.preventDefault()
             _.defer =>
                 incoming_value = @_ui.input.val()
