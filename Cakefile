@@ -152,7 +152,7 @@ task 'build', 'Compile the static source (coffee/sass) and put it into static/',
 
             compass_builder = spawn 'compass', compassOptions
             captureOutput compass_builder, 'COMPASS', ->
-                unminified = fs.readFileSync(path.join(BUILD_FOLDER, 'Doodad.css')).toString()
+                unminified = fs.readFileSync(path.join(BUILD_FOLDER, 'dist.css')).toString()
                 minified = Sqwish.minify(unminified)
                 fs.writeFile path.join(OUTPUT_FOLDER, CSS_LIB_NAME), cssSourcePrefix(unminified), (err) ->
                     throw err if err?
