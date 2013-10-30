@@ -1,0 +1,51 @@
+$color-marquee_blue     : #71beba
+$color-dark_gray        : #444444
+$color-light_gray       : #c5c5c5
+$color-lighter_gray     : #dadada
+$color-lightest_gray    : #e9e9e9
+$color-background_gray  : #f2f2f2
+$color-error_red        : #e74c3c
+$color-select_green     : #1abc9c
+$color-draft_gold       : #f1c40f
+
+
+
+// $DColor-default    : #34495e !default
+$DColor-friendly   : $color-marquee_blue
+$DColor-dangerous  : $color-error_red
+$DColor-warning    : $color-draft_gold
+// $DColor-action     : #9b59b6 !default
+$DColor-disabled   : $color-background_gray
+
+
+$Doodad-font--size          : 14px !default
+$Doodad-border--radius      : 0
+$Doodad-border--color       : $color-light_gray
+$Doodad-label--color        : $color-dark_gray
+$Doodad-text--color         : $color-dark_gray
+
+$SelectChoice-color--hover      : white
+$SelectChoice-background--hover : $color-dark_gray
+
+
+
+.StringFieldInput
+    border-top: 0 !important
+    border-right: 0 !important
+    border-left: 0 !important
+    padding-left: 1rem
+    padding-right: 1rem
+
+.StringFieldLabel
+    padding-left: 1rem
+    padding-right: 1rem
+
+.StringFieldLabel
+    visibility: hidden
+    &[data-visible="true"], [data-error="true"] &, [data-focus="true"] &
+        visibility: visible
+
+
+.StringFieldToken
+    padding: 10px
+    border-radius: 36px

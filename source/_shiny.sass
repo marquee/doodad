@@ -1,0 +1,152 @@
+
+// shiny/responsive
+
+$break-extra_small  : 640px     !default
+$break-small        : 980px     !default
+$break-medium       : 1400px    !default
+$break-large        : 1600px    !default
+$break-extra_large  : 2000px    !default
+
+
+@mixin respond-to($min, $max)
+    @media only screen and (min-width: $min) and (max-width: $max)
+        @content
+
+@mixin respond-to-gt($size)
+    @media only screen and (min-width: $size + 1)
+        @content
+
+@mixin respond-to-lt($size)
+    @media only screen and (max-width: $size - 1)
+        @content
+
+@mixin respond-to-gte($size)
+    @media only screen and (min-width: $size)
+        @content
+
+@mixin respond-to-lte($size)
+    @media only screen and (max-width: $size)
+        @content
+
+
+
+// shiny/module
+
+@mixin variants($module_name, $variants...)
+    @each $variant in $variants
+        @if type_of($variant) == 'list'
+            $variant: #{ nth($variant, 1) }--#{ nth($variant, 2) }
+        @extend %#{ $module_name }%-#{ $variant }
+
+@mixin extends($module_name, $variants...)
+    @extend %#{ $module_name }
+    +variants($module_name, $variants...)
+
+@mixin auto-extend($classes...)
+    @each $class in $classes
+        .#{ $class }
+            +extends($class)
+
+@mixin not-state($state, $value: true)
+    &:not([data-#{ $state }="#{ $value }"])
+        @content
+
+@mixin state($state, $value: true)
+    &[data-#{ $state }="#{ $value }"]
+        @content
+
+
+
+
+
+// shiny/icons
+
+// Define your default icon set in $Icons
+// ('fontname', (iconname '\e801', iconname2 '\e802') )
+
+@mixin icon-selector()
+    &:before
+        @content
+
+@mixin icon($set: $Icons, $name: false, $code_only: false)
+    @if not $name
+        $name: $set
+        $set: $Icons
+    $icon_code: false
+    @each $icon in nth($set,2)
+        @if nth($icon, 1) == $name
+            $icon_code: nth($icon, 2)
+
+    @if not $icon_code
+        @warn "Icon #{ $name } not found"
+    @else
+        +icon-selector
+            content: $icon_code
+            @if not $code_only
+                font-family: nth($set,1)
+            @content
+
+
+@function icon-value($set: $Icons, $name: false)
+    @if not $name
+        $name: $set
+        $set: $Icons
+    $icon_code: false
+    @each $icon in nth($set,2)
+        @if nth($icon, 1) == $name
+            $icon_code: nth($icon, 2)
+
+    @if not $icon_code
+        @warn "Icon #{ $name } not found"
+        $icon_code: ""
+
+    @return $icon_code
+
+@mixin generate-icon-selectors($name: Icon, $set: $Icons)
+    %#{ $name }
+        font-family: nth($set,1)
+        @each $icon in nth($set,2)
+            &.-#{ nth($icon,1) }
+                +icon($set, nth($icon,1), $code_only: true)
+
+
+
+
+// shiny/layers
+
+
+@mixin layer($l, $offset: 0)
+    z-index: layer-value($l, $offset)
+
+@function layer-value($l, $offset: 0)
+    $z_index: 1
+    $min_z: 1
+    $max_z: length($layers)
+    @for $i from $min_z through $max_z
+        @if $l == nth($layers, $i)
+            $z_index: $max_z - $i + 1 + $offset
+    @return $z_index
+
+
+// shiny/fonts
+$type--base_font_size: 16px !default
+
+@mixin fontstack($set, $primary)
+    font-family: fontstack-value($set, $primary)
+
+@function fontstack-value($set: $Fonts, $primary: false)
+    @if not $primary
+        $primary: $set
+        $set: $Fonts
+    $stack: false
+
+    @each $font_stack in $set
+        @if nth($font_stack, 1) == $primary
+            $stack: $font_stack
+
+    @if not $stack
+        @warn "Font stack #{ $primary } not set"
+        $stack: 'Helvetica', 'Arial', 'sans-serif'
+    @return $stack
+
+

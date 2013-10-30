@@ -7,27 +7,40 @@ block content
 
     script(type='text/coffeescript').
         components = []
+        { StringField, Select, Button, Popover, Form } = Doodad
+        { dp, dh2, dh3, dh4, ddiv } = Doodad.Shortcuts
 
-        components.push new Doodad.StringField
-            label: 'Some Field'
+        components.push dh2('StringField')
 
-        components.push new Doodad.StringField
-            label: 'Some Field'
+        components.push new StringField
+            label: 'StringField'
+            placeholder: 'StringField'
+            char_limit: '~300'
+
+        components.push new StringField
+            label: 'StringField (disabled)'
+            placeholder: 'StringField'
             enabled: false
 
-        components.push new Doodad.StringField
-            label: 'Some Field'
+        components.push new StringField
+            label: 'StringField (error)'
+            placeholder: 'StringField'
+            value: 'erroneous input'
             state:
                 error: true
 
-        components.push new Doodad.StringField
+        components.push new StringField
             type: 'multiline'
+            label: 'StringField (multiline)'
+            placeholder: 'StringField (multiline)'
 
-        components.push new Doodad.StringField
-            label: 'Tags'
+        components.push new StringField
+            label: 'StringField (token)'
             type: 'token'
+            value: ['tag 1', 'tag 2']
 
-        components.push new Doodad.Select
+        components.push new Select
+            label: 'Select (drop)'
             placeholder: 'Uncategorized'
             choices: [
                 {
@@ -40,8 +53,11 @@ block content
                 }
             ]
 
+        components.push dh2('Buttons')
+
+        components.push dh3 'Types'
         ['text','icon','text+icon','text-bare','icon-bare','text+icon-bare'].forEach (type) ->
-            components.push new Doodad.Button
+            components.push ddiv dh4(type), new Button
                 label   : 'Click Me'
                 type    : type
                 spinner : true
@@ -50,8 +66,9 @@ block content
                         self.enable()
                     , 1000
 
+        components.push dh3 'With Spinner'
         ['text','text+icon','text-bare','text+icon-bare'].forEach (type) ->
-            components.push new Doodad.Button
+            components.push ddiv dh4(type), new Button
                 label   : 'Click Me'
                 type    : type
                 spinner : 'replace'
@@ -60,24 +77,43 @@ block content
                         self.enable()
                     , 1000
 
-
-
-        components.push new Doodad.Button
+        components.push dh3 'Disabled'
+        components.push new Button
             label: 'Click Me'
             on: click: ->
             enabled: false
 
-        ['text', 'icon', 'icon+text','text-bare','icon-bare'].forEach (type) ->
-            ['action','dangerous','warning','friendly'].forEach (variant) ->
-                components.push new Doodad.Button
-                    label   : 'Click Me'
-                    variant : variant
-                    type    : type
-                    spinner : true
-                    on: click: (self) ->
-                        setTimeout ->
-                            self.enable()
-                        , 1000
+        components.push dh3 'Variants'
+        ['action','dangerous','warning','friendly'].forEach (variant) ->
+            components.push new Button
+                type    : 'icon+text'
+                label   : 'Click Me (' + variant + ')' # dunno why string interpolation wasn't working here
+                variant : variant
+                spinner : true
+                on: click: (self) ->
+                    setTimeout ->
+                        self.enable()
+                    , 1000
+
+        components.push dh2 'Modal'
+        modal_form = new Form
+            content: [
+                new StringField()
+                new StringField()
+                new StringField()
+                new StringField()
+            ]
+        modal = new Popover
+            visible: false
+            type: 'modal'
+            title: 'Modal Title'
+            dismiss: 'Nevermind'
+            confirm: 'Save'
+            content: modal_form
+        components.push new Button
+            label: 'Show Modal'
+            on: click: modal.show
+
 
 
         $components = $('#components')

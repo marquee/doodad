@@ -20,9 +20,6 @@
         &:disabled
             background: $Button-background--default--disabled
 
-        //.ButtonIcon
-        //    +extends(background-image: $icon_default_image
-
         &.-friendly
             background: $Button-background--friendly
             &:hover:not(:disabled)
@@ -31,8 +28,6 @@
                 background: $Button-background--friendly--active
             &:disabled
                 background: $Button-background--friendly--disabled
-            //.ButtonIcon
-            //    background-image: $icon_friendly_image
 
         &.-dangerous
             background: $Button-background--dangerous
@@ -42,8 +37,6 @@
                 background: $Button-background--dangerous--active
             &:disabled
                 background: $Button-background--dangerous--disabled
-            //.ButtonIcon
-            //    background-image: $icon_dangerous_image
 
         &.-warning
             background: $Button-background--warning
@@ -53,8 +46,6 @@
                 background: $Button-background--warning--active
             &:disabled
                 background: $Button-background--warning--disabled
-            //.ButtonIcon
-            //    background-image: $icon_warning_image
 
         &.-action
             background: $Button-background--action
@@ -64,8 +55,6 @@
                 background: $Button-background--action--active
             &:disabled
                 background: $Button-background--action--disabled
-            //.ButtonIcon
-            //    background-image: $icon_action_image
 
 
 .Button.-bare
@@ -83,11 +72,6 @@
             color: $Button-font--color--bare--default--active
     &:disabled
         color: $Button-font--color--bare--default--disabled
-        .ButtonIcon
-            background-color: $Button-font--color--bare--default--disabled
-    //.ButtonIcon
-        +icon-mask($icon_bare_default_image)
-        background-color: $Button-background--default
 
     &.-friendly
         &:not(:disabled)
@@ -96,9 +80,6 @@
                 color: $Button-font--color--bare--friendly--hover
             &:active
                 color: $Button-font--color--bare--friendly--active
-            //.ButtonIcon
-                +icon-mask($icon_bare_friendly_image)
-                background-color: $Button-font--color--bare--friendly
 
     &.-dangerous
         &:not(:disabled)
@@ -107,9 +88,6 @@
                 color: $Button-font--color--bare--dangerous--hover
             &:active
                 color: $Button-font--color--bare--dangerous--active
-            //.ButtonIcon
-                +icon-mask($icon_bare_dangerous_image)
-                background-color: $dangerous_color
 
     &.-warning
         &:not(:disabled)
@@ -118,9 +96,6 @@
                 color: $Button-font--color--bare--warning--hover
             &:active
                 color: $Button-font--color--bare--warning--active
-            //.ButtonIcon
-                +icon-mask($icon_bare_warning_image)
-                background-color: $warning_color
 
     &.-action
         &:not(:disabled)
@@ -129,6 +104,11 @@
                 color: $Button-font--color--bare--action--hover
             &:active
                 color: $Button-font--color--bare--action--active
-            //.ButtonIcon
-                +icon-mask($icon_bare_action_image)
-                background-color: $action_color
+
+.ButtonIcon
+    +icon-selector
+        position    : relative
+        top         : 0.2em
+        font-size   : 1.3em
+
+

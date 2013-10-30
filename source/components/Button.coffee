@@ -6,6 +6,12 @@ Spinner     = require '../subcomponents/Spinner'
 
 class Button extends BaseDoodad
     @__doc__ = '<Link to button docs>'
+    DEFAULT_ICONS:
+        default     : 'ok'
+        friendly    : 'ok'
+        warning     : 'warning'
+        dangerous   : 'warning'
+        action      : 'right'
 
     tagName: 'BUTTON'
     className: 'Button'
@@ -39,6 +45,17 @@ class Button extends BaseDoodad
         if not options.on?.click? and options.url
             options.on.click = ->
                 window.location = options.url
+
+        if options.variant
+            # Allow the icon_name to be something like 'angle-right'. The variant
+            # is always one word, unhyphenated.
+            [variant, icon_name...] = options.variant.split('-')
+            unless icon_name.length > 0
+                icon_name = [@DEFAULT_ICONS[variant]]
+            options.variant = variant
+            options._icon_name = icon_name.join('-')
+        else
+            options._icon_name = @DEFAULT_ICONS.default
 
         super(arguments...)
         @_config = _.extend {},
@@ -97,7 +114,10 @@ class Button extends BaseDoodad
             @$el.append('<span class="ButtonLabel"></span>')
             @setLabel(@_config.label)
         if @_config.type.indexOf('icon') isnt -1
-            @$el.prepend('<div class="ButtonIcon"></div>')
+            $icon_display = $('<div class="ButtonIcon"></div>')
+            if @_config._icon_name
+                $icon_display.addClass("-#{ @_config._icon_name }")
+            @$el.prepend($icon_display)
         if @_config.spinner
             @$el.append(@_spinner.render())
         @delegateEvents()

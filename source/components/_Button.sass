@@ -1,16 +1,4 @@
 
-@import 'compass/css3'
-@import '../global/_colors'
-@import '../global/_icons'
-
-
-=not-state($state, $value: true)
-    &:not([data-#{ $state }="#{ $value }"])
-        @content
-
-=state($state, $value: true)
-    &[data-#{ $state }="#{ $value }"]
-        @content
 
 
 .Button
@@ -71,14 +59,17 @@
             padding-right: 0
             .Spinner
                 right: ($Button-height - $Button-spinner--height) / 2
-            .ButtonIconDisplay
+            .ButtonIcon
                 display: none
 
 
-.ButtonIconDisplay
+.ButtonIcon
+    +extends(Icon)
     position    : absolute
     left        : ($Button-height - $Button-icon--width) / 2
     top         : ($Button-height - $Button-icon--height) / 2
     width       : $Button-icon--width
     height      : $Button-icon--height
     display     : block
+
+

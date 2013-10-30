@@ -40,6 +40,9 @@ class BaseDoodad extends View
             @show()
         else
             @hide()
+
+        _.each options.state, (value, name) =>
+            @setState(name, value)
         # TODO: DRY up the child classes using something like:
         # @_config = @_validateOptions(options)
         # @_configure()

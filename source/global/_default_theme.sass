@@ -5,7 +5,8 @@ $Doodad-border--style       : solid !default
 $Doodad-border--width       : 1px !default
 $Doodad-border--color       : #ccc !default
 $Doodad-background--color   : white !default
-
+$Doodad-label--color        : #454545 !default
+$Doodad-text--color         : #252525 !default
 
 //
     $AppBar_z_index         : 10
@@ -50,10 +51,7 @@ $Button-font--color--default                    : $Button-font--color           
 $Button-font--color--default--hover             : $Button-font--color               !default
 $Button-font--color--default--active            : $Button-font--color               !default
 $Button-font--color--default--disabled          : $Button-font--color               !default
-$Button-icon--image--default                    : DIcon default                     !default
-$Button-icon--color--default                    : $Button-font--color               !default
-$Button-icon--image--bare--default              : DIcon default                     !default
-$Button-icon--color--bare--default              : $DColor-default                   !default
+
 
 
 
@@ -72,12 +70,6 @@ $Button-font--color--friendly--hover            : $Button-font--color           
 $Button-font--color--friendly--active           : $Button-font--color               !default
 $Button-font--color--friendly--disabled         : $Button-font--color               !default
 
-$Button-icon--image--friendly                   : friendly                          !default
-$Button-icon--color--friendly                   : white                             !default
-$Button-icon--image--bare--friendly             : friendly                          !default
-$Button-icon--color--bare--friendly             : $DColor-friendly                  !default
-
-
 
 
 
@@ -86,19 +78,15 @@ $Button-background--dangerous--hover            : lighten($DColor-dangerous, 10)
 $Button-background--dangerous--active           : darken($DColor-dangerous, 10)     !default
 $Button-background--dangerous--disabled         : $DColor-disabled                  !default
 
-$Button-font--color--bare--dangerous            : $DColor-dangerous                !default
-$Button-font--color--bare--dangerous--hover     : lighten($DColor-dangerous, 10)   !default
-$Button-font--color--bare--dangerous--active    : darken($DColor-dangerous, 10)    !default
-$Button-font--color--bare--dangerous--disabled  : $DColor-disabled                 !default
-$Button-font--color--dangerous                  : $Button-font--color              !default
-$Button-font--color--dangerous--hover           : $Button-font--color              !default
-$Button-font--color--dangerous--active          : $Button-font--color              !default
-$Button-font--color--dangerous--disabled        : $Button-font--color              !default
+$Button-font--color--bare--dangerous            : $DColor-dangerous                 !default
+$Button-font--color--bare--dangerous--hover     : lighten($DColor-dangerous, 10)    !default
+$Button-font--color--bare--dangerous--active    : darken($DColor-dangerous, 10)     !default
+$Button-font--color--bare--dangerous--disabled  : $DColor-disabled                  !default
+$Button-font--color--dangerous                  : $Button-font--color               !default
+$Button-font--color--dangerous--hover           : $Button-font--color               !default
+$Button-font--color--dangerous--active          : $Button-font--color               !default
+$Button-font--color--dangerous--disabled        : $Button-font--color               !default
 
-$Button-icon--image--dangerous                  : dangerous                         !default
-$Button-icon--color--dangerous                  : white                             !default
-$Button-icon--image--bare--dangerous            : dangerous                         !default
-$Button-icon--color--bare--dangerous            : $DColor-dangerous                 !default
 
 
 
@@ -116,11 +104,6 @@ $Button-font--color--warning--hover             : $Button-font--color           
 $Button-font--color--warning--active            : $Button-font--color               !default
 $Button-font--color--warning--disabled          : $Button-font--color               !default
 
-$Button-icon--image--warning                    : warning                           !default
-$Button-icon--color--warning                    : white                             !default
-$Button-icon--image--bare--warning              : warning                           !default
-$Button-icon--color--bare--warning              : $DColor-warning                   !default
-
 
 
 $Button-background--action                      : $DColor-action                    !default
@@ -137,11 +120,6 @@ $Button-font--color--action--hover              : $Button-font--color           
 $Button-font--color--action--active             : $Button-font--color               !default
 $Button-font--color--action--disabled           : $Button-font--color               !default
 
-$Button-icon--image--action                     : action                            !default
-$Button-icon--color--action                     : white                             !default
-$Button-icon--image--bare--action               : action                            !default
-$Button-icon--color--bare--action               : $DColor-action                    !default
-
 
 
 
@@ -152,6 +130,7 @@ $StringField-border--width                      : $Doodad-border--width         
 $StringField-border--style                      : $Doodad-border--style             !default
 $StringField-border--color                      : $Doodad-border--color             !default
 $StringField-border--color--error               : $DColor-dangerous                 !default
+$StringField-border--color--focus               : $DColor-friendly                  !default
 $StringField-border--radius                     : $Doodad-border--radius            !default
 $StringFieldToken-background--color             : rgba($DColor-default, 0.1)        !default
 $StringFieldToken-border--width                 : $Doodad-border--width             !default
@@ -161,6 +140,10 @@ $StringFieldToken-border--radius                : $Doodad-border--radius        
 $StringFieldToken-border--color                 : rgba($DColor-default, 0.2)        !default
 $StringFieldCounter-color--warn                 : $DColor-warning                   !default
 $StringFieldCounter-color--over                 : $DColor-dangerous                 !default
+$StringFieldLabel-color                         : $Doodad-label--color              !default
+$StringFieldLabel-color--focus                  : $DColor-friendly                  !default
+$StringFieldLabel-color--error                  : $DColor-dangerous                 !default
+$StringFieldInput-color                         : $Doodad-text--color               !default
 //$StringField_token_remove_image     : $icon_close_dark !default
 
 
@@ -177,7 +160,10 @@ $Select-background                              : $Doodad-background--color     
 $SelectChoice-background--hover                 : rgba($DColor-default, 0.1)        !default
 $SelectChoice-background--selected              : rgba($DColor-default, 0.2)        !default
 $Select-padding                                 : 8px                               !default
-
+$SelectLabel-color                              : $Doodad-label--color              !default
+$SelectChoice-color                             : $Doodad-text--color               !default
+$SelectChoice-color--hover                      : $Doodad-text--color               !default
+$SelectValue-color                              : $Doodad-text--color               !default
 
 
 
