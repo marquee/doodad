@@ -60,22 +60,26 @@ block content
             components.push ddiv dh4(type), new Button
                 label   : 'Click Me'
                 type    : type
-                spinner : true
-                on: click: (self) ->
-                    setTimeout ->
-                        self.enable()
-                    , 1000
 
         components.push dh3 'With Spinner'
         ['text','text+icon','text-bare','text+icon-bare'].forEach (type) ->
-            components.push ddiv dh4(type), new Button
-                label   : 'Click Me'
-                type    : type
-                spinner : 'replace'
-                on: click: (self) ->
-                    setTimeout ->
-                        self.enable()
-                    , 1000
+            components.push ddiv dh4(type),
+                new Button
+                    label   : 'Click Me'
+                    type    : type
+                    spinner : true
+                    on: click: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+                new Button
+                    label   : 'Click Me'
+                    type    : type
+                    spinner : 'replace'
+                    on: click: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
 
         components.push dh3 'Disabled'
         components.push new Button
@@ -89,11 +93,7 @@ block content
                 type    : 'icon+text'
                 label   : 'Click Me (' + variant + ')' # dunno why string interpolation wasn't working here
                 variant : variant
-                spinner : true
-                on: click: (self) ->
-                    setTimeout ->
-                        self.enable()
-                    , 1000
+
 
         components.push dh2 'Popovers'
         components.push dh3 'Modal'
