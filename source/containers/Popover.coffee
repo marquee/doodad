@@ -72,7 +72,8 @@ class Popover extends BaseDoodad
     _setClasses: ->
         super()
         if @_config.type.indexOf('flag') isnt -1
-            @$el.addClass("-#{ @_config.origin }")
+            origin = @_config.origin.split('-').join('_')
+            @$el.addClass("-origin--#{ origin }")
 
     render: =>
         @$el.empty()

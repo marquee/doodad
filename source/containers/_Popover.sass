@@ -22,7 +22,7 @@
 
     // TOP EDGE
 
-    &.-top-left .PopoverContent
+    &.-origin--top_left .PopoverContent
         margin-top  : $Popover-triangle--size * 2
         margin-left : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         &::after
@@ -34,7 +34,7 @@
             left                : -1 * $Popover-border--width + $border_radius_adjustment
             border-bottom-color : $Popover-border--color
 
-    &.-top-center .PopoverContent
+    &.-origin--top_center .PopoverContent
         margin-top      : $Popover-triangle--size * 2
         margin-left     : 50%
         &::after
@@ -46,7 +46,7 @@
             left                : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
             border-bottom-color : $Popover-border--color
 
-    &.-top-right .PopoverContent
+    &.-origin--top_right .PopoverContent
         margin-top      : $Popover-triangle--size * 2
         margin-right    : $Popover-triangle--size * 0.5 - $border_radius_adjustment
         &::after
@@ -60,7 +60,7 @@
 
     // RIGHT EDGE
 
-    &.-right-top .PopoverContent
+    &.-origin--right_top .PopoverContent
         margin-top      : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         margin-left     : $Popover-triangle--size * -2
         &::after
@@ -72,7 +72,7 @@
             top                 : -1 * $Popover-border--width + $border_radius_adjustment
             border-left-color   : $Popover-border--color
 
-    &.-right-center .PopoverContent
+    &.-origin--right_center .PopoverContent
         margin-top      : 50%
         margin-left     : $Popover-triangle--size * -2
         &::after
@@ -84,7 +84,7 @@
             top                 : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
             border-left-color   : $Popover-border--color
 
-    &.-right-bottom .PopoverContent
+    &.-origin--right_bottom .PopoverContent
         margin-bottom   : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         margin-left     : $Popover-triangle--size * -2
         &::after
@@ -98,7 +98,7 @@
 
     // BOTTOM EDGE
 
-    &.-bottom-left .PopoverContent
+    &.-origin--bottom_left .PopoverContent
         margin-top      : $Popover-triangle--size * -2
         margin-left     : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         &::after
@@ -110,7 +110,7 @@
             left                : -1 * $Popover-border--width + $border_radius_adjustment
             border-top-color    : $Popover-border--color
 
-    &.-bottom-center .PopoverContent
+    &.-origin--bottom_center .PopoverContent
         margin-top      : $Popover-triangle--size * -2
         margin-left     : 50%
         &::after
@@ -122,7 +122,7 @@
             left                : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
             border-top-color    : $Popover-border--color
 
-    &.-bottom-right .PopoverContent
+    &.-origin--bottom_right .PopoverContent
         margin-top      : $Popover-triangle--size * -2
         margin-right    : $Popover-triangle--size * 0.5 - $border_radius_adjustment
         &::after
@@ -136,7 +136,7 @@
 
     // LEFT EDGE
 
-    &.-left-top .PopoverContent
+    &.-origin--left_top .PopoverContent
         margin-top     : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         margin-left    : $Popover-triangle--size * 2
         &::after
@@ -148,7 +148,7 @@
             top                 : -1 * $Popover-border--width + $border_radius_adjustment
             border-right-color  : $Popover-border--color
 
-    &.-left-center .PopoverContent
+    &.-origin--left_center .PopoverContent
         margin-top     : 50%
         margin-left    : $Popover-triangle--size * 2
         &::after
@@ -160,7 +160,7 @@
             top                 : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
             border-right-color  : $Popover-border--color
 
-    &.-left-bottom .PopoverContent
+    &.-origin--left_bottom .PopoverContent
         margin-bottom  : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         margin-left    : $Popover-triangle--size * 2
         &::after
