@@ -44,10 +44,13 @@ class Popover extends BaseDoodad
     className: 'Popover'
     initialize: (options) ->
         super(arguments...)
+        if not _.isArray(options.content)
+            options.content = [options.content]
+
         @_config = _.extend {},
             type                : 'flag' # or 'modal
             content             : []
-            width               : 500
+            width               : 'auto'
             offset              : [0,0]
             close_on_outside    : false
             title               : null
@@ -57,6 +60,7 @@ class Popover extends BaseDoodad
             on                  : {}
         , options
 
+        super(options)
         if @_config.type.indexOf('flag') isnt -1
             if not @_config.origin?
                 @_config.origin = 'top-left'
@@ -68,7 +72,7 @@ class Popover extends BaseDoodad
     _setClasses: ->
         super()
         if @_config.type.indexOf('flag') isnt -1
-            @$el.addClass("#{ @className }-#{ @_config.origin }")
+            @$el.addClass("-#{ @_config.origin }")
 
     render: =>
         @$el.empty()
@@ -76,7 +80,7 @@ class Popover extends BaseDoodad
         @ui.content = $('<div class="PopoverContent"></div>')
         @ui.content.css(width: @_config.width)
         if @_config.title
-            $title = ("""<div class="PopoverTitle"></div>""")
+            $title = $("""<div class="PopoverTitle"></div>""")
             $title.text(@_config.title)
             @ui.content.append($title)
         _.each @_config.content, (item) =>
@@ -109,7 +113,7 @@ class Popover extends BaseDoodad
                             @trigger('confirm', this)
                             @hide()
                         variant: 'friendly'
-                @_config.dismiss.$el.addClass('PopoverControl -confirm')
+                @_config.confirm.$el.addClass('PopoverControl -confirm')
                 @ui.controls.append(@_config.confirm.render())
 
             @ui.content.append(@ui.controls)
@@ -203,17 +207,16 @@ class Popover extends BaseDoodad
 
     show: (trigger=null) =>
         @_is_showing = true
-        active_popovers[@cid] = this
-        console.log active_popovers
-        $('body').append(@render())
         if @_config.close_on_outside
             _.defer =>
                 $(window).one('click', @hide)
         if @_config.solo
             console.log 'closing others!', @cid
             _.each active_popovers, (popover) =>
-                if popover? and popover.cid isnt @cid
+                if popover?
                     popover.hide()
+        active_popovers[@cid] = this
+        $('body').append(@render())
         @ui.content.css('opacity', 0)
         _.defer =>
             if @_config.type.indexOf('fixed') is -1
@@ -234,9 +237,13 @@ class Popover extends BaseDoodad
             @show(trigger)
         return @_is_showing
 
+    _checkHide: (e) =>
+        if e.target is @el
+            @hide()
+        return
+
     events:
-        'click *'   : '_trapClick'
-        'click'     : 'hide'
+        'click'     : '_checkHide'
 
 
 

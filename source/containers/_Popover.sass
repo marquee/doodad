@@ -2,10 +2,12 @@
 
 .PopoverContent
     position: absolute
-    &::before, &::after
+    min-width: $Popover-min_width
+    &:before, &:after
         content         : ""
         position        : absolute
         pointer-events  : none
+        border-style    : solid
 
 
 // Many of these are technically LAF styles, but in this case it’s a lot
@@ -22,7 +24,7 @@
 
     &.-top-left .PopoverContent
         margin-top  : $Popover-triangle--size * 2
-        margin-left : $Popover-triangle--size * 0.5 - $border_radius_adjustment
+        margin-left : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         &::after
             top                 : $Popover-triangle--size * -2
             left                : $border_radius_adjustment
@@ -98,7 +100,7 @@
 
     &.-bottom-left .PopoverContent
         margin-top      : $Popover-triangle--size * -2
-        margin-left     : $Popover-triangle--size * 0.5 - $border_radius_adjustment
+        margin-left     : $Popover-triangle--size * -0.5 - $border_radius_adjustment
         &::after
             bottom              : $Popover-triangle--size * -2
             left                : $border_radius_adjustment
@@ -183,4 +185,5 @@
     left        : 0
     right       : 0
     bottom      : 0
+    position    : fixed
 

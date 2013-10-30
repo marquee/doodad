@@ -95,7 +95,8 @@ block content
                         self.enable()
                     , 1000
 
-        components.push dh2 'Modal'
+        components.push dh2 'Popovers'
+        components.push dh3 'Modal'
         modal_form = new Form
             content: [
                 new StringField()
@@ -107,13 +108,32 @@ block content
             visible: false
             type: 'modal'
             title: 'Modal Title'
-            dismiss: 'Nevermind'
+            dismiss: new Button
+                label: 'Nevermind'
+                type: 'text-bare'
             confirm: 'Save'
             content: modal_form
         components.push new Button
             label: 'Show Modal'
             on: click: modal.show
 
+
+        components.push dh3 'Flag'
+        flag_form = new Form
+            content: [
+                new StringField()
+                new StringField()
+                new StringField()
+                new StringField()
+            ]
+        flag = new Popover
+            origin: 'bottom-left'
+            visible: false
+            title: 'Flag Title'
+            content: modal_form
+        components.push new Button
+            label: 'Show Flag'
+            on: click: flag.toggle
 
 
         $components = $('#components')
