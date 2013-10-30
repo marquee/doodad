@@ -5,12 +5,16 @@
 .StringField
     margin-bottom: 1em
 
-
 .StringFieldInput
     font                : inherit
     border              : 0
     outline             : 0
+    color               : $StringFieldInput-color
     //width               : 10em
+
+.StringFieldToken, .StringFieldInput
+    margin              : 0
+    padding             : 0
 
 .StringFieldTokenForm, .StringField:not(.-token) .StringFieldInput
     border-width        : $StringField-border--width
@@ -18,7 +22,21 @@
     border-color        : $StringField-border--color
     border-radius       : $StringField-border--radius
     background-color    : $StringField-background--color
-    
+
+.StringField[data-error="true"]
+    .StringFieldLabel
+        color: $StringFieldLabel-color--error
+    .StringFieldTokenForm, &:not(.-token) .StringFieldInput
+        border-color: $StringField-border--color--error
+
+.StringFieldLabel
+    color: $StringFieldLabel-color
+
+.StringField[data-focus="true"]
+    .StringFieldLabel
+        color: $StringFieldLabel-color--focus
+    .StringFieldTokenForm, &:not(.-token) .StringFieldInput
+        border-color: $StringField-border--color--focus
  
 .StringFieldToken
     border-width        : $StringFieldToken-border--width
@@ -28,10 +46,7 @@
     background-color    : $StringFieldToken-background--color
     
 
-.StringFieldToken, .StringFieldInput
-    margin              : 0
-    padding             : 0.25em 0.5em
- 
+
 
 .StringField
     &[data-charcount--close="true"]
@@ -40,6 +55,7 @@
     &[data-charcount--over="true"]
         .StringFieldCounter
             color: $StringFieldCounter-color--over
+
 
 .StringFieldTokenRemove
     cursor: pointer

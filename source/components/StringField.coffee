@@ -27,7 +27,7 @@ class StringField extends BaseDoodad
     tagName: 'DIV'
     className: 'StringField'
  
-    initialize: (options) ->
+    initialize: (options={}) ->
         @_is_enabled = true
         if options.tokenize?
             console.warn "StringField `tokenize` option is deprecated. Use `type:'token'` and `delimiter:','` instead."
@@ -159,11 +159,11 @@ class StringField extends BaseDoodad
     _updateCharCount: ->
         [over_limit, count, limit] = @_calcLimit()
         @_ui.limit_counter.text("#{ count }/#{ limit }")
-        @_ui.limit_counter.unsetState('charcount--over').unsetState('charcount--close')
+        @unsetState('charcount--over').unsetState('charcount--close')
         if over_limit
-            @_ui.limit_counter.setState('charcount--over')
+            @setState('charcount--over')
         else if count > limit * 0.8
-            @_ui.limit_counter.setState('charcount--close')
+            @setState('charcount--close')
 
         return [over_limit, count, limit]
 
@@ -202,9 +202,11 @@ class StringField extends BaseDoodad
             @_ui.input.focus()
 
     _fireBlur: ->
+        @unsetState('focus')
         @trigger('blur', this)
 
     _fireFocus: ->
+        @setState('focus')
         @trigger('focus', this)
  
     _removeToken: (token) ->
@@ -279,6 +281,12 @@ class StringField extends BaseDoodad
 
     getValue: ->
         return @value
+
+    showLabel: ->
+        @ui.label.attr('data-visible', true)
+
+    hideLabel: ->
+        @ui.label.removeAttr('data-visible')
 
 KEYCODES =
     DELETE  : 8

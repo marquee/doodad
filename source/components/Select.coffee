@@ -77,9 +77,11 @@ class Select extends BaseDoodad
 
     _showChoices: ->
         # Keep it invisible until it is positioned.
+        left = @ui.value.position().left
         @ui.choices.css
             opacity: 0
-            left: @ui.value.position().left
+            left: left
+            right: left + @ui.value.width()
         @ui.choices.removeAttr('data-hidden')
 
         # Align the currently selected choice to the middle of the form.
