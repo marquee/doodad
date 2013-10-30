@@ -139,10 +139,8 @@ class Tag extends BaseDoodad
     @_default_child = TextNode
 
     initialize: (options={}) ->
-        @_options = _.extend
-            type: null
-        , options
-        super(@_options)
+        super(options)
+        @_config = options
 
         unless @constructor._takes_content?
             throw new Error('Doodad.Tag classes require a @_takes_content class property')
@@ -171,7 +169,8 @@ class Tag extends BaseDoodad
     # Returns self for chaining.
     addContent: (contents...) =>
         _.each contents, (child_content) =>
-            unless child_content instanceof @constructor._default_child
+            console.log 'child_content', child_content, typeof child_content
+            if not child_content.render? or (@constructor._default_child isnt TextNode and not child_content instanceof @constructor._default_child)
                 child_content = new @constructor._default_child(content: child_content)
             @_contents.push(child_content)
             @$el.append(child_content.render())

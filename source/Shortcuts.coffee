@@ -3,6 +3,7 @@ BaseDoodad  = require './BaseDoodad'
 Select      = require './components/Select'
 StringField = require './components/StringField'
 Form        = require './containers/Form'
+Tags        = require './subcomponents/Tags'
 
 
 module.exports.dform = (name, args...) ->
@@ -56,4 +57,37 @@ module.exports.dselect = (name, args...) ->
         choices: choices
     return new Select(options)
 
+
+module.exports.dh1 = (content...) ->
+    return new Tags.H1
+        content: content
+module.exports.dh2 = (content...) ->
+    return new Tags.H2
+        content: content
+module.exports.dh3 = (content...) ->
+    return new Tags.H3
+        content: content
+module.exports.dh4 = (content...) ->
+    return new Tags.H4
+        content: content
+module.exports.dh5 = (content...) ->
+    return new Tags.H5
+        content: content
+module.exports.dh6 = (content...) ->
+    return new Tags.H6
+        content: content
+
+module.exports.dp = (content...) ->
+    return new Tags.P
+        content: content
+
+module.exports.ddiv = (content...) ->
+    console.log content
+    return new Tags.DIV
+        content: content
+
+module.exports.dspan = (content...) ->
+    console.log content
+    return new Tags.SPAN
+        content: content
 
