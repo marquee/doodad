@@ -18,6 +18,11 @@
     padding-left    : $Button-internal_padding + $Button-label_padding
     padding-right   : $Button-internal_padding + $Button-label_padding
 
+    &.-size--large
+        height: $Button-height * $Button-scale_factor
+    &.-size--small
+        height: $Button-height / $Button-scale_factor
+
     &.-icon.-text
         padding-left: $Button-icon--width + $Button-internal_padding * 2
 

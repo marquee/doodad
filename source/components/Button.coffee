@@ -49,11 +49,15 @@ class Button extends BaseDoodad
         if options.variant
             # Allow the icon_name to be something like 'angle-right'. The variant
             # is always one word, unhyphenated.
-            [variant, icon_name...] = options.variant.split('-')
-            unless icon_name.length > 0
-                icon_name = [@DEFAULT_ICONS[variant]]
+            [variant, size] = options.variant.split(':')
+            options._size = size
             options.variant = variant
-            options._icon_name = icon_name.join('-')
+            if variant
+                [variant, icon_name...] = variant.split('-')
+                unless icon_name.length > 0
+                    icon_name = [@DEFAULT_ICONS[variant]]
+                options.variant = variant
+                options._icon_name = icon_name.join('-')
         else
             options._icon_name = @DEFAULT_ICONS.default
 
@@ -93,7 +97,7 @@ class Button extends BaseDoodad
     # Private: Apply the necessary classes to the element.
     #
     # Returns nothing.
-    _setClasses: ->
+    _setClasses: =>
         super()
         if @_config.spinner
             @$el.addClass('-spinner')
@@ -101,6 +105,8 @@ class Button extends BaseDoodad
                 @$el.addClass('-spinner--replace')
             else
                 @$el.addClass('-spinner--inline')
+        if @_config._size
+            @$el.addClass("-size--#{ @_config._size }")
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.

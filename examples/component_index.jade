@@ -82,6 +82,20 @@ block content
                             self.enable()
                         , 1000
 
+        ['text','text+icon','text-bare','text+icon-bare'].forEach (type) ->
+            sizes = ['large','medium','small'].map (size) ->
+                new Button
+                    label   : 'Click Me'
+                    type    : type
+                    variant : ':' + size
+                    spinner : true
+                    on: click: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+            components.push dp sizes...
+
+
         components.push dh3 'Disabled'
         components.push new Button
             label: 'Click Me'
