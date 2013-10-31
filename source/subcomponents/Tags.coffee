@@ -155,7 +155,7 @@ class Tag extends BaseDoodad
                     @addContent(options.content)
 
         for k, v of options
-            unless k in ['model', 'content', 'classes', 'variant', 'css']
+            unless k in ['model', 'content', 'classes', 'variant', 'css', 'on']
                 @$el.attr(k,v)
 
         @_setClasses()
