@@ -77,17 +77,17 @@ class Select extends BaseDoodad
 
     _showChoices: ->
         # Keep it invisible until it is positioned.
-        left = @ui.value.position().left
         @ui.choices.css
-            opacity: 0
-            left: left
-            right: left + @ui.value.width()
+            opacity : 0
+            left    : @ui.value.position().left
+            width   : @ui.value.width()
         @ui.choices.removeAttr('data-hidden')
 
         # Align the currently selected choice to the middle of the form.
         _.defer =>
             { top, left } = @_selected_choice_el.position()
 
+            top -= @ui.value.position().top
             # TODO: Constrain within window
 
             @ui.choices.css
@@ -104,7 +104,7 @@ class Select extends BaseDoodad
             @value = choice.value
         @_selected_choice_el = choice.$el
         @_selected_choice_el.attr('data-selected', true)
-        @ui.value.text(choice.label)
+        @ui.value_label.text(choice.label)
         @ui.choices.attr('data-hidden', true)
         @ui.value.removeAttr('data-hidden')
         if choice.null_choice
@@ -149,6 +149,9 @@ class Select extends BaseDoodad
     _renderDrop: ->
         @ui.label = $("<div class='SelectLabel'>#{ @_config.label }</div>")
         @ui.value = $("<div class='SelectValue'><div>")
+        @ui.value_label = $("<div class='SelectValueLabel'><div>")
+        @ui.value_icon = $("<div class='SelectValueIcon'><div>")
+        @ui.value.append(@ui.value_label, @ui.value_icon)
         @ui.choices = $("<div class='SelectChoices'></div>")
 
         has_default = false
@@ -174,9 +177,7 @@ class Select extends BaseDoodad
                 unless has_default
                     @_setChoice(null_choice, silent: true)
 
-        @$el.append(@ui.label)
-        @$el.append(@ui.value)
-        @$el.append(@ui.choices)
+        @$el.append(@ui.label, @ui.value, @ui.choices)
     
     setValue: (value, label=null) ->
         target_choice = _.find @_config.choices, (choice) -> choice.value is value

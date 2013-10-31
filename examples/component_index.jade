@@ -39,6 +39,7 @@ block content
             type: 'token'
             value: ['tag 1', 'tag 2']
 
+        components.push new dh2('Select')
         components.push new Select
             label: 'Select (drop)'
             placeholder: 'Uncategorized'
@@ -138,27 +139,12 @@ block content
 
         components.push dh2 'Form'
         components.push dh3 'With layout'
-        components.push new Form
+
+        class ReusableForm extends Form
             layout: [
                 [ ['field_1'] ]
                 [ ['field_2'],['field_3', 'formtext_1'] ]
                 [ ['field_4'] ]
-            ]
-            content: [
-                new StringField label: 'Field 1'
-                new StringField label: 'Field 2', type: 'multiline'
-                new StringField label: 'Field 3'
-                dformtext('Some help text describing the form.')
-                new StringField label: 'Field 4'
-            ]
-
-        components.push dh3 'As class'
-
-        class ReusableForm extends Form
-            layout: [
-                [ ['field_4'] ]
-                [ ['field_3'],['field_2', 'formtext_1'] ]
-                [ ['field_1'] ]
             ]
             content: -> [
                 new StringField label: 'Field 1'

@@ -1,18 +1,19 @@
 
+.Select
+    font-family: $Select-font--family
+
 .SelectChoice, .SelectValue, .SelectLabel
     cursor: pointer
 
 .SelectValue.-null
-    opacity: 0.7
-    font-style: italic
+    .SelectValueLabel
+        opacity: 0.7
+        font-style: italic
 
-.SelectChoice
-
-
-    &.-null
-        .SelectChoiceLabel
-            opacity: 0.7
-            font-style: italic
+.SelectChoice.-null
+    .SelectChoiceLabel
+        opacity: 0.7
+        font-style: italic
 
 
 
@@ -27,6 +28,12 @@
 
 .SelectValue
     padding: $Select-padding
+
+.SelectValueLabel
+    +icon(down)
+        display     : inline-block
+        float       : right
+        font-style  : normal
 
 .SelectChoice
     padding: $Select-padding
