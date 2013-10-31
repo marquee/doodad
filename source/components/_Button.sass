@@ -29,7 +29,7 @@
     &.-icon:not(.-text)
         width: $Button-icon--width + ($Button-height - $Button-icon--width)
 
-    &.-spinner
+    &%-spinner
         .Spinner
             opacity     : 0
             position    : absolute
@@ -47,10 +47,12 @@
                 opacity: 1
 
     &.-spinner--inline
+        @extend .Button%-spinner
         +state(active)
             padding-right: $Button-spinner--width + $Button-internal_padding * 2
 
     &.-spinner--replace
+        @extend .Button%-spinner
         +state(active)
             .ButtonIcon
                 visibility: hidden
@@ -59,7 +61,7 @@
             .Spinner
                 right: calc(50% - #{ $Button-spinner--width / 2 })
 
-    &:not(.-text).-icon.-spinner
+    &:not(.-text).-icon%-spinner
         +state(active)
             padding-right: 0
             .Spinner

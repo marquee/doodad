@@ -60,7 +60,6 @@ class Button extends BaseDoodad
                 options._icon_name = icon_name.join('-')
         else
             options._icon_name = @DEFAULT_ICONS.default
-
         super(arguments...)
         @_config = _.extend {},
             type            : 'text'
@@ -100,7 +99,6 @@ class Button extends BaseDoodad
     _setClasses: =>
         super()
         if @_config.spinner
-            @$el.addClass('-spinner')
             if @_config.spinner is 'replace'
                 @$el.addClass('-spinner--replace')
             else
