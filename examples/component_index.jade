@@ -3,19 +3,19 @@ extend _base
 block content
     h1 Doodad Components
 
-    #components
+    #components(style='max-width: 800px;margin: 0 auto')
 
     script(type='text/coffeescript').
         components = []
         { StringField, Select, Button, Popover, Form } = Doodad
-        { dp, dh2, dh3, dh4, ddiv } = Doodad.Shortcuts
+        { dp, dh2, dh3, dh4, ddiv, dp, dformtext } = Doodad.Shortcuts
 
         components.push dh2('StringField')
 
         components.push new StringField
             label: 'StringField'
             placeholder: 'StringField'
-            char_limit: '~300'
+            char_limit: '~30'
 
         components.push new StringField
             label: 'StringField (disabled)'
@@ -89,7 +89,7 @@ block content
 
         components.push dh3 'Variants'
         ['action','dangerous','warning','friendly'].forEach (variant) ->
-            components.push new Button
+            components.push dp new Button
                 type    : 'icon+text'
                 label   : 'Click Me (' + variant + ')' # dunno why string interpolation wasn't working here
                 variant : variant
@@ -136,10 +136,44 @@ block content
             on: click: flag.toggle
 
 
+        components.push dh2 'Form'
+        components.push dh3 'With layout'
+        components.push new Form
+            layout: [
+                [ ['field_1'] ]
+                [ ['field_2'],['field_3', 'formtext_1'] ]
+                [ ['field_4'] ]
+            ]
+            content: [
+                new StringField label: 'Field 1'
+                new StringField label: 'Field 2', type: 'multiline'
+                new StringField label: 'Field 3'
+                dformtext('Some help text describing the form.')
+                new StringField label: 'Field 4'
+            ]
+
+        components.push dh3 'As class'
+
+        class ReusableForm extends Form
+            layout: [
+                [ ['field_4'] ]
+                [ ['field_3'],['field_2', 'formtext_1'] ]
+                [ ['field_1'] ]
+            ]
+            content: -> [
+                new StringField label: 'Field 1'
+                new StringField label: 'Field 2', type: 'multiline'
+                new StringField label: 'Field 3'
+                dformtext('Some help text describing the form.')
+                new StringField label: 'Field 4'
+            ]
+        
+        components.push new ReusableForm()
+
         $components = $('#components')
         components.forEach (doodad) ->
-            # console.log doodad
-            $components.append(doodad.el)
+            console.log doodad
+            $components.append(doodad.render())
 
 
 

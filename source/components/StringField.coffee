@@ -114,6 +114,10 @@ class StringField extends BaseDoodad
         else
             if @_config.char_limit or @_config.word_limit
                 @_ui.limit_counter = $('<span class="StringFieldCounter"></span>')
+                @_ui.limit_count = $('<span class="StringFieldCounterCount"></span>')
+                @_ui.limit_total = $('<span class="StringFieldCounterTotal"></span>')
+                @_ui.limit_counter.append(@_ui.limit_count)
+                @_ui.limit_counter.append(@_ui.limit_total)
                 @_ui.label.append(@_ui.limit_counter)
                 @_updateCharCount()
             @_ui.input.val(@value)
@@ -158,7 +162,8 @@ class StringField extends BaseDoodad
 
     _updateCharCount: ->
         [over_limit, count, limit] = @_calcLimit()
-        @_ui.limit_counter.text("#{ count }/#{ limit }")
+        @_ui.limit_count.text(count)
+        @_ui.limit_total.text(limit)
         @unsetState('charcount--over').unsetState('charcount--close')
         if over_limit
             @setState('charcount--over')

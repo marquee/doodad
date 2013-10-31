@@ -74,8 +74,8 @@ class Form extends BaseDoodad
     initialize: (options) ->
         super(arguments...)
         @_config = _.extend {},
-            content : []
-            layout  : null
+            content : @content?() or []
+            layout  : @layout
             on      : {}
         , options
 
@@ -102,8 +102,12 @@ class Form extends BaseDoodad
                         width: "#{ 100/row.length }%"
                     _.each cell, (field_name) =>
                         unless used[field_name]
-                            $cell.append(@components[field_name].render())
-                            used[field_name] = true
+                            field = @components[field_name]
+                            if field?
+                                $cell.append(field.render())
+                                used[field_name] = true
+                            else
+                                console.error "Component \"#{ field_name }\" defined in layout, but not found in content for", this
                         else
                             console.error "Component \"#{ field_name }\" already used in layout for", this
                     $row.append($cell)

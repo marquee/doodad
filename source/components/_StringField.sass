@@ -2,7 +2,7 @@
 
 .StringField
     display             : block
-    box-sizing: border-box
+    box-sizing          : border-box
     *
         box-sizing: border-box
     label
@@ -22,6 +22,7 @@
 .StringFieldInput
     display: block
     width: 100%
+    max-width: 100%
 
 .StringFieldTokenRemove
     display: inline-block
@@ -30,3 +31,6 @@
     display: block
 .StringFieldCounter
     float: right
+
+.StringFieldCounterTotal:before
+    content: "/"
