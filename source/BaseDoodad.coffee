@@ -13,6 +13,7 @@ class BaseDoodad extends View
     """
 
     initialize: (options) ->
+        @_initial_events = options?.on or {}
         @_is_enabled = true
 
         if options.css
@@ -21,6 +22,8 @@ class BaseDoodad extends View
         # @_options = @_validateOptions(options)
         # @_configure()
         # @_setClasses()
+
+    events: -> @_initial_events
 
     # Public: Get the center position of the element relative to the document.
     #

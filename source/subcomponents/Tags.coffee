@@ -157,7 +157,7 @@ class Tag extends BaseDoodad
                     @addContent(options.content)
 
         for k, v of options
-            unless k in ['model', 'content', 'extra_classes']
+            unless k in ['model', 'content', 'classes', 'variant', 'css', 'on']
                 @$el.attr(k,v)
 
         @_setClasses()
@@ -199,6 +199,7 @@ class Tag extends BaseDoodad
         @$el.empty()
         _.each @_contents, (content) =>
             @$el.append(content.render())
+        @delegateEvents()
         return @el
 
 

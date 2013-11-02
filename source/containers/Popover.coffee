@@ -226,9 +226,16 @@ class Popover extends BaseDoodad
             @show(trigger)
         return @_is_showing
 
+    _checkHide: (e) =>
+        if e.target is @el
+            @hide()
+        else
+            if @_options.close_on_outside
+                e.stopPropagation()
+        return
+
     events:
-        'click *'   : '_trapClick'
-        'click'     : 'hide'
+        'click'     : '_checkHide'
 
 
 
