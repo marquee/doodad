@@ -169,7 +169,6 @@ class Tag extends BaseDoodad
     # Returns self for chaining.
     addContent: (contents...) =>
         _.each contents, (child_content) =>
-            console.log 'child_content', child_content, typeof child_content
             if not child_content.render? or (@constructor._default_child isnt TextNode and not child_content instanceof @constructor._default_child)
                 child_content = new @constructor._default_child(content: child_content)
             @_contents.push(child_content)

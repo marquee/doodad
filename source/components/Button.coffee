@@ -46,6 +46,7 @@ class Button extends BaseDoodad
             options.on.click = ->
                 window.location = options.url
 
+        options._icon_name = @DEFAULT_ICONS.default
         if options.variant
             # Allow the icon_name to be something like 'angle-right'. The variant
             # is always one word, unhyphenated.
@@ -58,8 +59,7 @@ class Button extends BaseDoodad
                     icon_name = [@DEFAULT_ICONS[variant]]
                 options.variant = variant
                 options._icon_name = icon_name.join('-')
-        else
-            options._icon_name = @DEFAULT_ICONS.default
+
         super(arguments...)
         @_config = _.extend {},
             type            : 'text'

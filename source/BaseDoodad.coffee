@@ -28,6 +28,7 @@ class BaseDoodad extends View
         if options.extra_classes?
             console.warn "#{ @className } `extra_classes` option is deprecated. Use the `classes` option instead."
             options.classes = options.extra_classes
+
         @on(event, handler) for event, handler of options.on
         @name = options.name
         @_is_enabled = true
@@ -47,6 +48,8 @@ class BaseDoodad extends View
         # @_config = @_validateOptions(options)
         # @_configure()
         # @_setClasses()
+
+    events: -> @_config?.on or {}
 
     # Public: Get the center position of the element relative to the document.
     #

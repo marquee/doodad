@@ -43,7 +43,7 @@ active_popovers = {}
 class Popover extends BaseDoodad
     className: 'Popover'
     initialize: (options) ->
-        super(arguments...)
+
         if not _.isArray(options.content)
             options.content = [options.content]
 
@@ -54,13 +54,16 @@ class Popover extends BaseDoodad
             offset              : [0,0]
             close_on_outside    : false
             title               : null
+            visible             : false
             dismiss             : null
             confirm             : null
             solo                : true
             on                  : {}
         , options
 
-        super(options)
+
+        super(@_config)
+
         if @_config.type.indexOf('flag') isnt -1
             if not @_config.origin?
                 @_config.origin = 'top-left'
@@ -195,9 +198,6 @@ class Popover extends BaseDoodad
             else
                 offset_y = @ui.content.height() / 2
 
-
-        console.log edge, position, offset_x, offset_y, @_config.offset
-
         # TODO: Allow @_config.offset to be a function, that's given the triggering element
         @$el.css
             left: x + @_config.offset[0]# - offset_x
@@ -212,7 +212,6 @@ class Popover extends BaseDoodad
             _.defer =>
                 $(window).one('click', @hide)
         if @_config.solo
-            console.log 'closing others!', @cid
             _.each active_popovers, (popover) =>
                 if popover?
                     popover.hide()
@@ -241,6 +240,9 @@ class Popover extends BaseDoodad
     _checkHide: (e) =>
         if e.target is @el
             @hide()
+        else
+            if @_config.close_on_outside
+                e.stopPropagation()
         return
 
     events:

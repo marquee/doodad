@@ -124,6 +124,15 @@ class Form extends BaseDoodad
         @$el.append(@ui.content)
         return @el
 
+    appendContent: (contents...) ->
+        @_config.content.push(contents...)
+        return this
+
+    appendLayout: (layouts...) ->
+        @_config.layout ?= []
+        @_config.layout.push(layouts...)
+        return this
+
     # Internal: gather the components of this form into a `@components` object
     # and if it’s a field (has a getValue), a `@fields` object, so that the
     # fields may be accessed directly, eg `form.fields.field_1`. Nested forms
@@ -140,7 +149,6 @@ class Form extends BaseDoodad
     #
     # Returns nothing.
     _captureFields: ->
-        console.log 'Form::_captureFields'
         @fields = {}
         @components = {}
         num_fields = 0
@@ -212,10 +220,16 @@ class Form extends BaseDoodad
         kwargs.flatten ?= true
         values = @getValue(flatten: kwargs.flatten)
         @disable()
-        @model.save values,
+        options =
             success: =>
                 @enable()
-                kwargs.success?(@model)
+                kwargs.success?(arguments...)
+            error: =>
+                @enable()
+                kwargs.error?(arguments...)
+        @model.save(values, options)
+
+
 
 Form.FormLabel = FormLabel
 Form.FormText = FormText

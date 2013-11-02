@@ -82,12 +82,10 @@ module.exports.dp = (content...) ->
         content: content
 
 module.exports.ddiv = (content...) ->
-    console.log content
     return new Tags.DIV
         content: content
 
 module.exports.dspan = (content...) ->
-    console.log content
     return new Tags.SPAN
         content: content
 

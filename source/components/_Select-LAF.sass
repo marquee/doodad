@@ -27,7 +27,7 @@
     background          : $Select-background
 
 .SelectValue
-    padding: $Select-padding
+    padding: $Select-internal_padding
 
 .SelectValueLabel
     +icon(down)
@@ -36,14 +36,15 @@
         font-style  : normal
 
 .SelectChoice
-    padding: $Select-padding
+    padding: $Select-internal_padding
     &:hover:not([data-selected="true"])
         background: $SelectChoice-background--hover
     &[data-selected="true"]
         background: $SelectChoice-background--selected
 
 .SelectLabel
-    padding: $Select-padding
+    padding: $Select-internal_padding
+    color: $SelectLabel-color
     &:empty
         display: none
 

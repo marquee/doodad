@@ -7,20 +7,20 @@ Button      = require './components/Button'
 Select      = require './components/Select'
 StringField = require './components/StringField'
 
-AppBar      = require './containers/AppBar'
+# AppBar      = require './containers/AppBar'
 Form        = require './containers/Form'
-Layout      = require './containers/Layout'
+# Layout      = require './containers/Layout'
 Popover     = require './containers/Popover'
 
 Shortcuts   = require './Shortcuts'
 
 
 Doodad =
-    AppBar      : AppBar
+    # AppBar      : AppBar
     BaseDoodad  : BaseDoodad
     Button      : Button
     Form        : Form
-    Layout      : Layout
+    # Layout      : Layout
     Popover     : Popover
     Select      : Select
     Shortcuts   : Shortcuts

@@ -63,7 +63,7 @@ class Select extends BaseDoodad
         @ui = {}
 
         switch @_config.type
-            when 'drop'
+            when 'drop', 'drop-inline'
                 @_renderDrop()
             when 'grid'
                 @_renderGrid()
@@ -112,7 +112,7 @@ class Select extends BaseDoodad
         else
             @ui.value.removeClass('-null')
         unless opts.silent
-            @_config.action?(this, @value, choice.label)
+            @trigger('change', this, @value, choice.label)
 
     _renderGrid: ->
         @$el.html """

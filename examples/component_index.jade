@@ -54,6 +54,22 @@ block content
                 }
             ]
 
+        components.push new Select
+            label: 'Select (drop-inline)'
+            type: 'drop-inline'
+            placeholder: 'Uncategorized'
+            choices: [
+                {
+                    label: 'Category 1'
+                    value: 'category-1'
+                }
+                {
+                    label: 'Category 2'
+                    value: 'category-2'
+                }
+            ]
+        components.push dspan '« inline'
+
         components.push dh2('Buttons')
 
         components.push dh3 'Types'
