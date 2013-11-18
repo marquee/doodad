@@ -83,18 +83,25 @@ class BaseDoodad extends View
 
     # Public: Hide the element, using `display: none`.
     #
+    # Hides the element using inline `display: none`, so that it can be revealed
+    # in a less-forceful way using `@show`.
+    #
     # Returns self for chaining.
     hide: =>
         @is_visible = false
-        @$el.hide()
+        @$el.css(display: 'none')
         return this
 
     # Public: Show the element.
     #
+    # Assumes the element was hidden using inline `display: none` and simply
+    # removes it. `jQuery::show` adds inline styles corresponding to the
+    # tag's defaults, which interferes with styles.
+    #
     # Returns self for chaining.
     show: =>
         @is_visible = true
-        @$el.show()
+        @$el.css(display: '')
         return this
 
     # Public: Toggle the visibility of the element.
