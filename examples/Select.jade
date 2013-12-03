@@ -11,7 +11,7 @@ block content
                 required: false
                 placeholder: 'Uncategorized'
                 label: 'Category:'
-                action: (this_select) ->
+                on: click: (this_select) ->
                     @text("Picked \#{ this_select.value }")
                 choices: [
                     {
@@ -49,6 +49,6 @@ block content
         window.instanceSetup = ($example_el, doodad_instance) ->
             # Patch the action to use the output element as `this`, and have
             # it reset after two seconds.
-            old_action = doodad_instance._options.action
-            doodad_instance._options.action = (inst) ->
+            old_action = doodad_instance._config.action
+            doodad_instance._config.action = (inst) ->
                 old_action.call($example_el.find('.output'), inst)

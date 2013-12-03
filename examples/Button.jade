@@ -8,7 +8,7 @@ block content
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 label: 'Do Something'
-                action: (this_button) ->
+                on: click: (this_button) ->
                     @text('Something done!')
 
     .example
@@ -17,7 +17,7 @@ block content
             doodads.push new Doodad.Button
                 label: 'Do Something'
                 type: 'text-bare'
-                action: (this_button) ->
+                on: click: (this_button) ->
                     @text('Something done!')
 
 
@@ -27,9 +27,9 @@ block content
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
                     type: 'text'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
-                    action: (this_button) ->
+                    on: click: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -38,9 +38,9 @@ block content
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
                     type: 'text-bare'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
-                    action: (this_button) ->
+                    on: click: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -49,9 +49,9 @@ block content
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
                     type: 'icon'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
-                    action: (this_button) ->
+                    on: click: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -60,9 +60,9 @@ block content
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
                     type: 'icon+text'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
-                    action: (this_button) ->
+                    on: click: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -71,9 +71,9 @@ block content
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
                     type: 'icon-bare'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
-                    action: (this_button) ->
+                    on: click: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -82,7 +82,7 @@ block content
             doodads.push new Doodad.Button
                 type: 'icon+text'
                 label: "Do something"
-                action: (this_button) ->
+                on: click: (this_button) ->
                     @text("Something done!")
                     this_button.setLabel('Do something again!')
 
@@ -94,7 +94,7 @@ block content
                     type: type
                     label: "Do something"
                     spinner: true
-                    action: (this_button) ->
+                    on: click: (this_button) ->
                         @text("Doing something!")
                         setTimeout =>
                             this_button.enable()
@@ -105,8 +105,8 @@ block content
         window.instanceSetup = ($example_el, doodad_instance) ->
             # Patch the action to use the output element as `this`, and have
             # it reset after two seconds.
-            old_action = doodad_instance._options.action
-            doodad_instance._options.action = (inst) ->
+            old_action = doodad_instance._config.on.click
+            doodad_instance._config.on.click = (inst) ->
                 old_action.call($example_el.find('.output'), inst)
                 clearTimeout(example_timeout)
                 example_timeout = setTimeout ->

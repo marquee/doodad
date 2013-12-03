@@ -12,14 +12,14 @@ block content
                     new Doodad.Button
                         label: 'Do Stuff'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                             , 1000
                     new Doodad.Button
                         label: 'Do Stuff Then Close'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                                 popover.hide()
@@ -27,8 +27,8 @@ block content
                 ]
             button = new Doodad.Button
                 label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
+                on: click: popover.toggle
+                variant: 'warning'
             doodads.push(button)
 
 
@@ -43,14 +43,14 @@ block content
                     new Doodad.Button
                         label: 'Do Stuff'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                             , 1000
                     new Doodad.Button
                         label: 'Do Stuff Then Close'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                                 popover.hide()
@@ -58,8 +58,8 @@ block content
                 ]
             button = new Doodad.Button
                 label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
+                on: click: popover.toggle
+                variant: 'warning'
             doodads.push(button)
 
 
@@ -74,14 +74,14 @@ block content
                     new Doodad.Button
                         label: 'Do Stuff'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                             , 1000
                     new Doodad.Button
                         label: 'Do Stuff Then Close'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                                 popover.hide()
@@ -89,8 +89,8 @@ block content
                 ]
             button = new Doodad.Button
                 label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
+                on: click: popover.toggle
+                variant: 'warning'
             doodads.push(button)
 
 
@@ -104,12 +104,12 @@ block content
                         content: 'Some filler text and stuff.'
                     new Doodad.Button
                         label: 'Close Modal'
-                        action: ->
+                        on: click: ->
                             modal.hide()
                 ]
             button = new Doodad.Button
                 label: 'Show Modal'
-                action: modal.toggle
+                on: click: modal.toggle
             doodads.push(button)
 
 
@@ -122,14 +122,14 @@ block content
                     new Doodad.Button
                         label: 'Do Stuff'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                             , 1000
                     new Doodad.Button
                         label: 'Do Stuff Then Close'
                         spinner: true
-                        action: (self) ->
+                        on: click: (self) ->
                             setTimeout ->
                                 self.enable()
                                 popover.hide()
@@ -137,8 +137,8 @@ block content
                 ]
             button = new Doodad.Button
                 label: 'Show Flag Popover'
-                action: popover.toggle
-                class: 'warning'
+                on: click: popover.toggle
+                variant: 'warning'
             doodads.push(button)
 
 
@@ -147,7 +147,7 @@ block content
         script.example_code(type='text/coffeescript').
             select = new Doodad.Select
                 required: true
-                action: ->
+                on: click: ->
                 css:
                     'z-index': 3
                 choices: [
@@ -178,12 +178,11 @@ block content
                 dismiss: 'Nevermind'
             button = new Doodad.Button
                 label: 'Show Modal'
-                action: modal.toggle
+                on: click: modal.toggle
             status = new Doodad.Tags.P()
             modal.on 'dismiss', ->
                 status.setContent('Dismissed')
             modal.on 'confirm', ->
                 status.setContent("Confirmed - \#{ select.value }")
-            window.X = status
             doodads.push([button, status])
 
