@@ -52,6 +52,7 @@ class StringField extends BaseDoodad
             word_limit      : null
             value           : ''
             on              : {}
+            name            : ''
         , options
 
         @setValue(@_config.value)
@@ -76,7 +77,7 @@ class StringField extends BaseDoodad
             @$el.html """
                     <label class="StringField_Label"></label>
                     <div class="StringField_TokenForm">
-                        <input class="StringField_Input" placeholder="#{ @_config.placeholder }">
+                        <input class="StringField_Input" placeholder="#{ @_config.placeholder }" name="#{ @_config.name }">
                         <div class="StringField_Tokens"></div>
                     </div>
                 """
@@ -85,14 +86,14 @@ class StringField extends BaseDoodad
             @$el.html """
                     <label>
                         <span class="StringField_Label"></span>
-                        <textarea class="StringField_Input" placeholder="#{ @_config.placeholder }"></textarea>
+                        <textarea class="StringField_Input" placeholder="#{ @_config.placeholder }" name="#{ @_config.name }"></textarea>
                     </label>
                 """
         else
             @$el.html """
                     <label>
                         <span class="StringField_Label"></span>
-                        <input class="StringField_Input" placeholder="#{ @_config.placeholder }">
+                        <input class="StringField_Input" placeholder="#{ @_config.placeholder }" name="#{ @_config.name }">
                     </label>
                 """
         @_ui.input = @$el.find('.StringField_Input')
