@@ -72,8 +72,8 @@ class Select extends BaseDoodad
         return @el
 
     events:
-        'click .SelectValue' : '_showChoices'
-        'click .SelectLabel' : '_showChoices'
+        'click .Select_Value' : '_showChoices'
+        'click .Select_Label' : '_showChoices'
 
     _showChoices: ->
         # Keep it invisible until it is positioned.

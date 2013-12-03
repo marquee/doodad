@@ -90,14 +90,14 @@ class Form extends BaseDoodad
     render: =>
         @$el.empty()
         @ui = {}
-        @ui.content = $('<div class="FormContent"></div>')
+        @ui.content = $('<div class="Form_Content"></div>')
         if @_config.layout
             @$el.addClass('-autolayout')
             used = {}
             _.each @_config.layout, (row) =>
-                $row = $('<div class="FormContentRow"></div>')
+                $row = $('<div class="Form_ContentRow"></div>')
                 _.each row, (cell) =>
-                    $cell = $('<div class="FormContentCell"></div>')
+                    $cell = $('<div class="Form_ContentCell"></div>')
                     $cell.css
                         width: "#{ 100/row.length }%"
                     _.each cell, (field_name) =>

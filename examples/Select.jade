@@ -11,7 +11,7 @@ block content
                 required: false
                 placeholder: 'Uncategorized'
                 label: 'Category:'
-                on: click: (this_select) ->
+                on: change: (this_select) ->
                     @text("Picked \#{ this_select.value }")
                 choices: [
                     {
