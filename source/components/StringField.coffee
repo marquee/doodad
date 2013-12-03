@@ -55,13 +55,7 @@ class StringField extends BaseDoodad
         , options
 
 
-        @raw_value = ''
-        if @_config.type is 'token'
-            @value = if @_config.value then @_config.value else []
-            @raw_value = @value.join(@_config.delimiter)
-            @_current_token = ''
-        else
-            @value = @_config.value
+        @setValue(@_config.value)
 
         if @_config.char_limit
             [@_config.limit_is_soft, @_config.char_limit] = parseLimit(@_config.char_limit)
@@ -282,6 +276,15 @@ class StringField extends BaseDoodad
         if e.which is 88 and e.metaKey
             _.defer => @_handleInput(e)
         return
+
+    setValue: (value) =>
+        @raw_value = value
+        if @_config.type is 'token'
+            @value = if value then value else []
+            @raw_value = value.join(@_config.delimiter)
+            @_current_token = ''
+        else
+            @value = value
 
     getValue: ->
         return @value
