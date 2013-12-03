@@ -66,7 +66,7 @@ block content
                         @text("Something \#{ class_ } done!")
 
     .example
-        h2 Naken Icon buttons
+        h2 Naked Icon buttons
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
@@ -100,6 +100,16 @@ block content
                             this_button.enable()
                         , 2000
 
+    .example
+        h2 Class-based button
+        script.example_code(type='text/coffeescript').
+            class CustomButton extends Doodad.Button
+                type: 'icon+text'
+                label: "Do something"
+                on: click: (this_button) ->
+                    @text("Something done!")
+                    this_button.setLabel('Do something again!')
+            doodads.push new CustomButton()
 
     script(type='text/coffeescript').
         window.instanceSetup = ($example_el, doodad_instance) ->

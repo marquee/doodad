@@ -49,6 +49,14 @@ class BaseDoodad extends View
         # @_configure()
         # @_setClasses()
 
+    _loadConfig: (options, defaults) =>
+        # Grab any new defaults from the class definition, in case this is a
+        # customized component using class extension.
+        default_config = {}
+        for k, v of defaults
+            default_config[k] = @[k] or v
+        @_config = _.extend({}, default_config, options)
+
     events: -> @_config?.on or {}
 
     # Public: Get the center position of the element relative to the document.

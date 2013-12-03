@@ -37,7 +37,7 @@ class Button extends BaseDoodad
     #             # do stuff
     #             self.enable()
     #
-    initialize: (options) ->
+    initialize: (options={}) ->
         if options.action?
             console.warn 'Button `action` option is deprecated. Used the `on.click` event option instead.'
             options.on ?= {}
@@ -61,7 +61,8 @@ class Button extends BaseDoodad
                 options._icon_name = icon_name.join('-')
 
         super(arguments...)
-        @_config = _.extend {},
+
+        @_loadConfig options,
             type            : 'text'
             label           : null
             variant         : null
@@ -71,7 +72,6 @@ class Button extends BaseDoodad
             progress        : null
             classes         : []
             on              : {}
-        , options
 
         @_validateOptions()
 

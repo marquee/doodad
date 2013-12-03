@@ -47,7 +47,7 @@ class Popover extends BaseDoodad
         if not _.isArray(options.content)
             options.content = [options.content]
 
-        @_config = _.extend {},
+        @_loadConfig options,
             type                : 'flag' # or 'modal
             content             : []
             width               : 'auto'
@@ -60,8 +60,6 @@ class Popover extends BaseDoodad
             confirm             : null
             solo                : true
             on                  : {}
-        , options
-
 
         super(@_config)
 

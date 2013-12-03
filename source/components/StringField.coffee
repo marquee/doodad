@@ -38,7 +38,7 @@ class StringField extends BaseDoodad
             console.warn "StringField `multiline` option is deprecated. Used `type:'multiline'` instead."
             options.type = 'multiline'
         super(options)
-        @_config = _.extend {},
+        @_loadConfig options,
             type            : 'singleline'
             delimiter       : null # instead of tokenize, then type: 'token', 'multiline'
             variant         : null
@@ -53,7 +53,6 @@ class StringField extends BaseDoodad
             value           : ''
             on              : {}
             name            : ''
-        , options
 
         @setValue(@_config.value)
 

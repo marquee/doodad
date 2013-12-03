@@ -33,13 +33,14 @@ class Select extends BaseDoodad
     tagName: 'DIV'
     className: 'Select'
 
-    initialize: (options) ->
+    initialize: (options={}) ->
         if options.action?
             console.warn "Select `action` option is deprecated. Use `on: change: ->` event instead."
             options.on ?= {}
             options.on.change = options.action
         super(arguments...)
-        @_config = _.extend {},
+
+        @_loadConfig options,
             type            : 'drop'
             width           : null
             height          : null
@@ -49,7 +50,6 @@ class Select extends BaseDoodad
             enabled         : true
             required        : false
             classes         : []
-        , options
 
         @render()
 

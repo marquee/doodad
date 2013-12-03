@@ -71,13 +71,12 @@ class FormText extends P
 
 class Form extends BaseDoodad
     className: 'Form'
-    initialize: (options) ->
+    initialize: (options={}) ->
         super(arguments...)
-        @_config = _.extend {},
+        @_loadConfig options,
             content : @content?() or []
             layout  : @layout
             on      : {}
-        , options
 
         @on(event, handler) for event, handler of @_config.on
 

@@ -21,9 +21,9 @@
 class AppBar extends View
     @__doc__ = ''
     @_name = 'AppBar'
-    initialize: (options) ->
+    initialize: (options={}) ->
         console.log 'AppBar.initialize'
-        @_config = _.extend {},
+        @_loadConfig options,
             head            : []
             tail            : []
             responsive      : true
@@ -31,7 +31,6 @@ class AppBar extends View
             position        : 'top'
             attach_to       : 'body'
             inject_padding  : true
-        , options
 
         @_validateOptions()
         @_setClasses()
