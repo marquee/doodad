@@ -45,6 +45,7 @@ class Select extends BaseDoodad
             width           : null
             height          : null
             label           : ''
+            choices         : null
             placeholder     : '- - -'
             variant         : null
             enabled         : true

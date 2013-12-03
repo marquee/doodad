@@ -230,3 +230,54 @@ block content
             modal.on 'confirm', ->
                 status.setContent("Confirmed - \#{ select.value }")
             doodads.push([button, status])
+
+
+
+    .example
+        h2 Define Popover using class
+        script.example_code(type='text/coffeescript').
+            class CustomPopover extends Doodad.Popover
+                type: 'modal'
+                title: 'I am defined using a class'
+                confirm: 'Okay'
+                dismiss: 'Nevermind'
+                css:
+                    'z-index': 2
+                # Can be functions
+                content: (self) ->
+                    return [
+                        select,
+                        new Doodad.Tags.P
+                            content: 'Some filler text and stuff.'
+                    ]
+            class CustomSelect extends Doodad.Select
+                required: true
+                _on:
+                    click: ->
+                css:
+                    'z-index': 3
+                choices: [
+                    {
+                        label: 'Choice 1'
+                        value: 'choice-1'
+                    }
+                    {
+                        label: 'Choice 2'
+                        value: 'choice-2'
+                    }
+                    {
+                        label: 'Choice 3'
+                        value: 'choice-3'
+                    }
+                ]
+            select = new CustomSelect()
+            modal = new CustomPopover()
+            button = new Doodad.Button
+                label: 'Show Modal'
+                on: click: modal.toggle
+            status = new Doodad.Tags.P()
+            modal.on 'dismiss', ->
+                status.setContent('Dismissed')
+            modal.on 'confirm', ->
+                status.setContent("Confirmed - \#{ select.value }")
+            doodads.push([button, status])

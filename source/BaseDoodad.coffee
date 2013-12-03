@@ -54,8 +54,12 @@ class BaseDoodad extends View
         # customized component using class extension.
         default_config = {}
         for k, v of defaults
-            default_config[k] = @[k] or v
+            class_default = @[k]
+            if _.isFunction(class_default)
+                class_default = @[k](this)
+            default_config[k] = class_default or v
         @_config = _.extend({}, default_config, options)
+        console.log '@_config', @_config, default_config, options
 
     events: -> @_config?.on or {}
 

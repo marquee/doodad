@@ -42,9 +42,9 @@ active_popovers = {}
 
 class Popover extends BaseDoodad
     className: 'Popover'
-    initialize: (options) ->
+    initialize: (options={}) ->
 
-        if not _.isArray(options.content)
+        if options.content? and not _.isArray(options.content)
             options.content = [options.content]
 
         @_loadConfig options,
