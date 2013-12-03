@@ -54,9 +54,9 @@
     &.-spinner--replace
         @extend .Button%-spinner
         +state(active)
-            .ButtonIcon
+            .Button_Icon
                 visibility: hidden
-            .ButtonLabel
+            .Button_Label
                 visibility: hidden
             .Spinner
                 right: calc(50% - #{ $Button-spinner--width / 2 })
@@ -66,14 +66,14 @@
             padding-right: 0
             .Spinner
                 right: ($Button-height - $Button-spinner--height) / 2
-            .ButtonIcon
+            .Button_Icon
                 display: none
 
-.ButtonLabel
+.Button_Label
     display: inline-block
 
-.ButtonIcon
-    +extends(Icon)
+.Button_Icon
+    +extend(Icon)
     position    : absolute
     left        : ($Button-height - $Button-icon--width) / 2
     top         : ($Button-height - $Button-icon--height) / 2

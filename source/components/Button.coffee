@@ -115,10 +115,10 @@ class Button extends BaseDoodad
         @_setClasses()
 
         if @_config.label
-            @$el.append('<span class="ButtonLabel"></span>')
+            @$el.append('<span class="Button_Label"></span>')
             @setLabel(@_config.label)
         if @_config.type.indexOf('icon') isnt -1
-            $icon_display = $('<div class="ButtonIcon"></div>')
+            $icon_display = $('<div class="Button_Icon"></div>')
             if @_config._icon_name
                 $icon_display.addClass("-#{ @_config._icon_name }")
             @$el.prepend($icon_display)
@@ -179,7 +179,7 @@ class Button extends BaseDoodad
         if @_config.type in ['icon', 'icon-bare']
             @$el.attr('title', label)
         else
-            @$el.find('.ButtonLabel').text(label)
+            @$el.find('.Button_Label').text(label)
         return this
 
 

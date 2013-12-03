@@ -32,20 +32,20 @@ $break-extra_large  : 2000px    !default
 
 // shiny/module
 
-@mixin variants($module_name, $variants...)
+@mixin extend-variants($module_name, $variants...)
     @each $variant in $variants
         @if type_of($variant) == 'list'
             $variant: #{ nth($variant, 1) }--#{ nth($variant, 2) }
         @extend %#{ $module_name }%-#{ $variant }
 
-@mixin extends($module_name, $variants...)
+@mixin extend($module_name, $variants...)
     @extend %#{ $module_name }
-    +variants($module_name, $variants...)
+    +extend-variants($module_name, $variants...)
 
 @mixin auto-extend($classes...)
     @each $class in $classes
         .#{ $class }
-            +extends($class)
+            +extend($class)
 
 @mixin not-state($state, $value: true)
     &:not([data-#{ $state }="#{ $value }"])

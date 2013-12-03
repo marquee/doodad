@@ -2,16 +2,16 @@
 .Select
     font-family: $Select-font--family
 
-.SelectChoice, .SelectValue, .SelectLabel
+.Select_Choice, .Select_Value, .Select_Label
     cursor: pointer
 
-.SelectValue.-null
-    .SelectValueLabel
+.Select_Value.-null
+    .Select_ValueLabel
         opacity: 0.7
         font-style: italic
 
-.SelectChoice.-null
-    .SelectChoiceLabel
+.Select_Choice.-null
+    .Select_ChoiceLabel
         opacity: 0.7
         font-style: italic
 
@@ -19,32 +19,32 @@
 
 
 // Theme styles
-.SelectValue, .SelectChoices
+.Select_Value, .Select_Choices
     border-radius       : $Select-border--radius
     border-style        : $Select-border--style
     border-width        : $Select-border--width
     border-color        : $Select-border--color
     background          : $Select-background
 
-.SelectValue
+.Select_Value
     padding: $Select-internal_padding
 
-.SelectValueLabel
+.Select_ValueLabel
     +icon(down)
         display     : inline-block
         float       : right
         font-style  : normal
 
-.SelectChoice
+.Select_Choice
     padding: $Select-internal_padding
     &:hover:not([data-selected="true"])
-        background: $SelectChoice-background--hover
+        background: $Select_Choice-background--hover
     &[data-selected="true"]
-        background: $SelectChoice-background--selected
+        background: $Select_Choice-background--selected
 
-.SelectLabel
+.Select_Label
     padding: $Select-internal_padding
-    color: $SelectLabel-color
+    color: $Select_Label-color
     &:empty
         display: none
 

@@ -81,29 +81,29 @@ class StringField extends BaseDoodad
         @_ui = {}
         if @_config.type is 'token'
             @$el.html """
-                    <label class="StringFieldLabel"></label>
-                    <div class="StringFieldTokenForm">
-                        <input class="StringFieldInput" placeholder="#{ @_config.placeholder }">
-                        <div class="StringFieldTokens"></div>
+                    <label class="StringField_Label"></label>
+                    <div class="StringField_TokenForm">
+                        <input class="StringField_Input" placeholder="#{ @_config.placeholder }">
+                        <div class="StringField_Tokens"></div>
                     </div>
                 """
-            @_ui.tokens = @$el.find('.StringFieldTokens')
+            @_ui.tokens = @$el.find('.StringField_Tokens')
         else if @_config.type is 'multiline'
             @$el.html """
                     <label>
-                        <span class="StringFieldLabel"></span>
-                        <textarea class="StringFieldInput" placeholder="#{ @_config.placeholder }"></textarea>
+                        <span class="StringField_Label"></span>
+                        <textarea class="StringField_Input" placeholder="#{ @_config.placeholder }"></textarea>
                     </label>
                 """
         else
             @$el.html """
                     <label>
-                        <span class="StringFieldLabel"></span>
-                        <input class="StringFieldInput" placeholder="#{ @_config.placeholder }">
+                        <span class="StringField_Label"></span>
+                        <input class="StringField_Input" placeholder="#{ @_config.placeholder }">
                     </label>
                 """
-        @_ui.input = @$el.find('.StringFieldInput')
-        @_ui.label = @$el.find('.StringFieldLabel')
+        @_ui.input = @$el.find('.StringField_Input')
+        @_ui.label = @$el.find('.StringField_Label')
         if @_config.placeholder
             @_ui.input.attr('placeholder', @_config.placeholder)
         if @_config.label
@@ -113,9 +113,9 @@ class StringField extends BaseDoodad
             @_renderTokens()
         else
             if @_config.char_limit or @_config.word_limit
-                @_ui.limit_counter = $('<span class="StringFieldCounter"></span>')
-                @_ui.limit_count = $('<span class="StringFieldCounterCount"></span>')
-                @_ui.limit_total = $('<span class="StringFieldCounterTotal"></span>')
+                @_ui.limit_counter = $('<span class="StringField_Counter"></span>')
+                @_ui.limit_count = $('<span class="StringField_CounterCount"></span>')
+                @_ui.limit_total = $('<span class="StringField_CounterTotal"></span>')
                 @_ui.limit_counter.append(@_ui.limit_count, @_ui.limit_total)
                 @_ui.label.append(@_ui.limit_counter)
                 @_updateCharCount()
@@ -177,13 +177,13 @@ class StringField extends BaseDoodad
         # TODO: Make each token a view, use Collection to manage?
         _.each @value, (token) =>
             $el = $ """
-                    <span class='StringFieldToken'>
-                        <span class="StringFieldTokenValue"></span>
-                        <button class="StringFieldTokenRemove">x</button>
+                    <span class='StringField_Token'>
+                        <span class="StringField_TokenValue"></span>
+                        <button class="StringField_TokenRemove">x</button>
                     </span>
                 """
-            $el.find('.StringFieldTokenValue').text(token)
-            $el.find('.StringFieldTokenRemove').on 'click', (e) =>
+            $el.find('.StringField_TokenValue').text(token)
+            $el.find('.StringField_TokenRemove').on 'click', (e) =>
                 e.stopPropagation()
                 @_removeToken(token)
             @_ui.tokens.append($el)
@@ -195,11 +195,11 @@ class StringField extends BaseDoodad
             @_ui.input.attr('placeholder', @_config.placeholder)
  
     events:
-        'keydown    .StringFieldInput'         : '_handleInput'
-        'paste      .StringFieldInput'         : '_handleInput'
-        'click      .StringFieldTokenForm'     : '_focusInput'
-        'blur       .StringFieldInput'         : '_fireBlur'
-        'focus      .StringFieldInput'         : '_fireFocus'
+        'keydown    .StringField_Input'        : '_handleInput'
+        'paste      .StringField_Input'        : '_handleInput'
+        'click      .StringField_TokenForm'    : '_focusInput'
+        'blur       .StringField_Input'        : '_fireBlur'
+        'focus      .StringField_Input'        : '_fireFocus'
 
     _focusInput: ->
         if @_is_enabled

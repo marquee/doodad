@@ -6,18 +6,18 @@
     margin-bottom       : 1em
     font-family         : $StringField-font--family
 
-.StringFieldInput
+.StringField_Input
     font                : inherit
     border              : 0
     outline             : 0
-    color               : $StringFieldInput-color
+    color               : $StringField_Input-color
     //width               : 10em
 
-.StringFieldToken, .StringFieldInput
+.StringField_Token, .StringField_Input
     margin              : 0
 
 
-.StringFieldTokenForm, .StringField:not(.-token) .StringFieldInput
+.StringField_TokenForm, .StringField:not(.-token) .StringField_Input
     border-width        : $StringField-border--width
     border-style        : $StringField-border--style
     border-color        : $StringField-border--color
@@ -25,36 +25,36 @@
     background-color    : $StringField-background--color
     padding             : $StringField-internal_padding
 
-.StringFieldTokenForm
+.StringField_TokenForm
     padding-bottom      : 0
 
-.StringFieldTokens
+.StringField_Tokens
     margin-top          : $StringField-internal_padding
-.StringFieldToken
+.StringField_Token
     padding             : $StringField-internal_padding
 
 .StringField[data-error="true"]
-    .StringFieldLabel
-        color: $StringFieldLabel-color--error
-    .StringFieldTokenForm, &:not(.-token) .StringFieldInput
+    .StringField_Label
+        color: $StringField_Label-color--error
+    .StringField_TokenForm, &:not(.-token) .StringField_Input
         border-color: $StringField-border--color--error
 
-.StringFieldLabel
-    color: $StringFieldLabel-color
+.StringField_Label
+    color: $StringField_Label-color
     padding: $StringField-internal_padding
 
 .StringField[data-focus="true"]
-    .StringFieldLabel
-        color: $StringFieldLabel-color--focus
-    .StringFieldTokenForm, &:not(.-token) .StringFieldInput
+    .StringField_Label
+        color: $StringField_Label-color--focus
+    .StringField_TokenForm, &:not(.-token) .StringField_Input
         border-color: $StringField-border--color--focus
  
-.StringFieldToken
-    border-width        : $StringFieldToken-border--width
-    border-style        : $StringFieldToken-border--style
-    border-color        : $StringFieldToken-border--color
-    border-radius       : $StringFieldToken-border--radius
-    background-color    : $StringFieldToken-background--color
+.StringField_Token
+    border-width        : $StringField_Token-border--width
+    border-style        : $StringField_Token-border--style
+    border-color        : $StringField_Token-border--color
+    border-radius       : $StringField_Token-border--radius
+    background-color    : $StringField_Token-background--color
     margin-right        : $StringField-internal_padding
     margin-bottom       : $StringField-internal_padding
     
@@ -63,14 +63,14 @@
 
 .StringField
     &[data-charcount--close="true"]
-        .StringFieldCounter
-            color: $StringFieldCounter-color--warn
+        .StringField_Counter
+            color: $StringField_Counter-color--warn
     &[data-charcount--over="true"]
-        .StringFieldCounter
-            color: $StringFieldCounter-color--over
+        .StringField_Counter
+            color: $StringField_Counter-color--over
 
 
-.StringFieldTokenRemove
+.StringField_TokenRemove
     cursor: pointer
     opacity: 0.5
     border: 0

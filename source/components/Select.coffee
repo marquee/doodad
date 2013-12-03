@@ -116,22 +116,22 @@ class Select extends BaseDoodad
 
     _renderGrid: ->
         @$el.html """
-            <div class="SelectLabel">Category:</div>
-            <div class="SelectChoices">
-                <div class="SelectChoice">
-                    <span class="SelectChoiceLabel">Option 1
+            <div class="Select_Label">Category:</div>
+            <div class="Select_Choices">
+                <div class="Select_Choice">
+                    <span class="Select_ChoiceLabel">Option 1
                 </div>
-                <div class="SelectChoice" data-selected="true">Option 2</div>
-                <div class="SelectChoice">Option 3</div>
-                <div class="SelectChoice">Option 4</div>
-                <div class="SelectChoice">Option 5</div>
+                <div class="Select_Choice" data-selected="true">Option 2</div>
+                <div class="Select_Choice">Option 3</div>
+                <div class="Select_Choice">Option 4</div>
+                <div class="Select_Choice">Option 5</div>
             </div>
         """
 
     _makeChoiceEl: (choice) =>
         choice.$el = $("""
-            <div class='SelectChoice #{ if choice.null_choice then '-null' else '' }'>
-                <span class='SelectChoiceLabel'>
+            <div class='Select_Choice #{ if choice.null_choice then '-null' else '' }'>
+                <span class='Select_ChoiceLabel'>
                 </span>
             </div>
         """)
@@ -140,19 +140,19 @@ class Select extends BaseDoodad
                 choice.$el.addClass(choice.classes.join(' '))
             else
                 choice.$el.addClass(choice.classes)
-        choice.$el.find('.SelectChoiceLabel').text(choice.label)
+        choice.$el.find('.Select_ChoiceLabel').text(choice.label)
         choice.$el.attr('data-value', choice.value)
         choice.$el.on 'click', =>
             @_setChoice(choice)
 
 
     _renderDrop: ->
-        @ui.label = $("<div class='SelectLabel'>#{ @_config.label }</div>")
-        @ui.value = $("<div class='SelectValue'><div>")
-        @ui.value_label = $("<div class='SelectValueLabel'><div>")
-        @ui.value_icon = $("<div class='SelectValueIcon'><div>")
+        @ui.label = $("<div class='Select_Label'>#{ @_config.label }</div>")
+        @ui.value = $("<div class='Select_Value'><div>")
+        @ui.value_label = $("<div class='Select_ValueLabel'><div>")
+        @ui.value_icon = $("<div class='Select_ValueIcon'><div>")
         @ui.value.append(@ui.value_label, @ui.value_icon)
-        @ui.choices = $("<div class='SelectChoices'></div>")
+        @ui.choices = $("<div class='Select_Choices'></div>")
 
         has_default = false
 
