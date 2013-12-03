@@ -186,3 +186,47 @@ block content
                 status.setContent("Confirmed - \#{ select.value }")
             doodads.push([button, status])
 
+    .example
+        h2 Confirm but don’t dismiss
+        script.example_code(type='text/coffeescript').
+            select = new Doodad.Select
+                required: true
+                on: click: ->
+                css:
+                    'z-index': 3
+                choices: [
+                    {
+                        label: 'Choice 1'
+                        value: 'choice-1'
+                    }
+                    {
+                        label: 'Choice 2'
+                        value: 'choice-2'
+                    }
+                    {
+                        label: 'Choice 3'
+                        value: 'choice-3'
+                    }
+                ]
+            modal = new Doodad.Popover
+                type: 'modal'
+                title: 'I do not close on confirm'
+                close_on_confirm: false
+                css:
+                    'z-index': 2
+                content: [
+                    select,
+                    new Doodad.Tags.P
+                        content: 'Some filler text and stuff.'
+                ]
+                confirm: 'Okay'
+                dismiss: 'Nevermind'
+            button = new Doodad.Button
+                label: 'Show Modal'
+                on: click: modal.toggle
+            status = new Doodad.Tags.P()
+            modal.on 'dismiss', ->
+                status.setContent('Dismissed')
+            modal.on 'confirm', ->
+                status.setContent("Confirmed - \#{ select.value }")
+            doodads.push([button, status])

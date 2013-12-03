@@ -53,6 +53,7 @@ class Popover extends BaseDoodad
             width               : 'auto'
             offset              : [0,0]
             close_on_outside    : false
+            close_on_confirm    : true
             title               : null
             visible             : false
             dismiss             : null
@@ -109,13 +110,13 @@ class Popover extends BaseDoodad
                 if @_config.confirm.on?
                     @_config.confirm.on 'click', =>
                         @trigger('confirm', this)
-                        @hide()
+                        @hide() if @_config.close_on_confirm
                 else
                     @_config.confirm = new Button
                         label: @_config.confirm
                         on: click: =>
                             @trigger('confirm', this)
-                            @hide()
+                            @hide() if @_config.close_on_confirm
                         variant: 'friendly'
                 @_config.confirm.$el.addClass('PopoverControl -confirm')
                 @ui.controls.append(@_config.confirm.render())
