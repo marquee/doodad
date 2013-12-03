@@ -54,7 +54,6 @@ class StringField extends BaseDoodad
             on              : {}
         , options
 
-
         @setValue(@_config.value)
 
         if @_config.char_limit
@@ -280,6 +279,8 @@ class StringField extends BaseDoodad
     setValue: (value) =>
         @raw_value = value
         if @_config.type is 'token'
+            unless _.isArray(value)
+                value = value.split(@_config.delimiter)
             @value = if value then value else []
             @raw_value = value.join(@_config.delimiter)
             @_current_token = ''
