@@ -121,9 +121,9 @@ class Button extends BaseDoodad
                 $icon_display.addClass("-#{ @_config._icon_name }")
             @$el.prepend($icon_display)
         if @_config.spinner
-            @$el.append(@_spinner.render())
+            @$el.append(@_spinner.render().el)
         @delegateEvents()
-        return @el
+        return this
 
     # Public: Set the Button state to disabled.
     #

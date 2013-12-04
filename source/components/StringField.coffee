@@ -115,7 +115,7 @@ class StringField extends BaseDoodad
         @delegateEvents()
         unless @_config.enabled
             @disable()
-        return @el
+        return this
  
     # Public: Set the label of the StringField state
     #

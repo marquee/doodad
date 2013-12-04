@@ -13,7 +13,7 @@ For Tags that contain content (ie non-self-closing), pass them strings:
         content: 'Some text'
 
 or lists of strings, other Tags, or other Doodads (or really anything that
-implements a `.render()` method that returns an element to be appended):
+has an `.el` and implements a `.render()` method that returns itself):
 
     new Doodad.Tags.H1
         content: [
@@ -40,7 +40,7 @@ eg as LI when in a UL or OL.
 Otherwise, they are just text nodes:
 
     new Doodad.Tags.DIV
-        extra_classes: ['inset', 'align-right']
+        classes: ['inset', 'align-right']
         content: 'Some content inside a div'
 
 
@@ -172,7 +172,7 @@ class Tag extends BaseDoodad
             if not child_content.render? or (@constructor._default_child isnt TextNode and not child_content instanceof @constructor._default_child)
                 child_content = new @constructor._default_child(content: child_content)
             @_contents.push(child_content)
-            @$el.append(child_content.render())
+            @$el.append(child_content.render().el)
         return this
 
     # Public: Set the content of the Tag (replaces existing content).
@@ -194,7 +194,7 @@ class Tag extends BaseDoodad
     render: =>
         @$el.empty()
         _.each @_contents, (content) =>
-            @$el.append(content.render())
+            @$el.append(content.render().el)
         return @el
 
 

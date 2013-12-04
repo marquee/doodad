@@ -89,7 +89,7 @@ class Popover extends BaseDoodad
             $title.text(@_config.title)
             @ui.content.prepend($title)
         _.each @_config.content, (item) =>
-            @ui.body.append(item.render())
+            @ui.body.append(item.render().el)
         if @_config.dismiss or @_config.confirm
             @ui.controls = $('<div class="Popover_Controls"></div>')
             if @_config.dismiss
@@ -104,7 +104,7 @@ class Popover extends BaseDoodad
                             @trigger('dismiss', this)
                             @hide()
                 @_config.dismiss.$el.addClass('Popover_Control -dismiss')
-                @ui.controls.append(@_config.dismiss.render())
+                @ui.controls.append(@_config.dismiss.render().el)
 
             if @_config.confirm
                 if @_config.confirm.on?
@@ -123,7 +123,7 @@ class Popover extends BaseDoodad
 
             @ui.content.append(@ui.controls)
         @$el.append(@ui.content)
-        return @el
+        return this
 
     # Public:   Set the position of the popover depending on its type.
     #

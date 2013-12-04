@@ -70,7 +70,7 @@ class Select extends BaseDoodad
                 @_renderGrid()
 
         @delegateEvents()
-        return @el
+        return this
 
     events:
         'click .Select_Value' : '_showChoices'

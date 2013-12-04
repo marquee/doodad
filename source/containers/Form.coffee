@@ -103,7 +103,7 @@ class Form extends BaseDoodad
                         unless used[field_name]
                             field = @components[field_name]
                             if field?
-                                $cell.append(field.render())
+                                $cell.append(field.render().el)
                                 used[field_name] = true
                             else
                                 console.error "Component \"#{ field_name }\" defined in layout, but not found in content for", this
@@ -119,7 +119,7 @@ class Form extends BaseDoodad
 
         else
             _.each @_config.content, (item, i) =>
-                @ui.content.append(item.render())
+                @ui.content.append(item.render().el)
         @$el.append(@ui.content)
         return @el
 

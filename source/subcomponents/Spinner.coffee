@@ -47,7 +47,7 @@ class Spinner extends BaseDoodad
     # Returns nothing.
     render: =>
         @_setClasses()
-        return @el
+        return this
 
     _setUpSpinner: (options) =>
         @_spinner?.stop()

@@ -62,5 +62,5 @@ html
                 example_timeout = null
                 _.each doodad_set, (doodad_instance) ->
                     # Add the doodad_instance to the DOM
-                    $example_el.find('.example_app').prepend(doodad_instance.render())
+                    $example_el.find('.example_app').prepend(doodad_instance.render().el)
                     window.instanceSetup?($example_el, doodad_instance)
