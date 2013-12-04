@@ -280,9 +280,12 @@ class StringField extends BaseDoodad
     setValue: (value) =>
         @raw_value = value
         if @_config.type is 'token'
-            unless _.isArray(value)
-                value = value.split(@_config.delimiter)
-            @value = if value then value else []
+            if value
+                if _.isString(value)
+                    value = value.split(@_config.delimiter)
+            else
+                value = []
+            @value = value
             @raw_value = value.join(@_config.delimiter)
             @_current_token = ''
         else
