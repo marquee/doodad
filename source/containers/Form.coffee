@@ -76,9 +76,6 @@ class Form extends BaseDoodad
         @_loadConfig options,
             content : @content?() or []
             layout  : @layout
-            on      : {}
-
-        @on(event, handler) for event, handler of @_config.on
 
         @_setClasses()
         @_is_showing = false
@@ -121,7 +118,7 @@ class Form extends BaseDoodad
             _.each @_config.content, (item, i) =>
                 @ui.content.append(item.render().el)
         @$el.append(@ui.content)
-        return @el
+        return this
 
     appendContent: (contents...) ->
         @_config.content.push(contents...)

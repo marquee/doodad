@@ -162,7 +162,7 @@ block content
                     on: click: ->
             button1 = new Doodad.Button
                 label: 'Submit Form'
-                on: click: ->
+                action: ->
                     alert(JSON.stringify(new_form.getValue(),null,4))
             doodads.push([new_form, button1])
 
@@ -182,7 +182,7 @@ block content
             button1 = new Doodad.Button
                 label: 'Save Form'
                 spinner: true
-                on: click: (self) ->
+                action: (self) ->
                     new_form.save ->
                         self.enable()
                         alert("model attributes:\n\n" + JSON.stringify(model1.attributes, null, 4))
