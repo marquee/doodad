@@ -80,16 +80,18 @@ class Popover extends BaseDoodad
     render: =>
         @$el.empty()
         @ui = {}
-        @ui.content = $('<div class="PopoverContent"></div>')
+        @ui.content = $('<div class="Popover_Content"></div>')
+        @ui.body    = $('<div class="Popover_Body"></div>')
+        @ui.content.append(@ui.body)
         @ui.content.css(width: @_config.width)
         if @_config.title
-            $title = $("""<div class="PopoverTitle"></div>""")
+            $title = $("""<div class="Popover_Title"></div>""")
             $title.text(@_config.title)
-            @ui.content.append($title)
+            @ui.content.prepend($title)
         _.each @_config.content, (item) =>
-            @ui.content.append(item.render())
+            @ui.body.append(item.render())
         if @_config.dismiss or @_config.confirm
-            @ui.controls = $('<div class="PopoverControls"></div>')
+            @ui.controls = $('<div class="Popover_Controls"></div>')
             if @_config.dismiss
                 if @_config.dismiss.on?
                     @_config.dismiss.on 'click', =>
@@ -101,7 +103,7 @@ class Popover extends BaseDoodad
                         on: click: =>
                             @trigger('dismiss', this)
                             @hide()
-                @_config.dismiss.$el.addClass('PopoverControl -dismiss')
+                @_config.dismiss.$el.addClass('Popover_Control -dismiss')
                 @ui.controls.append(@_config.dismiss.render())
 
             if @_config.confirm
@@ -116,7 +118,7 @@ class Popover extends BaseDoodad
                             @trigger('confirm', this)
                             @hide() if @_config.close_on_confirm
                         variant: 'friendly'
-                @_config.confirm.$el.addClass('PopoverControl -confirm')
+                @_config.confirm.$el.addClass('Popover_Control -confirm')
                 @ui.controls.append(@_config.confirm.render())
 
             @ui.content.append(@ui.controls)
