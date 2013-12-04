@@ -51,7 +51,8 @@ class StringField extends BaseDoodad
             char_limit      : null
             word_limit      : null
             value           : ''
-            on              : {}
+            action          : null
+            events          : {}
             name            : ''
 
         @setValue(@_config.value)
@@ -60,8 +61,6 @@ class StringField extends BaseDoodad
             [@_config.limit_is_soft, @_config.char_limit] = parseLimit(@_config.char_limit)
         else if @_config.word_limit
             [@_config.limit_is_soft, @_config.word_limit] = parseLimit(@_config.word_limit)
-
-        @on(event, handler) for event, handler of @_config.on
 
         @render()
  
@@ -187,7 +186,7 @@ class StringField extends BaseDoodad
         else
             @_ui.input.attr('placeholder', @_config.placeholder)
  
-    events:
+    events: ->
         'keydown    .StringField_Input'        : '_handleInput'
         'paste      .StringField_Input'        : '_handleInput'
         'click      .StringField_TokenForm'    : '_focusInput'
@@ -198,11 +197,13 @@ class StringField extends BaseDoodad
         if @_is_enabled
             @_ui.input.focus()
 
-    _fireBlur: ->
+    _fireBlur: (e) ->
+        console.log '_fireBlur', e
         @unsetState('focus')
         @trigger('blur', this)
 
-    _fireFocus: ->
+    _fireFocus: (e) ->
+        console.log '_fireFocus', e
         @setState('focus')
         @trigger('focus', this)
  

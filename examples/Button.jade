@@ -8,7 +8,7 @@ block content
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 label: 'Do Something'
-                on: click: (this_button) ->
+                action: (this_button) ->
                     @text('Something done!')
 
     .example
@@ -17,7 +17,7 @@ block content
             doodads.push new Doodad.Button
                 label: 'Do Something'
                 type: 'text-bare'
-                on: click: (this_button) ->
+                action: (this_button) ->
                     @text('Something done!')
 
 
@@ -29,7 +29,7 @@ block content
                     type: 'text'
                     variant: class_
                     label: "Do something \#{ class_ }"
-                    on: click: (this_button) ->
+                    action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -40,7 +40,7 @@ block content
                     type: 'text-bare'
                     variant: class_
                     label: "Do something \#{ class_ }"
-                    on: click: (this_button) ->
+                    action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -51,7 +51,7 @@ block content
                     type: 'icon'
                     variant: class_
                     label: "Do something \#{ class_ }"
-                    on: click: (this_button) ->
+                    action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -62,7 +62,7 @@ block content
                     type: 'icon+text'
                     variant: class_
                     label: "Do something \#{ class_ }"
-                    on: click: (this_button) ->
+                    action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -73,7 +73,7 @@ block content
                     type: 'icon-bare'
                     variant: class_
                     label: "Do something \#{ class_ }"
-                    on: click: (this_button) ->
+                    action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
@@ -81,9 +81,9 @@ block content
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 type: 'icon+text'
-                label: "Do something"
-                on: click: (this_button) ->
-                    @text("Something done!")
+                label: 'Do something'
+                action: (this_button) ->
+                    @text('Something done!')
                     this_button.setLabel('Do something again!')
 
     .example
@@ -92,9 +92,9 @@ block content
             doodads.push ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
                 return new Doodad.Button
                     type: type
-                    label: "Do something"
+                    label: 'Do something'
                     spinner: true
-                    on: click: (this_button) ->
+                    action: (this_button) ->
                         @text("Doing something!")
                         setTimeout =>
                             this_button.enable()
@@ -105,21 +105,33 @@ block content
         script.example_code(type='text/coffeescript').
             class CustomButton extends Doodad.Button
                 type: 'icon+text'
-                label: "Do something"
-                on: click: (this_button) ->
-                    @text("Something done!")
+                label: 'Do something'
+                action: (this_button) ->
+                    @text('Something done!')
                     this_button.setLabel('Do something again!')
+                    console.log 'action', new Date()
+            b = new CustomButton()
+            b.on 'click', ->
+                console.log 'click2', new Date()
+            doodads.push b
+
+    .example
+        h2 Class-based link button
+        script.example_code(type='text/coffeescript').
+            class CustomButton extends Doodad.Button
+                type: 'text'
+                label: 'Link to something'
+                url: 'http://example.com'
             doodads.push new CustomButton()
 
     script(type='text/coffeescript').
         window.instanceSetup = ($example_el, doodad_instance) ->
             # Patch the action to use the output element as `this`, and have
             # it reset after two seconds.
-            old_action = doodad_instance._config.on.click
-            doodad_instance._config.on.click = (inst) ->
+            old_action = doodad_instance._config.action
+            doodad_instance._config.action = (inst) ->
                 old_action.call($example_el.find('.output'), inst)
                 clearTimeout(example_timeout)
                 example_timeout = setTimeout ->
                     $example_el.find('.output').text('')
                 , 2000
-            console.log 'patched', doodad_instance

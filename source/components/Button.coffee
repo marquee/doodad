@@ -38,14 +38,6 @@ class Button extends BaseDoodad
     #             self.enable()
     #
     initialize: (options={}) ->
-        if options.action?
-            console.warn 'Button `action` option is deprecated. Used the `on.click` event option instead.'
-            options.on ?= {}
-            options.on.click = options.action
-        if not options.on?.click? and options.url
-            options.on.click = ->
-                window.location = options.url
-
         options._icon_name = @DEFAULT_ICONS.default
         if options.variant
             # Allow the icon_name to be something like 'angle-right'. The variant
@@ -60,7 +52,7 @@ class Button extends BaseDoodad
                 options.variant = variant
                 options._icon_name = icon_name.join('-')
 
-        super(arguments...)
+        super(options)
 
         @_loadConfig options,
             type            : 'text'
@@ -71,7 +63,13 @@ class Button extends BaseDoodad
             spinner         : false
             progress        : null
             classes         : []
-            on              : {}
+            events          : {}
+            action          : null
+            url             : null
+
+        if not @_config.action? and @_config.url
+            @_config.action = =>
+                window.location = @_config.url
 
         @_validateOptions()
 
@@ -155,7 +153,7 @@ class Button extends BaseDoodad
         @_spinner?.stop()
         @unsetState('active')
 
-    events:
+    events: ->
         'click': '_handleClick'
 
     # Private: Handle the click event. Fires a 'click' event.
@@ -163,10 +161,10 @@ class Button extends BaseDoodad
     # Returns nothing.
     _handleClick: (e) =>
         e?.stopPropagation()
-
         if @_config.spinner
             @disable()
             @_setActive()
+        @_config.action?(this)
         @trigger('click', this)
         return
 

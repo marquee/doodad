@@ -29,7 +29,6 @@ class BaseDoodad extends View
             console.warn "#{ @className } `extra_classes` option is deprecated. Use the `classes` option instead."
             options.classes = options.extra_classes
 
-        @on(event, handler) for event, handler of options.on
         @name = options.name
         @_is_enabled = true
 
@@ -42,28 +41,29 @@ class BaseDoodad extends View
         else
             @hide()
 
-        _.each options.state, (value, name) =>
-            @setState(name, value)
-        # TODO: DRY up the child classes using something like:
-        # @_config = @_validateOptions(options)
-        # @_configure()
-        # @_setClasses()
+        _.each options.events, (handler, event) => @on(event, handler)
+        _.each options.on, (handler, event) => @on(event, handler)
+        _.each options.state, (value, name) => @setState(name, value)
 
+
+    # Internal: Load configuration from passed options, as well as from the
+    #           class definition if present. The final config is stored in the
+    #           instance's `_config` property.
+    #
+    # options - an Object of options passed to the constructor (may be empty)
+    # defaults - an Object of defaults to use
+    #
+    # Returns nothing.
     _loadConfig: (options, defaults) =>
         # Grab any new defaults from the class definition, in case this is a
         # customized component using class extension.
         default_config = {}
         for k, v of defaults
-            if k is 'on'
-                k = '_on'
             class_default = @[k]
-            if _.isFunction(class_default)
+            if _.isFunction(class_default) and k isnt 'action'
                 class_default = @[k](this)
             default_config[k] = class_default or v
         @_config = _.extend({}, default_config, options)
-        console.log '@_config', @_config, default_config, options
-
-    events: -> @_config?.on or {}
 
     # Public: Get the center position of the element relative to the document.
     #
@@ -76,7 +76,6 @@ class BaseDoodad extends View
         y = top + height / 2
         return { x:x, y:y }
 
-
     # Public: Get the center position of the element relative to the screen.
     #
     # Returns an object with the x and y coordinates of the center.
@@ -84,7 +83,6 @@ class BaseDoodad extends View
         pos = @getPosition()
         pos.y -= $(window).scrollTop()
         return pos
-
 
     # Public: Get the dimensions of the entire element.
     #
@@ -192,6 +190,7 @@ class BaseDoodad extends View
                 class_list.push(@_config.classes)
 
         @$el.addClass(class_list.join(' '))
+
 
     # Internal: Set extra CSS rules (useful for z-index, etc)
     #
