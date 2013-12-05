@@ -54,6 +54,7 @@ class StringField extends BaseDoodad
             action          : null
             events          : {}
             name            : ''
+            icon            : null
 
         @setValue(@_config.value)
 
@@ -64,7 +65,11 @@ class StringField extends BaseDoodad
 
         @render()
  
- 
+    _setClasses: ->
+        if @_config.icon
+            @$el.addClass('-icon')
+        super()
+
     # Public: Add the label to the element.
     #
     # Returns nothing.
@@ -104,6 +109,8 @@ class StringField extends BaseDoodad
         if @_config.type is 'token'
             @_renderTokens()
         else
+            if @_config.icon
+                @_ui.label.after("<span class=\"StringField_Icon -#{ @_config.icon }\"></span>")
             if @_config.char_limit or @_config.word_limit
                 @_ui.limit_counter = $('<span class="StringField_Counter"></span>')
                 @_ui.limit_count = $('<span class="StringField_CounterCount"></span>')
@@ -198,12 +205,10 @@ class StringField extends BaseDoodad
             @_ui.input.focus()
 
     _fireBlur: (e) ->
-        console.log '_fireBlur', e
         @unsetState('focus')
         @trigger('blur', this)
 
     _fireFocus: (e) ->
-        console.log '_fireFocus', e
         @setState('focus')
         @trigger('focus', this)
  

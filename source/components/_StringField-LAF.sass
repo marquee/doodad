@@ -34,7 +34,7 @@
     padding             : $StringField-internal_padding
 
 .StringField[data-error="true"]
-    .StringField_Label
+    .StringField_Label, .StringField_Icon
         color: $StringField_Label-color--error
     .StringField_TokenForm, &:not(.-token) .StringField_Input
         border-color: $StringField-border--color--error
@@ -43,8 +43,11 @@
     color: $StringField_Label-color
     padding: $StringField-internal_padding
 
+.StringField_Icon
+    color: $StringField_Label-color
+
 .StringField[data-focus="true"]
-    .StringField_Label
+    .StringField_Label, .StringField_Icon
         color: $StringField_Label-color--focus
     .StringField_TokenForm, &:not(.-token) .StringField_Input
         border-color: $StringField-border--color--focus

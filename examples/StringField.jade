@@ -34,6 +34,21 @@ block content
                         @demo_text('focused')
 
     .example
+        h2 Input with icon
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'Some String'
+                placeholder: 'Placeholder'
+                icon: 'search'
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
         h2 Multiline input
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.StringField
@@ -83,7 +98,7 @@ block content
             doodads.push new Doodad.StringField
                 label: 'A few words'
                 word_limit: 20
-                multiline: true
+                type: 'multiline'
                 on:
                     change: (self, val) ->
                         @demo_text(val)
