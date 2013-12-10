@@ -130,6 +130,7 @@ class Button extends BaseDoodad
     # Returns nothing.
     disable: ->
         super()
+        @$el.attr('disabled', true)
         @_setInactive()
 
     # Public: Set the Button state to enabled. Also sets the button as inactive.
@@ -137,6 +138,7 @@ class Button extends BaseDoodad
     # Returns nothing.
     enable: ->
         super()
+        @$el.removeAttr('disabled')
         @_setInactive()
 
     # Private: Set the button as active (shows the spinner).
