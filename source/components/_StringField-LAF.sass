@@ -33,11 +33,25 @@
 .StringField_Token
     padding             : $StringField-internal_padding
 
-.StringField[data-error="true"]
-    .StringField_Label, .StringField_Icon
-        color: $StringField_Label-color--error
-    .StringField_TokenForm, &:not(.-token) .StringField_Input
-        border-color: $StringField-border--color--error
+.StringField
+    +state(disabled)
+        .StringField_Label, .StringField_Icon
+            color: $StringField_Label-color--disabled
+        .StringField_TokenForm, &:not(.-token) .StringField_Input
+            border-color: $StringField-border--color--disabled
+        .StringField_Input
+            color: $StringField_Label-color--disabled
+
+    +state(focus)
+        .StringField_Label, .StringField_Icon
+            color: $StringField_Label-color--focus
+        .StringField_TokenForm, &:not(.-token) .StringField_Input
+            border-color: $StringField-border--color--focus
+    +state(error)
+        .StringField_Label, .StringField_Icon
+            color: $StringField_Label-color--error
+        .StringField_TokenForm, &:not(.-token) .StringField_Input
+            border-color: $StringField-border--color--error
 
 .StringField_Label
     color: $StringField_Label-color
@@ -46,11 +60,7 @@
 .StringField_Icon
     color: $StringField_Label-color
 
-.StringField[data-focus="true"]
-    .StringField_Label, .StringField_Icon
-        color: $StringField_Label-color--focus
-    .StringField_TokenForm, &:not(.-token) .StringField_Input
-        border-color: $StringField-border--color--focus
+
  
 .StringField_Token
     border-width        : $StringField_Token-border--width
