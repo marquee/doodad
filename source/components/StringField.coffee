@@ -56,7 +56,7 @@ class StringField extends BaseDoodad
             name            : ''
             icon            : null
 
-        @setValue(@_config.value)
+        @setValue(@_config.value, silent: true)
 
         if @_config.char_limit
             [@_config.limit_is_soft, @_config.char_limit] = parseLimit(@_config.char_limit)
@@ -264,6 +264,7 @@ class StringField extends BaseDoodad
                         @raw_value = @value.join(@_config.delimiter)
                         @trigger('change', this, @value, @raw_value)
                 @_updatePlaceholder()
+                @_updateState()
         else
             previous_value = @value
             _.defer =>
@@ -274,6 +275,7 @@ class StringField extends BaseDoodad
                         @raw_value = @value = previous_value
                         @_ui.input.val(previous_value)
                     @_updateCharCount()
+                @_updateState()
                 @trigger('change', this, @value, @raw_value)
 
         # Command-/Control-X, which only takes effect after the keyup, so
@@ -282,7 +284,7 @@ class StringField extends BaseDoodad
             _.defer => @_handleInput(e)
         return
 
-    setValue: (value) =>
+    setValue: (value, opts={ silent: false }) =>
         @raw_value = value
         if @_config.type is 'token'
             if value
@@ -295,15 +297,28 @@ class StringField extends BaseDoodad
             @_current_token = ''
         else
             @value = value
+        unless opts.silent
+            @trigger('change', this, @value, @raw_value)
+        return this
 
     getValue: ->
         return @value
+
+    hasValue: ->
+        return @value?.length > 0
 
     showLabel: ->
         @ui.label.attr('data-visible', true)
 
     hideLabel: ->
         @ui.label.removeAttr('data-visible')
+
+    _updateState: ->
+        if @value
+            @setState('has_value')
+        else
+            @unsetState('has_value')
+        return
 
 KEYCODES =
     DELETE  : 8

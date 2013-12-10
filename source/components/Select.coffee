@@ -110,8 +110,12 @@ class Select extends BaseDoodad
         @ui.value.removeAttr('data-hidden')
         if choice.null_choice
             @ui.value.addClass('-null')
+            @unsetState('has_value')
+            @_has_value = false
         else
             @ui.value.removeClass('-null')
+            @setState('has_value')
+            @_has_value = true
         unless opts.silent
             @trigger('change', this, @value, choice.label)
 
@@ -191,11 +195,13 @@ class Select extends BaseDoodad
             @_makeChoiceEl(target_choice)
             @ui.choices.append(target_choice.$el)
         @_setChoice(target_choice)
-
         return this
 
     getValue: ->
         return @value
+
+    hasValue: ->
+        return @_has_value
 
 
 module.exports = Select
