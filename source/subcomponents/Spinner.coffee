@@ -41,8 +41,7 @@ class Spinner extends BaseDoodad
             else
                 @stop()
 
-    # Public: Add the label to the element. If the Button is type 'icon', the
-    #         label is set as the title.
+    # Public: Render the spinner.
     #
     # Returns nothing.
     render: =>
