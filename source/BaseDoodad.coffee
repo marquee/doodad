@@ -131,14 +131,14 @@ class BaseDoodad extends View
     # Returns nothing.
     disable: =>
         @_is_enabled = false
-        @$el.attr('disabled', true)
+        @setState('disabled')
 
     # Public: Set the element state to enabled.
     #
     # Returns nothing.
     enable: =>
         @_is_enabled = true
-        @$el.removeAttr('disabled')
+        @unsetState('disabled')
 
     # Public: Check the enabled status.
     # 
