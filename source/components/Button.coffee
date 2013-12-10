@@ -1,7 +1,7 @@
 
 BaseDoodad  = require '../BaseDoodad'
 Spinner     = require '../subcomponents/Spinner'
-
+ProgressBar = require '../subcomponents/ProgressBar'
 
 
 class Button extends BaseDoodad
@@ -79,6 +79,8 @@ class Button extends BaseDoodad
         if @_config.spinner
             @_spinner = new Spinner
                 color: if @_config.type.indexOf('bare') is -1 then '#fff' else '#000'
+        if @_config.progress
+            @_progress = new ProgressBar()
         @render()
 
     # Private: Check that the required options were passed to the constructor.
@@ -87,9 +89,11 @@ class Button extends BaseDoodad
     # Returns nothing.
     _validateOptions: ->
         if not @_config.type in ['text', 'icon', 'icon+text', 'text-bare', 'icon-bare', 'icon+text-bare']
-            throw new Error "Button type must be one of 'text', 'icon', 'icon+text', got #{ @_config.type }."
+            throw new Error "Button type MUST be one of 'text', 'icon', 'icon+text', got #{ @_config.type }."
         if @_config.type is 'text' and not @_config.label
             throw new Error "Buttons of type 'text' MUST have a label set."
+        if @_config.spinner and @_config.progress
+            throw new Error "Buttons MUST NOT have both spinner and progress."
 
     # Private: Apply the necessary classes to the element.
     #
@@ -101,6 +105,8 @@ class Button extends BaseDoodad
                 @$el.addClass('-spinner--replace')
             else
                 @$el.addClass('-spinner--inline')
+        else if @_config.progress
+            @$el.addClass('-progress')
         if @_config._size
             @$el.addClass("-size--#{ @_config._size }")
 
@@ -122,6 +128,8 @@ class Button extends BaseDoodad
             @$el.prepend($icon_display)
         if @_config.spinner
             @$el.append(@_spinner.render().el)
+        else if @_config.progress
+            @$el.prepend(@_progress.render().el)
         @delegateEvents()
         return this
 
@@ -139,6 +147,9 @@ class Button extends BaseDoodad
     enable: ->
         super()
         @$el.removeAttr('disabled')
+        if @_progress
+            @_progress.hide()
+            @setProgress(0)
         @_setInactive()
 
     # Private: Set the button as active (shows the spinner).
@@ -163,9 +174,12 @@ class Button extends BaseDoodad
     # Returns nothing.
     _handleClick: (e) =>
         e?.stopPropagation()
-        if @_config.spinner
+
+        if @_config.spinner or @_config.progress
             @disable()
             @_setActive()
+            if @_config.progress
+                @_progress.show()
         @_config.action?(this)
         @trigger('click', this)
         return
@@ -180,6 +194,12 @@ class Button extends BaseDoodad
             @$el.attr('title', label)
         else
             @$el.find('.Button_Label').text(label)
+        return this
+
+    setProgress: (val) ->
+        if not @_config.progress
+            throw new Error 'CANNOT call `setProgress` on a Button without the progress option'
+        @_progress.setValue(val)
         return this
 
 

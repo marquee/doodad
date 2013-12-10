@@ -5,6 +5,25 @@
     font-family     : $Button-font--family
     font-size       : $Button-font--size
     text-transform  : $Button-font--transform
+    &.-progress
+        // So the ProgressBar gets clipped
+        overflow        : hidden
+
+    .ProgressBar_Bar
+        background-color: $Button-background--default
+    &.-friendly
+        .ProgressBar_Bar
+            background-color: $Button-background--friendly
+    &.-dangerous
+        .ProgressBar_Bar
+            background-color: $Button-background--dangerous
+    &.-warning
+        .ProgressBar_Bar
+            background-color: $Button-background--warning
+    &.-action
+        .ProgressBar_Bar
+            background-color: $Button-background--action
+
 
     &:not(.-bare)
         border-width    : $Button-border--width

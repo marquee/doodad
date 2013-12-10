@@ -101,6 +101,28 @@ block content
                         , 2000
 
     .example
+        h2 Progress button
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.Button
+                    type: 'text'
+                    variant: 'friendly'
+                    progress: true
+                    label: 'Do something'
+                    action: (this_button) ->
+                        @text("Doing something!")
+                        p = 0
+                        p_int = setInterval ->
+                            p += 0.05
+                            if p > 1
+                                p = 1
+                                setTimeout ->
+                                    this_button.enable()
+                                , 500
+                                clearInterval(p_int)
+                            this_button.setProgress(p)
+                        , 250
+
+    .example
         h2 Class-based button
         script.example_code(type='text/coffeescript').
             class CustomButton extends Doodad.Button

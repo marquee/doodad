@@ -1,5 +1,6 @@
 BaseDoodad  = require './BaseDoodad'
 
+ProgressBar = require './subcomponents/ProgressBar'
 Spinner     = require './subcomponents/Spinner'
 Tags        = require './subcomponents/Tags'
 
@@ -22,6 +23,7 @@ Doodad =
     Form        : Form
     # Layout      : Layout
     Popover     : Popover
+    ProgressBar : ProgressBar
     Select      : Select
     Shortcuts   : Shortcuts
     Spinner     : Spinner

@@ -1,0 +1,24 @@
+.ProgressBar
+    position        : relative
+    pointer-events  : none
+
+.ProgressBar_Bar
+    position    : absolute
+    display     : block
+    left        : 0
+    top         : 0
+    bottom      : 0
+    +transition-property(width)
+    +transition-duration(0.5s)
+
+.ProgressBar_Text
+    text-align  : center
+
+.ProgressBar.-bar
+    display: block
+    .ProgressBar_Text
+        position    : absolute
+        display     : block
+        left        : 0
+        right       : 0
+        
