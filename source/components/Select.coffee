@@ -52,6 +52,10 @@ class Select extends BaseDoodad
             required        : false
             classes         : []
 
+        @_current_label = @_config.label
+        if @model?
+            @listenTo(@model, 'change', @_renderLabel)
+
         @render()
 
     # Public: Add the label to the element. If the Button is type 'icon', the
@@ -61,7 +65,7 @@ class Select extends BaseDoodad
     render: ->
         @$el.empty()
         @_setClasses()
-        @ui = {}
+        @_ui = {}
 
         switch @_config.type
             when 'drop', 'drop-inline'
@@ -78,42 +82,42 @@ class Select extends BaseDoodad
 
     _showChoices: ->
         # Keep it invisible until it is positioned.
-        @ui.choices.css
+        @_ui.choices.css
             opacity : 0
-            left    : @ui.value.position().left
-            width   : @ui.value.width()
-        @ui.choices.removeAttr('data-hidden')
+            left    : @_ui.value.position().left
+            width   : @_ui.value.width()
+        @_ui.choices.removeAttr('data-hidden')
 
         # Align the currently selected choice to the middle of the form.
         _.defer =>
             { top, left } = @_selected_choice_el.position()
 
-            top -= @ui.value.position().top
+            top -= @_ui.value.position().top
             # TODO: Constrain within window
 
-            @ui.choices.css
+            @_ui.choices.css
                 top: -1 * top
                 opacity: ''
-            @ui.value.attr('data-hidden', true)
+            @_ui.value.attr('data-hidden', true)
 
 
     _setChoice: (choice, opts={}) =>
-        @ui.choices.find('[data-selected]').removeAttr('data-selected')
+        @_ui.choices.find('[data-selected]').removeAttr('data-selected')
         if _.isFunction(choice.value)
             @value = choice.value(this)
         else
             @value = choice.value
         @_selected_choice_el = choice.$el
         @_selected_choice_el.attr('data-selected', true)
-        @ui.value_label.text(choice.label)
-        @ui.choices.attr('data-hidden', true)
-        @ui.value.removeAttr('data-hidden')
+        @_ui.value_label.text(choice.label)
+        @_ui.choices.attr('data-hidden', true)
+        @_ui.value.removeAttr('data-hidden')
         if choice.null_choice
-            @ui.value.addClass('-null')
+            @_ui.value.addClass('-null')
             @unsetState('has_value')
             @_has_value = false
         else
-            @ui.value.removeClass('-null')
+            @_ui.value.removeClass('-null')
             @setState('has_value')
             @_has_value = true
         unless opts.silent
@@ -152,12 +156,12 @@ class Select extends BaseDoodad
 
 
     _renderDrop: ->
-        @ui.label = $("<div class='Select_Label'>#{ @_config.label }</div>")
-        @ui.value = $("<div class='Select_Value'><div>")
-        @ui.value_label = $("<div class='Select_ValueLabel'><div>")
-        @ui.value_icon = $("<div class='Select_ValueIcon'><div>")
-        @ui.value.append(@ui.value_label, @ui.value_icon)
-        @ui.choices = $("<div class='Select_Choices'></div>")
+        @_ui.label = $("<div class='Select_Label'></div>")
+        @_ui.value = $("<div class='Select_Value'><div>")
+        @_ui.value_label = $("<div class='Select_ValueLabel'><div>")
+        @_ui.value_icon = $("<div class='Select_ValueIcon'><div>")
+        @_ui.value.append(@_ui.value_label, @_ui.value_icon)
+        @_ui.choices = $("<div class='Select_Choices'></div>")
 
         has_default = false
 
@@ -166,7 +170,7 @@ class Select extends BaseDoodad
             if choice.default
                 has_default = true
                 @_setChoice(choice, silent: true)
-            @ui.choices.append(choice.$el)
+            @_ui.choices.append(choice.$el)
 
         # If it doesn't have a default set above, or is not required, add a
         # null choice to the list of choices that sets the value to null.
@@ -177,13 +181,18 @@ class Select extends BaseDoodad
                     label: @_config.placeholder
                     value: null
                 @_makeChoiceEl(null_choice)
-                @ui.choices.prepend(null_choice.$el)
+                @_ui.choices.prepend(null_choice.$el)
                 # Set the choice if no default was set above.
                 unless has_default
                     @_setChoice(null_choice, silent: true)
 
-        @$el.append(@ui.label, @ui.value, @ui.choices)
+        @_renderLabel()
+        @$el.append(@_ui.label, @_ui.value, @_ui.choices)
     
+    _renderLabel: =>
+        context = if @model? then @model.toJSON() else {}
+        @_ui.label.text(_.template(@_current_label, context))
+
     setValue: (value, label=null) ->
         target_choice = _.find @_config.choices, (choice) -> choice.value is value
         console.log 'Select.setValue', value, label
@@ -193,7 +202,7 @@ class Select extends BaseDoodad
                 label: label
             @_config.choices.push(target_choice)
             @_makeChoiceEl(target_choice)
-            @ui.choices.append(target_choice.$el)
+            @_ui.choices.append(target_choice.$el)
         @_setChoice(target_choice)
         return this
 

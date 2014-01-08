@@ -56,14 +56,18 @@ class StringField extends BaseDoodad
             name            : ''
             icon            : null
 
-        @setValue(@_config.value, silent: true)
-
         if @_config.char_limit
             [@_config.limit_is_soft, @_config.char_limit] = parseLimit(@_config.char_limit)
         else if @_config.word_limit
             [@_config.limit_is_soft, @_config.word_limit] = parseLimit(@_config.word_limit)
 
-        @render()
+        @_current_label = @_config.label
+        if @model?
+            @listenTo(@model, 'change', @_renderLabel)
+
+        @setValue(@_config.value, silent: true)
+
+
  
     _setClasses: ->
         if @_config.icon
@@ -104,7 +108,7 @@ class StringField extends BaseDoodad
         if @_config.placeholder
             @_ui.input.attr('placeholder', @_config.placeholder)
         if @_config.label
-            @_ui.label.text(@_config.label)
+            @_renderLabel()
 
         if @_config.type is 'token'
             @_renderTokens()
@@ -123,14 +127,23 @@ class StringField extends BaseDoodad
         unless @_config.enabled
             @disable()
         return this
- 
+
+    # Internal: Render the label text, using it as an Underscore template with
+    #           the model attributes as context (if model is present).
+    #
+    # Returns nothing.
+    _renderLabel: =>
+        context = if @model? then @model.toJSON() else {}
+        @_ui.label.text(_.template(@_current_label, context))
+
     # Public: Set the label of the StringField state
     #
     # value - (String) the value of the label
     #
     # Returns self for chaining.
     setLabel: (value) ->
-        @_ui.label.text(value)
+        @_label_value = value
+        @_renderLabel()
         return this
 
     # Public: Set the StringField state to disabled.
@@ -285,20 +298,22 @@ class StringField extends BaseDoodad
         return
 
     setValue: (value, opts={ silent: false }) =>
-        @raw_value = value
-        if @_config.type is 'token'
-            if value
-                if _.isString(value)
-                    value = value.split(@_config.delimiter)
+        if value isnt @value
+            @raw_value = value
+            if @_config.type is 'token'
+                if value
+                    if _.isString(value)
+                        value = value.split(@_config.delimiter)
+                else
+                    value = []
+                @value = value
+                @raw_value = value.join(@_config.delimiter)
+                @_current_token = ''
             else
-                value = []
-            @value = value
-            @raw_value = value.join(@_config.delimiter)
-            @_current_token = ''
-        else
-            @value = value
-        unless opts.silent
-            @trigger('change', this, @value, @raw_value)
+                @value = value
+            unless opts.silent
+                @trigger('change', this, @value, @raw_value)
+            @render()
         return this
 
     getValue: ->

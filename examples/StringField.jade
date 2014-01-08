@@ -123,6 +123,25 @@ block content
                     focus: (self, val) ->
                         @demo_text('focused')
 
+    .example
+        h2 Model binding to label
+        script.example_code(type='text/coffeescript').
+            model = new Backbone.Model(some_property: new Date())
+            setInterval ->
+                model.set(some_property: new Date())
+            , 1000
+            doodads.push new Doodad.StringField
+                label: '<%= some_property.toISOString() %>'
+                model: model
+                char_limit: '~20'
+                on:
+                    change: (self, val) ->
+                        @demo_text(val)
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
     script(type='text/coffeescript').
         _.each doodads, (doodad_set, i) ->
             $example_el = $($('.example').get(i))
