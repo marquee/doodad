@@ -76,11 +76,16 @@ class Form extends BaseDoodad
         @_loadConfig options,
             content : @content?() or []
             layout  : @layout
+            binding : 'set'         # 'set', 'save', false
 
         @_setClasses()
         @_is_showing = false
 
         @_captureFields()
+        if @model?
+            @bindToModel()
+
+
 
 
     render: =>
@@ -160,6 +165,7 @@ class Form extends BaseDoodad
                     num_fields += 1
                     index = num_fields
                     type = 'field'
+                @listenTo(field, 'change', @_onFieldChange)
                 field_name = if field.name then field.name else "#{ type }_#{ index }"
                 @fields[field_name] = field
             else
@@ -169,6 +175,29 @@ class Form extends BaseDoodad
                 field_name = if field.name then field.name else "#{ name }_#{ component_index[name] }"
             @components[field_name] = field
         return
+
+    _onFieldChange: (args...) =>
+        @trigger('change', this)
+
+    unbindFromModel: ->
+
+    bindToModel: (model=@model, binding=@_config.binding) =>
+        if binding
+            _.each @fields, (field, name) ->
+                if field.bindToModel?
+                    field.bindToModel(model, binding)
+                else
+                    field.listenTo model, "change:#{ name }", ->
+                        value = model.get(name)
+                        # Avoid getting stuck in change loops!
+                        if model.get(name) isnt field.getValue()
+                            field.setValue(value)
+                    field.on 'change', ->
+                        value = field.getValue()
+                        # Avoid getting stuck in change loops!
+                        if value isnt model.get(field.name)
+                            model[binding](field.name, field.getValue())
+        return this
 
     # Public: get the value of the form, pulling the values from each of its
     # contained fields and any nested forms.

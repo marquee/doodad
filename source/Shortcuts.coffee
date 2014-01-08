@@ -89,3 +89,5 @@ module.exports.dspan = (content...) ->
     return new Tags.SPAN
         content: content
 
+module.exports.dbr = ->
+    return new Tags.BR()

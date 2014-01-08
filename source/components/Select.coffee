@@ -90,7 +90,12 @@ class Select extends BaseDoodad
 
         # Align the currently selected choice to the middle of the form.
         _.defer =>
-            { top, left } = @_selected_choice_el.position()
+            # There may not be an already selected choice, if @setValue(null)
+            # was called, for example.
+            if @_selected_choice_el?
+                { top } = @_selected_choice_el.position()
+            else
+                top = 0
 
             top -= @_ui.value.position().top
             # TODO: Constrain within window
@@ -103,16 +108,23 @@ class Select extends BaseDoodad
 
     _setChoice: (choice, opts={}) =>
         @_ui.choices.find('[data-selected]').removeAttr('data-selected')
-        if _.isFunction(choice.value)
-            @value = choice.value(this)
+        if choice?
+            if _.isFunction(choice.value)
+                @value = choice.value(this)
+            else
+                @value = choice.value
+            @_selected_choice_el = choice.$el
+            @_selected_choice_el.attr('data-selected', true)
+            @_ui.value_label.text(choice.label)
         else
-            @value = choice.value
-        @_selected_choice_el = choice.$el
-        @_selected_choice_el.attr('data-selected', true)
-        @_ui.value_label.text(choice.label)
+            @value = null
+            @_selected_choice_el = null
+            @_ui.value_label.text(@_config.placeholder)
+
         @_ui.choices.attr('data-hidden', true)
         @_ui.value.removeAttr('data-hidden')
-        if choice.null_choice
+
+        if not choice or choice.null_choice
             @_ui.value.addClass('-null')
             @unsetState('has_value')
             @_has_value = false
@@ -121,7 +133,7 @@ class Select extends BaseDoodad
             @setState('has_value')
             @_has_value = true
         unless opts.silent
-            @trigger('change', this, @value, choice.label)
+            @trigger('change', this, @value, choice?.label)
 
     _renderGrid: ->
         @$el.html """
