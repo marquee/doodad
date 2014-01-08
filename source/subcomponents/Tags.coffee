@@ -85,13 +85,17 @@ class TextNode
     # Public: A wrapper around ordinary text nodes that provide Doodad-compatible
     #        methods. However, unlike the other Tags, they are not full
     #        components (no getPosition, etc) since they are not tags in the DOM.
-    constructor: ({ content }) ->
-        @_node = document.createTextNode(content)
+    constructor: ({ content, @model }) ->
+        @el = document.createTextNode()
+        @_content = []
+        if @model?
+            @listenTo(@model, 'change', @_renderContent)
+        @setContent(content)
 
     # Public: A `.render()` method for compatibility with the Doodad components.
     #
-    # Returns the text node.
-    render: -> @_node
+    # Returns self for chaining.
+    render: -> this
 
     # Public: Set the content of the node. Note: this wraps a text node, so the
     #         content MUST NOT be HTML. Any HTML characters will be escaped.
@@ -100,16 +104,27 @@ class TextNode
     #
     # Returns self for chaining.
     setContent: (content...) ->
-        @_node.textContent = content.join('')
+        @_content = content
+        @_renderContent()
         return this
 
     # Public: Add content to the node, concatenating with existing content.
     #
     # Returns self for chaining.
     addContent: (content...) ->
-        @setContent(@_node.textContent, content...)
+        @_content.push(content...)
+        @_renderContent()
         return this
 
+    # Internal: Render the content. The text is used as an Underscore template
+    #           and the model, if any, provides the context.
+    #
+    # Returns nothing.
+    _renderContent: =>
+        context = if @model? then @model.toJSON() else {}
+        @el.textContent = _.template(@_content.join(''), context)
+
+_.extend(TextNode::, Backbone.Events)
 
 
 class Tag extends BaseDoodad
@@ -170,7 +185,7 @@ class Tag extends BaseDoodad
     addContent: (contents...) =>
         _.each contents, (child_content) =>
             if not child_content.render? or (@constructor._default_child isnt TextNode and not child_content instanceof @constructor._default_child)
-                child_content = new @constructor._default_child(content: child_content)
+                child_content = new @constructor._default_child(content: child_content, model: @model)
             @_contents.push(child_content)
             @$el.append(child_content.render().el)
         return this
@@ -195,7 +210,7 @@ class Tag extends BaseDoodad
         @$el.empty()
         _.each @_contents, (content) =>
             @$el.append(content.render().el)
-        return @el
+        return this
 
 
 
