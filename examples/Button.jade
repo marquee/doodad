@@ -146,6 +146,23 @@ block content
                 url: 'http://example.com'
             doodads.push new CustomButton()
 
+    .example
+        h2 Model-bound label
+        script.example_code(type='text/coffeescript').
+            model = new Backbone.Model(clicks: 0)
+            doodads.push [
+                new Doodad.Button
+                    label: 'Clicked <%= clicks %> time<% if(clicks!==1){ %>s<% } %>'
+                    model: model
+                    action: (self) ->
+                        model.set('clicks', model.get('clicks') + 1)
+                new Doodad.Button
+                    label: 'Reset'
+                    variant: 'warning'
+                    action: ->
+                        model.set('clicks', 0)
+            ]
+
     script(type='text/coffeescript').
         window.instanceSetup = ($example_el, doodad_instance) ->
             # Patch the action to use the output element as `this`, and have

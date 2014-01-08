@@ -55,17 +55,17 @@ class Button extends BaseDoodad
         super(options)
 
         @_loadConfig options,
-            type            : 'text'
-            label           : null
-            variant         : null
-            helptext        : null
-            enabled         : true
-            spinner         : false
-            progress        : null
-            classes         : []
-            events          : {}
-            action          : null
-            url             : null
+            type        : 'text'
+            label       : null
+            variant     : null
+            helptext    : null
+            enabled     : true
+            spinner     : false
+            progress    : null
+            classes     : []
+            events      : {}
+            action      : null
+            url         : null
 
         if not @_config.action? and @_config.url
             @_config.action = =>
@@ -79,9 +79,15 @@ class Button extends BaseDoodad
         if @_config.spinner
             @_spinner = new Spinner
                 color: if @_config.type.indexOf('bare') is -1 then '#fff' else '#000'
-        if @_config.progress
+        else if @_config.progress
             @_progress = new ProgressBar()
+
         @render()
+
+        # Listen to the change event of the model, rerendering the label,
+        # which MAY be an Underscore template that depends on model attributes.
+        if @model?
+            @listenTo(@model, 'change', @_renderLabel)
 
     # Private: Check that the required options were passed to the constructor.
     #          Throws Errors if the options are invalid or missing.
@@ -110,27 +116,34 @@ class Button extends BaseDoodad
         if @_config._size
             @$el.addClass("-size--#{ @_config._size }")
 
-    # Public: Add the label to the element. If the Button is type 'icon', the
-    #         label is set as the title.
+    # Public: Render the component.
     #
-    # Returns nothing.
-    render: ->
+    # Returns self for chaining.
+    render: =>
         @$el.empty()
         @_setClasses()
 
+        # Add the label element. (Not visible if icon-only.)
         if @_config.label
             @$el.append('<span class="Button_Label"></span>')
             @setLabel(@_config.label)
+
+        # Add the icon element.
         if @_config.type.indexOf('icon') isnt -1
             $icon_display = $('<div class="Button_Icon"></div>')
             if @_config._icon_name
                 $icon_display.addClass("-#{ @_config._icon_name }")
             @$el.prepend($icon_display)
+
+        # Add the spinner or progress element (exclusive options).
         if @_config.spinner
             @$el.append(@_spinner.render().el)
         else if @_config.progress
             @$el.prepend(@_progress.render().el)
+
+        # Ensure the events are bound.
         @delegateEvents()
+
         return this
 
     # Public: Set the Button state to disabled.
@@ -169,7 +182,8 @@ class Button extends BaseDoodad
     events: ->
         'click': '_handleClick'
 
-    # Private: Handle the click event. Fires a 'click' event.
+    # Private: Handle the click event. Fires a 'click' event and calls the
+    #          specified `action` function, if any.
     #
     # Returns nothing.
     _handleClick: (e) =>
@@ -190,12 +204,29 @@ class Button extends BaseDoodad
     #
     # Returns self for chaining.
     setLabel: (label) =>
+        @_current_label = label
+        @_renderLabel()
+        return this
+
+    # Internal: Render the label text, using `@_current_label` as an Underscore
+    #           template. If a `model` property was provided when initializing,
+    #           its serialized form will be used as the template context.
+    #
+    # Returns nothing.
+    _renderLabel: =>
+        context = if @model then @model.toJSON() else {}
+        label = _.template(@_current_label, context)
         if @_config.type in ['icon', 'icon-bare']
             @$el.attr('title', label)
         else
             @$el.find('.Button_Label').text(label)
-        return this
 
+    # Public: Set the value of the progress bar. Requires the Button to be
+    #         constructed with the option `progess: true`.
+    #
+    # val - a Number value, from 0 to 1, representing the progress percentage
+    #
+    # Returns self for chaining.
     setProgress: (val) ->
         if not @_config.progress
             throw new Error 'CANNOT call `setProgress` on a Button without the progress option'
