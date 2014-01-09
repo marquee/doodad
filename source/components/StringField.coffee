@@ -54,6 +54,7 @@ class StringField extends BaseDoodad
             action          : null
             events          : {}
             name            : ''
+            binding         : 'set'
             icon            : null
 
         if @_config.char_limit
@@ -62,11 +63,33 @@ class StringField extends BaseDoodad
             [@_config.limit_is_soft, @_config.word_limit] = parseLimit(@_config.word_limit)
 
         @_current_label = @_config.label
+        value_set = false
         if @model?
             @listenTo(@model, 'change', @_renderLabel)
+            if @_config.name and @_config.binding
+                @bindTo(@model)
+                value_set = true
 
-        @setValue(@_config.value, silent: true)
+        unless value_set
+            @setValue(@_config.value, silent: true)
 
+    bindTo: (model, kwargs={}) ->
+        name = kwargs.name or @_config.name
+        binding = kwargs.binding or @_config.binding
+        if not binding
+            console.warn('`StringField::bindTo()` attempted on field with `binding: false`.')
+        if not name
+            throw new Error('`StringField` binding to model requires `name` option or argument.')
+
+        @setValue(model.get(name))
+        @listenTo model, "change:#{ name }", =>
+            model_value = model.get(name)
+            if model_value isnt @value
+                @setValue(model_value)
+        @on 'change', (self, value) ->
+            if value isnt model.get(name)
+                model[binding](name, value)
+        return this
 
  
     _setClasses: ->

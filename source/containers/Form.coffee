@@ -76,6 +76,7 @@ class Form extends BaseDoodad
         @_loadConfig options,
             content : @content?() or []
             layout  : @layout
+            label   : ''
             binding : 'set'         # 'set', 'save', false
 
         @_setClasses()
@@ -83,7 +84,8 @@ class Form extends BaseDoodad
 
         @_captureFields()
         if @model?
-            @bindToModel()
+            @bindTo(@model)
+            @listenTo(@model, 'change', @_renderLabel)
 
 
 
@@ -91,9 +93,10 @@ class Form extends BaseDoodad
     render: =>
         @$el.empty()
         @ui = {}
+        @ui.label   = $('<div class="Form_Label"></div>')
         @ui.content = $('<div class="Form_Content"></div>')
         if @_config.layout
-            @$el.addClass('-autolayout')
+            @$el.addClass('-has_layout')
             used = {}
             _.each @_config.layout, (row) =>
                 $row = $('<div class="Form_ContentRow"></div>')
@@ -122,8 +125,13 @@ class Form extends BaseDoodad
         else
             _.each @_config.content, (item, i) =>
                 @ui.content.append(item.render().el)
-        @$el.append(@ui.content)
+        @$el.append(@ui.label, @ui.content)
+        @_renderLabel()
         return this
+
+    _renderLabel: =>
+        context = if @model? then @model.toJSON() else {}
+        @ui.label.text(_.template(@_config.label, context))
 
     appendContent: (contents...) ->
         @_config.content.push(contents...)
@@ -176,16 +184,17 @@ class Form extends BaseDoodad
             @components[field_name] = field
         return
 
-    _onFieldChange: (args...) =>
-        @trigger('change', this)
+    _onFieldChange: (field) =>
+        @trigger('change', this, field)
 
     unbindFromModel: ->
 
-    bindToModel: (model=@model, binding=@_config.binding) =>
+    bindTo: (model, opts={}) =>
+        binding = opts.binding or @_config.binding
         if binding
             _.each @fields, (field, name) ->
-                if field.bindToModel?
-                    field.bindToModel(model, binding)
+                if field.bindTo?
+                    field.bindTo(model, binding: binding)
                 else
                     field.listenTo model, "change:#{ name }", ->
                         value = model.get(name)
