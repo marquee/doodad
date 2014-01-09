@@ -3,8 +3,16 @@ extend _base
 block content
     h1 Doodad.Button
 
+    :markdown
+        `Buttons` are ordinary buttons, with some added support for inline
+        subcomponents like spinners and progress bars, icons, and hooks for
+        enabling and disabling.
+
     .example
         h2 Basic button
+        :markdown
+            A basic button that calls the given `action` function when clicked.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 label: 'Do Something'
@@ -13,6 +21,9 @@ block content
 
     .example
         h2 Bare button
+        :markdown
+            Buttons can be "bare", which removes the border and background.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 label: 'Do Something'
@@ -23,6 +34,10 @@ block content
 
     .example
         h2 Classy buttons
+        :markdown
+            Buttons can have different semantic `variants`, which correspond
+            to certain colors and icons.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
@@ -34,6 +49,9 @@ block content
 
     .example
         h2 Classy, naked buttons
+        :markdown
+            The variants can be bare, as well.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
@@ -45,6 +63,9 @@ block content
 
     .example
         h2 Iconic buttons
+        :markdown
+            Buttons can be icon-only.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
@@ -56,6 +77,9 @@ block content
 
     .example
         h2 Iconic label buttons
+        :markdown
+            Buttons can have icons and text, together.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
@@ -67,6 +91,9 @@ block content
 
     .example
         h2 Naked Icon buttons
+        :markdown
+            Icon-only buttons can be bare, as well.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
@@ -78,6 +105,9 @@ block content
 
     .example
         h2 Dynamic label buttons
+        :markdown
+            The label can be set by calling `Button::setLabel(label)`.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 type: 'icon+text'
@@ -88,6 +118,17 @@ block content
 
     .example
         h2 Spinner buttons
+        :markdown
+            Buttons can have a spinner that is revealed on click by setting
+            `spinner: true`/`spinner: 'inline'`, which causes the spinner to
+            reveal by expanding, or `spinner: replace`, which replaces the
+            button label with the spinner. Buttons with a spinner enabled make
+            themselves disabled when clicked, and can be enabled calling 
+            `Button::enable()`, which also hides the spinner.
+
+            (`type: 'icon'` buttons do not expand to reveal the spinner, only
+            replace.)
+
         script.example_code(type='text/coffeescript').
             doodads.push ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
                 return new Doodad.Button
@@ -102,6 +143,14 @@ block content
 
     .example
         h2 Progress button
+        :markdown
+            The `ProgressBar` subcomponent can be used in buttons as well.
+            If the option `progress: true` is used, the button will disable
+            itself when clicked, and activate a progress bar. The value of
+            the progress bar can be set using `Button::setProgress(progress)`.
+
+            Buttons CANNOT have both a spinner and a progress bar.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                     type: 'text'
@@ -124,10 +173,17 @@ block content
 
     .example
         h2 Class-based button
+        :markdown
+            A button that is reused can be defined as a class, with the
+            options that would be passed to the constructor set as class
+            properties. Any options then passed to the constructor will
+            override the class options.
+
         script.example_code(type='text/coffeescript').
             class CustomButton extends Doodad.Button
                 type: 'icon+text'
                 label: 'Do something'
+                variant: 'action'
                 action: (this_button) ->
                     @text('Something done!')
                     this_button.setLabel('Do something again!')
@@ -139,6 +195,13 @@ block content
 
     .example
         h2 Class-based link button
+        :markdown
+            Instead of an `action: ->` option, buttons can be given a `url`
+            option, with a URL to redirect the user to when clicked. This is
+            basically a link, though, which is preferred since it behaves
+            better.
+
+
         script.example_code(type='text/coffeescript').
             class CustomButton extends Doodad.Button
                 type: 'text'
@@ -148,6 +211,11 @@ block content
 
     .example
         h2 Model-bound label
+        :markdown
+            Button labels can be used as Underscore templates that render
+            using a given model as the context. The label will rerender on
+            model change.
+
         script.example_code(type='text/coffeescript').
             model = new Backbone.Model(clicks: 0)
             doodads.push [

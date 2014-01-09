@@ -1,13 +1,12 @@
 {
   "name": "doodad-ui",
-  "version": "0.3.0.dev",
+  "version": "0.3.0-dev",
   "description": "",
   "engines": {
     "node": "0.10.x",
     "npm": "1.x.x"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "backbone": "1.x.0",
     "browserify": "2.x.x",
@@ -19,7 +18,8 @@
     "spin": "*",
     "sqwish": "0.2.x",
     "uglify-js": "2.x.x",
-    "walker": "1.0.3"
+    "walker": "1.0.3",
+    "marked": "~0.3.0"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha --compilers coffee:coffee-script"

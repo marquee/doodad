@@ -14,14 +14,59 @@ html
         link(rel='stylesheet',href='../doodad-#{ VERSION }.css')
         script(src='../doodad-#{ VERSION }.js')
         style.
+            body {
+                background-color: #eee;
+                padding: 3em;
+                max-width: 1024px;
+                margin: 0 auto;
+                font-size: 18px;
+                font-family: 'Times New Roman', Times, Georgia, serif;
+            }
+            .example {
+                background-color: white;
+                margin-bottom: 2em;
+                padding: 2em;
+            }
             .example_code {
                 white-space: pre;
                 font-family: Menlo, monospace;
                 font-size: 14px;
-                margin-top: 1em;
                 display: block;
             }
+            .example_code[data-collapsed="true"] {
+                max-height: 3em;
+                overflow: hidden;
+                opacity: 0.4;
+            }
+            .example_app {
+                margin: 1em 0;
+                padding: 1em;
+                border: 1px solid #ccc;
+            }
             .example-DISABLED {
+                display: none;
+            }
+            code {
+                border: 1px solid #ccc;
+                padding: 0 0.2em;
+                font-size: 0.8em;
+                background: #f9f9f9;
+                color: #222222;
+                border-radius: 0.3em;
+                display: inline-block;
+            }
+            *:not(.example_app) p, *:not(.example_app) h2, *:not(.example_app) h1 {
+                max-width: 650px;
+                line-height: 1.5;
+            }
+            .example_app .output {
+                margin: 1em 0;
+                padding: 1em;
+                border: 1px solid rgba(255,255,0,0.4);
+                font-family: Menlo, 'Courier New', monospace;
+                white-space: pre;
+            }
+            .example_app .output:empty {
                 display: none;
             }
     body
@@ -47,11 +92,20 @@ html
 
         script(type='text/coffeescript').
             examples = $('.example')
-            examples.find('h2').after """
-                <div class="example_app">
-                    <div class="output"></div>
-                </div>
-            """
+            examples.find('.example_code').each (i, el) ->
+                $el = $(el)
+                $el.before """
+                    <div class="example_app">
+                        <div class="output"></div>
+                    </div>
+                """
+                $el.attr('data-collapsed', true)
+                $el.on 'click', ->
+                    if $el.data('collapsed')
+                        $el.removeAttr('data-collapsed')
+                    else
+                        $el.attr('data-collapsed', true)
+                    return
 
             window.exampleSetup?()
 
