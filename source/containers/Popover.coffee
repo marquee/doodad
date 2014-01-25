@@ -59,7 +59,7 @@ class Popover extends BaseDoodad
             dismiss             : null
             confirm             : null
             solo                : true
-            on                  : {}
+            events              : {}
 
         super(@_config)
 
@@ -119,7 +119,7 @@ class Popover extends BaseDoodad
                             @hide() if @_config.close_on_confirm
                         variant: 'friendly'
                 @_config.confirm.$el.addClass('Popover_Control -confirm')
-                @ui.controls.append(@_config.confirm.render())
+                @ui.controls.append(@_config.confirm.render().el)
 
             @ui.content.append(@ui.controls)
         @$el.append(@ui.content)
@@ -217,7 +217,7 @@ class Popover extends BaseDoodad
                 if popover?
                     popover.hide()
         active_popovers[@cid] = this
-        $('body').append(@render())
+        $('body').append(@render().el)
         @ui.content.css('opacity', 0)
         _.defer =>
             if @_config.type.indexOf('fixed') is -1

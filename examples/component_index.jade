@@ -126,6 +126,8 @@ block content
                 variant : variant
 
 
+
+
         components.push dh2 'Popovers'
         components.push dh3 'Modal'
         modal_form = new Form
@@ -146,7 +148,8 @@ block content
             content: modal_form
         components.push new Button
             label: 'Show Modal'
-            on: click: modal.show
+            action: modal.show
+
 
 
         components.push dh3 'Flag'
@@ -158,13 +161,14 @@ block content
                 new StringField()
             ]
         flag = new Popover
-            origin: 'bottom-left'
+            origin: 'left-top'
             visible: false
             title: 'Flag Title'
             content: modal_form
         components.push new Button
             label: 'Show Flag'
-            on: click: flag.toggle
+            action: flag.toggle
+
 
 
         components.push dh2 'Form'
@@ -186,10 +190,16 @@ block content
         
         components.push new ReusableForm()
 
+
+
+
+
+
+
         $components = $('#components')
         components.forEach (doodad) ->
             console.log doodad
-            $components.append(doodad.render())
+            $components.append(doodad.render().el)
 
 
 
