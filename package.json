@@ -26,17 +26,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/droptype/doodad.git"
+    "url": "git://github.com/marquee/doodad.git"
   },
-  "author": "Alec Perkins <alec@droptype.com>",
+  "author": "Alec Perkins <alec@marquee.by>",
   "license": {
     "type": "Unlicense",
-    "url": "https://raw.github.com/droptype/doodad/master/UNLICENSE"
+    "url": "https://raw.github.com/marquee/doodad/master/LICENSE"
   },
   "contributors": [
     {
       "name": "Alec Perkins",
-      "email": "alec@droptype.com"
+      "email": "alec@marquee.by"
     }
   ]
 }
