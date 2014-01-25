@@ -10,6 +10,7 @@ StringField = require './components/StringField'
 
 # AppBar      = require './containers/AppBar'
 Form        = require './containers/Form'
+List        = require './containers/List'
 # Layout      = require './containers/Layout'
 Popover     = require './containers/Popover'
 
@@ -22,6 +23,7 @@ Doodad =
     Button      : Button
     Form        : Form
     # Layout      : Layout
+    List        : List
     Popover     : Popover
     ProgressBar : ProgressBar
     Select      : Select

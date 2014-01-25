@@ -1,0 +1,45 @@
+extend _base
+
+block content
+    h1 Doodad.List
+
+    .info
+        :markdown
+            `Lists`
+
+    .example
+        h2 Basic list
+        :markdown
+            Basic `List` usage with several fields.
+
+        script.example_code(type='text/coffeescript').
+            new_list = new Doodad.List
+                label: 'Some List'
+                value: [
+                        'Lorem ipsum dolor sit amet.'
+                        'Wakka wakka doo doo yeah.'
+                    ]
+            button = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_list.getValue(),null,4))
+            doodads.push([new_list, button])
+
+    .example
+        h2 Basic list
+        :markdown
+            Basic `List` usage with several fields.
+
+        script.example_code(type='text/coffeescript').
+            new_list = new Doodad.List
+                label: 'Some List'
+                type: 'unordered'
+                value: [
+                        'Lorem ipsum dolor sit amet.'
+                        'Wakka wakka doo doo yeah.'
+                    ]
+            button = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_list.getValue(),null,4))
+            doodads.push([new_list, button])

@@ -1,0 +1,12 @@
+// Wrapper around the actual field inside the List_Item, to preserve list
+// style formatting when containing only a `display: block` element.
+.List_ItemContent
+    display: inline-block
+    width: 100%
+
+    .List.-is_flexible &
+        width: calc(100% - #{ $Button-height })
+
+.List_ItemRemove
+    float: right
+
