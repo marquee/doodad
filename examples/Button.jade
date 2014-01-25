@@ -117,61 +117,6 @@ block content
                     this_button.setLabel('Do something again!')
 
     .example
-        h2 Spinner buttons
-        :markdown
-            Buttons can have a spinner that is revealed on click by setting
-            `spinner: true`/`spinner: 'inline'`, which causes the spinner to
-            reveal by expanding, or `spinner: replace`, which replaces the
-            button label with the spinner. Buttons with a spinner enabled make
-            themselves disabled when clicked, and can be enabled calling 
-            `Button::enable()`, which also hides the spinner.
-
-            (`type: 'icon'` buttons do not expand to reveal the spinner, only
-            replace.)
-
-        script.example_code(type='text/coffeescript').
-            doodads.push ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
-                return new Doodad.Button
-                    type: type
-                    label: 'Do something'
-                    spinner: true
-                    action: (this_button) ->
-                        @text("Doing something!")
-                        setTimeout =>
-                            this_button.enable()
-                        , 2000
-
-    .example
-        h2 Progress button
-        :markdown
-            The `ProgressBar` subcomponent can be used in buttons as well.
-            If the option `progress: true` is used, the button will disable
-            itself when clicked, and activate a progress bar. The value of
-            the progress bar can be set using `Button::setProgress(progress)`.
-
-            Buttons CANNOT have both a spinner and a progress bar.
-
-        script.example_code(type='text/coffeescript').
-            doodads.push new Doodad.Button
-                    type: 'text'
-                    variant: 'friendly'
-                    progress: true
-                    label: 'Do something'
-                    action: (this_button) ->
-                        @text("Doing something!")
-                        p = 0
-                        p_int = setInterval ->
-                            p += 0.05
-                            if p > 1
-                                p = 1
-                                setTimeout ->
-                                    this_button.enable()
-                                , 500
-                                clearInterval(p_int)
-                            this_button.setProgress(p)
-                        , 250
-
-    .example
         h2 Class-based button
         :markdown
             A button that is reused can be defined as a class, with the
@@ -194,13 +139,75 @@ block content
             doodads.push b
 
     .example
-        h2 Class-based link button
+        h2 Spinner buttons
+        :markdown
+            Buttons can have a spinner that is revealed on click by setting
+            `spinner: true`/`spinner: 'inline'`, which causes the spinner to
+            reveal by expanding, or `spinner: replace`, which replaces the
+            button label with the spinner. Buttons with a spinner enabled make
+            themselves disabled when clicked, and can be enabled calling 
+            `Button::enable()`, which also hides the spinner.
+
+            (`type: 'icon'` buttons do not expand to reveal the spinner, only
+            replace.)
+
+        script.example_code(type='text/coffeescript').
+            class SpinnerButton extends Doodad.Button
+                label: 'Do something'
+                spinner: true
+                action: (this_button) ->
+                    @text("Doing something!")
+                    setTimeout =>
+                        this_button.enable()
+                    , 2000
+            buttons = ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
+                return new SpinnerButton(type: type)
+            buttons.push new SpinnerButton(spinner: 'replace')
+            doodads.push(buttons)
+
+    .example
+        h2 Progress button
+        :markdown
+            The `ProgressBar` subcomponent can be used in buttons as well.
+            If the option `progress: true` is used, the button will disable
+            itself when clicked, and activate a progress bar. The value of
+            the progress bar can be set using `Button::setProgress(progress)`.
+
+            The progress bar color is dependent on the variant of the button.
+            Buttons CANNOT have both a spinner and a progress bar.
+
+        script.example_code(type='text/coffeescript').
+            class ProgressButton extends Doodad.Button
+                type: 'text'
+                progress: true
+                label: 'Do something'
+                action: (this_button) ->
+                    @text("Doing something!")
+                    p = 0
+                    p_int = setInterval ->
+                        p += 0.05
+                        if p > 1
+                            p = 1
+                            setTimeout ->
+                                this_button.enable()
+                            , 500
+                            clearInterval(p_int)
+                        this_button.setProgress(p)
+                    , 250
+            buttons = []
+            ['dangerous', 'friendly', 'warning', 'action', ''].forEach (class_) ->
+                buttons.push new ProgressButton(variant: class_)
+            ['icon+text', 'icon'].forEach (type_) ->
+                buttons.push new ProgressButton(type: type_)
+            doodads.push(buttons)
+
+    .example
+        h2 Button as link (just in case)
         :markdown
             Instead of an `action: ->` option, buttons can be given a `url`
             option, with a URL to redirect the user to when clicked. This is
             basically a link, though, which is preferred since it behaves
             better.
-
 
         script.example_code(type='text/coffeescript').
             class CustomButton extends Doodad.Button
