@@ -39,10 +39,11 @@ class Button extends BaseDoodad
     #
     initialize: (options={}) ->
         options._icon_name = @DEFAULT_ICONS.default
-        if options.variant
+        instance_variant = options.variant or @variant
+        if instance_variant
             # Allow the icon_name to be something like 'angle-right'. The variant
             # is always one word, unhyphenated.
-            [variant, size] = options.variant.split(':')
+            [variant, size] = instance_variant.split(':')
             options._size = size
             options.variant = variant
             if variant
