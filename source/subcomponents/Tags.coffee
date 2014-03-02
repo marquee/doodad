@@ -1,6 +1,6 @@
 ###
 They also provide convenient points to bind data changes, eg:
-    
+
     p_node = new Doodad.Tags.P
         content: @model.get('text_property')
     @model.on 'change:text_property', ->
@@ -86,7 +86,7 @@ class TextNode
     #        methods. However, unlike the other Tags, they are not full
     #        components (no getPosition, etc) since they are not tags in the DOM.
     constructor: ({ content, @model }) ->
-        @el = document.createTextNode()
+        @el = document.createTextNode('')
         @_content = []
         if @model?
             @listenTo(@model, 'change', @_renderContent)
