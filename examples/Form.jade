@@ -1,0 +1,266 @@
+extend _base
+
+block content
+    h1 Doodad.Form
+
+    .info
+        :markdown
+            `Forms` are organizational components that create groupings of
+            components such as `StringField` and `Select`, referred to as
+            *fields* when used in a form. Forms provide value serialization,
+            model binding, and layout capability.
+
+    .example
+        h2 Basic form
+        :markdown
+            Basic `Form` usage with several fields. The button displays the
+            result of calling `Form::getValue`. The field names are the keys
+            used for the serialization. Components without names will be
+            given a sequential name, eg `field_5`.
+
+        script.example_code(type='text/coffeescript').
+            new_form = new Doodad.Form
+                content: [
+                    new Doodad.StringField
+                        name: 'some_field'
+                        label: 'Some Field'
+                    new Doodad.StringField
+                        name: 'other_field'
+                        type: 'multiline'
+                    new Doodad.Select
+                        placeholder: 'A Field'
+                        choices: [
+                            {
+                                label: 'Category 1'
+                                value: 'category-1'
+                            }
+                            {
+                                label: 'Category 2'
+                                value: 'category-2'
+                            }
+                        ]
+                    new Doodad.StringField
+                        label: 'Tokens'
+                        name: 'token_field'
+                        type: 'token'
+                    new Doodad.StringField
+                        label: 'Unnamed'
+                ]
+            button = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue(),null,4))
+            doodads.push([new_form, button])
+
+    .example
+        h2 Nested form
+        :markdown
+            Forms can contain other forms, and will include them when
+            serializing the values. By default, the values are flattened into
+            a single-level object. An object matching the original nesting can
+            be optionally generated when calling `Form::getValue(flatten: false)`.
+
+            This example also shows the `label` property of the `Form`.
+
+        script.example_code(type='text/coffeescript').
+            new_form = new Doodad.Form
+                label: 'Nested Form'
+                content: [
+                    new Doodad.StringField
+                        name: 'some_field'
+                        label: 'Some Field'
+                    new Doodad.Button
+                        label: 'Show Nested Form'
+                        type: 'text-bare'
+                        action: (self) ->
+                            if new_form.fields.form_1.toggle().is_visible
+                                self.setLabel('Hide Nested Form')
+                            else
+                                self.setLabel('Show Nested Form')
+
+                    new Doodad.Form
+                        visible: false
+                        content: [
+                            new Doodad.Form.FormLabel
+                                content: 'Nested Form:'
+                            new Doodad.StringField
+                                name: 'other_field'
+                                type: 'multiline'
+                            new Doodad.Select
+                                placeholder: 'A Field'
+                                choices: [
+                                    {
+                                        label: 'Category 1'
+                                        value: 'category-1'
+                                    }
+                                    {
+                                        label: 'Category 2'
+                                        value: 'category-2'
+                                    }
+                                ]
+                            new Doodad.StringField
+                                label: 'Tokens'
+                                name: 'token_field'
+                                type: 'token'
+                            new Doodad.Form.FormText
+                                content: 'This nested form is hidden by default. It also has a FormLabel and a FormText.'
+                        ]
+                ]
+
+            button1 = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue(),null,4))
+            button2 = new Doodad.Button
+                label: 'Submit Form (nested)'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue(flatten: false),null,4))
+            doodads.push([new_form, button1, button2])
+
+
+    .example
+        h2 Form layout
+        :markdown
+            The components inside a form will simply stack, by default. The
+            `layout` option provides a way to declare how the fields and other
+            components should be arranged in the form, specifying rows and
+            cells using the field names. (The auto-generated names MAY be
+            used, if names are not provided.) Fields that are not included in
+            the layout will not be displayed, though they will still serialize.
+            Fields specified in the layout more than once will log (but not
+            throw) an error.
+
+        script.example_code(type='text/coffeescript').
+            new_form = new Doodad.Form
+                layout: [
+                    [ ['some_field']                           ]
+                    [ ['other_field'],['field_3', 'button_1']  ]
+                    # [ ['token_field']                        ] # disabled to show warning
+                    [ ['some_field']                           ] # duplicated to show error
+                ]
+                content: [
+                    new Doodad.StringField
+                        name: 'some_field'
+                        label: 'Some Field'
+                    new Doodad.StringField
+                        name: 'other_field'
+                        type: 'multiline'
+                    new Doodad.Select
+                        placeholder: 'A Field'
+                        choices: [
+                            {
+                                label: 'Category 1'
+                                value: 'category-1'
+                            }
+                            {
+                                label: 'Category 2'
+                                value: 'category-2'
+                            }
+                        ]
+                    new Doodad.StringField
+                        label: 'Tokens'
+                        name: 'token_field'
+                        type: 'token'
+                    new Doodad.Button
+                        label: 'Toggle Something'
+                        action: ->
+                ]
+            button1 = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue(),null,4))
+            doodads.push([new_form, button1])
+
+
+
+    .example
+        h2 Form shortcuts
+        script.example_code(type='text/coffeescript').
+            { dform, dstringinput, dselect, dformlabel, dformtext } = Doodad.Shortcuts
+            new_form = dform 'form_name',
+                dstringinput 'some_field'
+                dformlabel 'Additional fields:'
+                dstringinput 'other_field', label: 'Other Field', type: 'multiline', placeholder: 'Text goes here'
+                dselect 'prop', placeholder: 'A Field', [
+                    { label: 'Category 1', value: 'category-1' }
+                    { label: 'Category 2', value: 'category-2' }
+                ]
+                dstringinput
+                    label: 'Tokens'
+                    type: 'token'
+                dformlabel 'Info'
+                dformtext 'This is some helpful information about the form'
+                new Doodad.Button
+                    label: 'Toggle Something'
+                    on: click: ->
+            button1 = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_form.getValue(),null,4))
+            doodads.push([new_form, button1])
+
+    .example
+        h2 Form saving
+        :markdown
+            Forms can be connected to models. Passing a `model:` option to the
+            `Form` constructor will cause it to bind change events, and
+            support calling `Form::save` to save the field values to the model.
+
+            The binding is two-way. If the model changes, the fields will
+            update. Likewise, as the fields change, the model will update. By
+            default, the binding uses `Model::set` to update the model.
+            Using the `binding: 'save'` option on the form will cause the
+            model to save whenever a field changes. `binding: false` will
+            disable the binding behavior.
+
+            The form also propagates the `change` events of its fields, so
+            other things can respond to form changes.
+
+        script.example_code(type='text/coffeescript').
+            { dform, dstringinput, dselect, dbr } = Doodad.Shortcuts
+            model1 = new DummyModel
+                some_field: 'Initial Value'
+                other_field: null
+                prop: null
+            new_form = dform 'form_name', model: model1,
+                dstringinput 'some_field', label: 'Some Field', value: model1.get('some_field')
+                dstringinput 'other_field', label: 'Other Field', type: 'multiline', placeholder: 'Text goes here'
+                dselect 'prop', label: 'Prop', placeholder: 'A Field', [
+                    { label: 'Category 1', value: 'category-1' }
+                    { label: 'Category 2', value: 'category-2' }
+                ]
+            model_values = new Doodad.Tags.P
+                content: [
+                    'Non-field components in a form can also use templating.'
+                    dbr()
+                    'The following text is interpolated with `some_field`: <%= some_field %>'
+                    dbr()
+                    'While this text is from `other_field`: <%= other_field %>'
+                    dbr()
+                    'And this text is interpolated from `prop`: <%= prop %>'
+                ]
+                model: model1
+            field_status = new Doodad.Tags.P
+                content: ''
+            notice_timeout = null
+            notify = (message, clear=true) ->
+                field_status.setContent(message)
+                clearTimeout(notice_timeout)
+                notice_timeout = setTimeout((-> field_status.setContent()), 2000) if clear
+            button1 = new Doodad.Button
+                label: 'Save Form'
+                spinner: true
+                action: (self) ->
+                    notify('Saving form...', false)
+                    new_form.save ->
+                        notify('Saved!, calling callback')
+                        self.enable()
+                        alert("model attributes:\n\n" + JSON.stringify(model1.attributes, null, 4))
+            new_form.on 'change', (form, field) -> notify('The ' + field.name + ' field changed in form ' + form.name + '.')
+            button2 = new Doodad.Button
+                label: 'Reset Model'
+                variant: 'warning'
+                action: (self) ->
+                    model1.set(some_field: 'Initial Value', other_field: null, prop: null)
+                    notify('Resetting model values (form will follow)')
+            doodads.push([new_form, model_values, button1, button2, field_status])

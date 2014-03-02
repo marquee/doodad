@@ -24,7 +24,7 @@ MIN_JS_LIB_NAME         = "doodad-#{ VERSION }-min.js"
 MIN_CSS_LIB_NAME        = "doodad-#{ VERSION }-min.css"
 
 
-TO_COPY = ['images',]     # relative to SOURCE_FOLDER
+TO_COPY = []#'images',]     # relative to SOURCE_FOLDER
 TO_COPY_FAIL_SILENT = []
 
 # Set by the -q option, determines the level of verbosity
@@ -41,11 +41,13 @@ option '-p', '--production', 'Compile for production'
 
 compassExtraOptions = [
     #'--debug-info',
+    '--boring', # Disable colors, which fuck up the output
     '--relative-assets',
     '--sass-dir',        'source/',
     '--css-dir',         'build/',
     '--images-dir',      'build/images/',
     '--javascripts-dir', 'build/',
+    '--load-all',  'node_modules/',
 ]
 
 
@@ -78,13 +80,10 @@ task 'build:examples', '', (opts) ->
 task 'build:scripts', '', (opts) ->
     coffee_builder = spawn 'coffee', ['--output', BUILD_FOLDER, '--compile', SOURCE_FOLDER]
     captureOutput coffee_builder, 'COFFEE', ->
-        index_file = path.join(BUILD_FOLDER, 'index.js')
-        index_content = fs.readFileSync(index_file).toString()
-        index_content = index_content.replace(/\{X VERSION X\}/g, VERSION)
-        fs.writeFileSync(index_file, index_content)
         browserify = require 'browserify'
         b = browserify()
-        b.add(path.join(index_file))
+        dist_file = path.join(BUILD_FOLDER, 'dist.js')
+        b.add(path.join(dist_file))
         output_file = path.join(OUTPUT_FOLDER, JS_LIB_NAME)
         output_stream = fs.createWriteStream(output_file)
         b.bundle (err, src) ->
@@ -97,20 +96,18 @@ task 'build:scripts', '', (opts) ->
 task 'build:sass', '', (opts) ->
     lines_to_concatenate = []
     file_list = []
-    folders_to_process = ['misc', 'subcomponents', 'components', 'containers']
+    folders_to_process = ['global', 'subcomponents', 'components', 'containers']
     num_folders_processed = 0
     folders_to_process.forEach (folder) ->
         path_to_walk = path.join(SOURCE_FOLDER, folder)
         w = Walker(path_to_walk)
         w.on 'file', (f, stat) ->
-            console.log f, stat
             if f.split('.').pop() is 'sass'
                 if f.split('/').pop()[0] is '_'
                     file_list.unshift(f)
                 else
                     file_list.push(f)
         w.on 'end', ->
-            console.log file_list
             while file_list.length > 0
                 do ->
                     f = file_list.shift()
@@ -153,10 +150,12 @@ task 'build', 'Compile the static source (coffee/sass) and put it into static/',
 
             compass_builder = spawn 'compass', compassOptions
             captureOutput compass_builder, 'COMPASS', ->
-                unminified = fs.readFileSync(path.join(BUILD_FOLDER, 'index.css')).toString()
+                unminified = fs.readFileSync(path.join(BUILD_FOLDER, 'dist.css')).toString()
                 minified = Sqwish.minify(unminified)
-                fs.writeFile(path.join(OUTPUT_FOLDER, CSS_LIB_NAME), cssSourcePrefix(unminified), ->)
-                fs.writeFile(path.join(OUTPUT_FOLDER, MIN_CSS_LIB_NAME), cssSourcePrefix(minified), ->)
+                fs.writeFile path.join(OUTPUT_FOLDER, CSS_LIB_NAME), cssSourcePrefix(unminified), (err) ->
+                    throw err if err?
+                fs.writeFile path.join(OUTPUT_FOLDER, MIN_CSS_LIB_NAME), cssSourcePrefix(minified), (err) ->
+                    throw err if err?
 
 
 task 'watch', 'Build, then watch the static source (coffee/sass) for changes', (opts) ->
@@ -240,15 +239,15 @@ _minifyJS = (js_script_code) ->
 build_date = new Date()
 doodad_source_prefix = """
     Doodad v#{ VERSION }
-    Public Domain, https://github.com/droptype/doodad
+    Public Domain, https://github.com/marquee/doodad
     #{ build_date.getFullYear() }-#{ build_date.getMonth() + 1 }-#{ build_date.getDate() }
 """
 sassSourcePrefix = (source) ->
     return """
     // Doodad v#{ VERSION }
-    // Public Domain, https://github.com/droptype/doodad
+    // Public Domain, https://github.com/marquee/doodad
     // #{ build_date.getFullYear() }-#{ build_date.getMonth() + 1 }-#{ build_date.getDate() }
-    
+
     #{ source }
     """
 
@@ -280,8 +279,12 @@ jsSourcePrefix = (source) ->
 captureOutput = (operator, label='', cb=->) ->
     if not quiet
         operator.stdout.on 'data', (data) ->
-            if data?.toString().trim().length > 0
+            if data?.toString().match(/[^\s]+/g)
                 console.log "#{ label }.stdout: #{ data }"
+        operator.stderr.on 'data', (data) ->
+            console.log 'match', data?.toString().match(/[^\s]+/g)
+            if data?.toString().match(/[^\s]+/g)
+                console.log "#{ label }.stderr: #{ data }"
         operator.on 'exit', (code) ->
             console.log "#{ label }.exit:", code
             if code is 0

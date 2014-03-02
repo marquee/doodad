@@ -1,0 +1,30 @@
+
+@import "./Doodad"
+
+=add-clicky-shadow($color)
+    +single-box-shadow($hoff: 0px, $voff: 2px, $blur: 0px, $color: darken($color, 10))
+    &:hover
+        +single-box-shadow($hoff: 0px, $voff: 2px, $blur: 0px, $color: $color)
+
+.Button:not(.-bare)
+    &:hover
+        outline: 0
+    &:active, &:disabled
+        outline: 0
+        .Button_Icon
+            margin-top: 1px
+        .Button_Label
+            position: relative
+            top: 1px
+    &:not(:active):not(:disabled)
+        +add-clicky-shadow($DColor-default)
+        &.-friendly
+            +add-clicky-shadow($DColor-friendly)
+        &.-action
+            +add-clicky-shadow($DColor-action)
+        &.-warning
+            +add-clicky-shadow($DColor-warning)
+        &.-dangerous
+            +add-clicky-shadow($DColor-dangerous)
+
+

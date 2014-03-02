@@ -1,0 +1,231 @@
+extend _base
+
+block content
+    h1 Doodad.StringField
+
+    :markdown
+        The `StringField` is a text input, with various options to control
+        behavior, such as singleline or multiline input, character and word
+        limits, and tokenization.
+
+    .example
+        h2 Basic input
+        :markdown
+            A basic `StrindgField` is a singleline text input, with a label and
+            placeholder. The field emits various events as it is interacted
+            with. The value can be retrieved through these events, or with a
+            direct call to `StringField::getValue()`.
+
+        script.example_code(type='text/coffeescript').
+            field = new Doodad.StringField
+                label: 'Some String'
+                placeholder: 'Placeholder'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+            button = new Doodad.Button
+                label: 'Alert StringField Value'
+                action: ->
+                    alert(field.getValue())
+            doodads.push([field, button])
+
+    .example
+        h2 Disabled input
+        :markdown
+            `StringFields` can be disabled by default. This state can be
+            changed using `StringField::enable()` and `StringField::disabled()`.
+
+        script.example_code(type='text/coffeescript').
+            field = new Doodad.StringField
+                label: 'Some String'
+                value: 'Immutable field'
+                enabled: false
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+            b_enable = new Doodad.Button
+                label: 'Enable Field'
+                variant: 'friendly'
+                action: (self) ->
+                    field.enable()
+                    self.disable()
+                    b_disable.enable()
+            b_disable = new Doodad.Button
+                label: 'Disable Field'
+                variant: 'dangerous'
+                enabled: false
+                action: (self) ->
+                    field.disable()
+                    self.disable()
+                    b_enable.enable()
+            doodads.push([field, b_enable, b_disable])
+            
+
+    .example
+        h2 Input with icon
+        :markdown
+            A `StringField` can be given an icon to indicate its purpose.
+
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'Some String'
+                placeholder: 'Placeholder'
+                icon: 'search'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Multiline input
+        :markdown
+            Setting `type: 'multiline'` turns the `StringField` into a
+            `textarea` that supports multiline strings.
+
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'Some Text'
+                type: 'multiline'
+                value: 'Multiline\ntext'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Tokenized input
+        :markdown
+            Setting `type: 'token'` enables tokenization on `tab` and `enter`.
+            Optionally, a `delimeter` can be specified, which is a character
+            that triggers tokenization, eg `delimeter: ','`.
+
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'Some Tokens'
+                placeholder: 'Enter tags (press enter)'
+                type: 'token'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Limited input, characters
+        :markdown
+            The number of characters can be hard limited to a specified count.
+
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'Only a little bit of text'
+                char_limit: 40
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Limited input, words
+        :markdown
+            The input limit can also be on a number of words, instead.
+
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'A few words'
+                word_limit: 5
+                type: 'multiline'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Softly limited input, words
+        :markdown
+            Using the '~' character in front of the word or character limit
+            makes it a soft limit, and the field will warn the user they are
+            over the limit but it will not restrict their input.
+
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.StringField
+                label: 'A few words'
+                word_limit: '~5'
+                type: 'multiline'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+
+    .example
+        h2 Model binding
+        :markdown
+            The field can be bound to a specified attribute of a model by
+            giving it `model: a_model` and `name: 'some_property'` options.
+            The binding is two-way, and the field will update if the model
+            changes. Likewise, if the model changes, the field will update. By
+            default the changes are applied to the model using `set`. Changing
+            the  `binding: 'set'` option to `'save'` will initiate a save on
+            the model, while `false` will disable the binding. Alternatively,
+            the `StringField::bindTo(model, name: @name, binding: 'set')`
+            method can be used.
+
+            If given a model, the label of the field can be an Underscore
+            template that is rendered using the model attributes as context.
+            The label will rerender whenever the model changes.
+
+        script.example_code(type='text/coffeescript').
+            model = new Backbone.Model(label: 'Dynamic Label')
+            value_field = new Doodad.StringField
+                label: '<%= label %>'
+                model: model
+                char_limit: '~20'
+                on:
+                    change: (self, val) ->
+                        @demo_text('changed: ' + JSON.stringify(val))
+                    blur: (self, val) ->
+                        @demo_text('blurred')
+                    focus: (self, val) ->
+                        @demo_text('focused')
+            label_field = new Doodad.StringField
+                model: model
+                name: 'label'
+                placeholder: 'Field Label'
+            reset = new Doodad.Button
+                label: 'Reset Label'
+                action: -> model.set(label: 'Dynamic Label')
+            doodads.push([label_field, value_field, reset])
+
+    script(type='text/coffeescript').
+        _.each doodads, (doodad_set, i) ->
+            $example_el = $($('.example').get(i))
+            unless _.isArray(doodad_set)
+                doodad_set = [doodad_set]
+            _.each doodad_set, (doodad_instance) ->    
+                doodad_instance.demo_text = (val) ->
+                    $example_el.find('.output').text(val)
+    

@@ -1,0 +1,189 @@
+
+
+.Popover_Content
+    position: absolute
+    min-width: $Popover-min_width
+    &:before, &:after
+        content         : ""
+        position        : absolute
+        pointer-events  : none
+        border-style    : solid
+
+
+// Many of these are technically LAF styles, but in this case it’s a lot
+// simpler to have the different variations in one place. Also, the structure
+// does affect the look-and-feel in the case of the triangles.
+.Popover
+    position: absolute
+    &.-fixed
+        position: fixed
+
+    $border_radius_adjustment: ($Popover-border--radius - $Popover-border--width)
+
+    // TOP EDGE
+
+    &.-origin--top_left .Popover_Content
+        margin-top  : $Popover-triangle--size * 2
+        margin-left : $Popover-triangle--size * -0.5 - $border_radius_adjustment
+        &::after
+            top                 : $Popover-triangle--size * -2
+            left                : $border_radius_adjustment
+            border-bottom-color : $Popover-background--color
+        &::before
+            top                 : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            left                : -1 * $Popover-border--width + $border_radius_adjustment
+            border-bottom-color : $Popover-border--color
+
+    &.-origin--top_center .Popover_Content
+        margin-top      : $Popover-triangle--size * 2
+        margin-left     : 50%
+        &::after
+            top                 : $Popover-triangle--size * -2
+            left                : calc(50% - #{ $Popover-triangle--size })
+            border-bottom-color : $Popover-background--color
+        &::before
+            top                 : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            left                : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
+            border-bottom-color : $Popover-border--color
+
+    &.-origin--top_right .Popover_Content
+        margin-top      : $Popover-triangle--size * 2
+        margin-right    : $Popover-triangle--size * 0.5 - $border_radius_adjustment
+        &::after
+            top                 : $Popover-triangle--size * -2
+            right               : $border_radius_adjustment
+            border-bottom-color : $Popover-background--color
+        &::before
+            top                 : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            right               : -1 * $Popover-border--width + $border_radius_adjustment
+            border-bottom-color : $Popover-border--color
+
+    // RIGHT EDGE
+
+    &.-origin--right_top .Popover_Content
+        margin-top      : $Popover-triangle--size * -0.5 - $border_radius_adjustment
+        margin-left     : $Popover-triangle--size * -2
+        &::after
+            right               : $Popover-triangle--size * -2
+            top                 : $border_radius_adjustment
+            border-left-color   : $Popover-background--color
+        &::before
+            right               : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            top                 : -1 * $Popover-border--width + $border_radius_adjustment
+            border-left-color   : $Popover-border--color
+
+    &.-origin--right_center .Popover_Content
+        margin-top      : 50%
+        margin-left     : $Popover-triangle--size * -2
+        &::after
+            right               : $Popover-triangle--size * -2
+            top                 : calc(50% - #{ $Popover-triangle--size })
+            border-left-color   : $Popover-background--color
+        &::before
+            right               : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            top                 : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
+            border-left-color   : $Popover-border--color
+
+    &.-origin--right_bottom .Popover_Content
+        margin-bottom   : $Popover-triangle--size * -0.5 - $border_radius_adjustment
+        margin-left     : $Popover-triangle--size * -2
+        &::after
+            right               : $Popover-triangle--size * -2
+            bottom              : $border_radius_adjustment
+            border-left-color   : $Popover-background--color
+        &::before
+            right               : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            bottom              : -1 * $Popover-border--width + $border_radius_adjustment
+            border-left-color   : $Popover-border--color
+
+    // BOTTOM EDGE
+
+    &.-origin--bottom_left .Popover_Content
+        margin-top      : $Popover-triangle--size * -2
+        margin-left     : $Popover-triangle--size * -0.5 - $border_radius_adjustment
+        &::after
+            bottom              : $Popover-triangle--size * -2
+            left                : $border_radius_adjustment
+            border-top-color    : $Popover-background--color
+        &::before
+            bottom              : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            left                : -1 * $Popover-border--width + $border_radius_adjustment
+            border-top-color    : $Popover-border--color
+
+    &.-origin--bottom_center .Popover_Content
+        margin-top      : $Popover-triangle--size * -2
+        margin-left     : 50%
+        &::after
+            bottom              : $Popover-triangle--size * -2
+            left                : calc(50% - #{ $Popover-triangle--size })
+            border-top-color    : $Popover-background--color
+        &::before
+            bottom              : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            left                : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
+            border-top-color    : $Popover-border--color
+
+    &.-origin--bottom_right .Popover_Content
+        margin-top      : $Popover-triangle--size * -2
+        margin-right    : $Popover-triangle--size * 0.5 - $border_radius_adjustment
+        &::after
+            bottom              : $Popover-triangle--size * -2
+            right               : $border_radius_adjustment
+            border-top-color    : $Popover-background--color
+        &::before
+            bottom              : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            right               : -1 * $Popover-border--width + $border_radius_adjustment
+            border-top-color    : $Popover-border--color
+
+    // LEFT EDGE
+
+    &.-origin--left_top .Popover_Content
+        margin-top     : $Popover-triangle--size * -0.5 - $border_radius_adjustment
+        margin-left    : $Popover-triangle--size * 2
+        &::after
+            left                : $Popover-triangle--size * -2
+            top                 : $border_radius_adjustment
+            border-right-color  : $Popover-background--color
+        &::before
+            left                : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            top                 : -1 * $Popover-border--width + $border_radius_adjustment
+            border-right-color  : $Popover-border--color
+
+    &.-origin--left_center .Popover_Content
+        margin-top     : 50%
+        margin-left    : $Popover-triangle--size * 2
+        &::after
+            left                : $Popover-triangle--size * -2
+            top                 : calc(50% - #{ $Popover-triangle--size })
+            border-right-color  : $Popover-background--color
+        &::before
+            left                : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            top                 : calc(50% - #{ $Popover-triangle--size + $Popover-border--width })
+            border-right-color  : $Popover-border--color
+
+    &.-origin--left_bottom .Popover_Content
+        margin-bottom  : $Popover-triangle--size * -0.5 - $border_radius_adjustment
+        margin-left    : $Popover-triangle--size * 2
+        &::after
+            left                : $Popover-triangle--size * -2
+            bottom              : $border_radius_adjustment
+            border-right-color  : $Popover-background--color
+        &::before
+            left                : ($Popover-triangle--size * -2) - (2 * $Popover-border--width)
+            bottom              : -1 * $Popover-border--width + $border_radius_adjustment
+            border-right-color  : $Popover-border--color
+
+.Popover_Control
+    &.-dismiss
+        float: left
+    &.-confirm
+        float: right
+
+
+
+.Popover.-modal
+    top         : 0
+    left        : 0
+    right       : 0
+    bottom      : 0
+    position    : fixed
+

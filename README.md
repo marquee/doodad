@@ -27,19 +27,35 @@ button = new Button
 $('#app').append(button.el)
 ```
 
-The element contructors take various options which control their appearance
+The element constructors take various options which control their appearance
 and behavior. Also, the element classes are based on Backbone Views, and can
 be used as such.
 
 ```coffeescript
 new Button
-    type: 'icon'
-    class: 'dangerous'
-    spinner: true
-    action: (self) ->
+    type    : 'icon'
+    variant : 'dangerous'
+    spinner : true
+    action  : (self) ->
         console.log('Did something')
         self.enable()
 ```
+
+Alternatively, customized components can be defined as classes, so they are
+more reusable:
+
+```coffeescript
+class SaveButton extends Button
+    type    : 'icon+text'
+    label   : 'Save'
+    variant : 'friendly-disk'
+    spinner : 'replace'
+    action: (self) =>
+        @model.save {},
+            success: ->
+                self.enable()
+```
+
 
 ## Usage
 
@@ -50,7 +66,7 @@ or [jQuery](//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js),
 [Underscore](//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js),
 and [Backbone](//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js).
 
-All elements support an `extra_classes` option, which is a string or list of
+All elements support a `classes` option, which is a string or list of
 strings to add to the element’s `className`.
 
 
@@ -59,7 +75,7 @@ strings to add to the element’s `className`.
 ### Components
 
 * `Button` - A clickable button that can have icons and spinners built-in
-  
+
   Bare minimum, a `Button` requires a label and an action. The action is a
   function that is called whenever the button is clicked, and receives the
   button instance as an argument.
@@ -69,6 +85,19 @@ strings to add to the element’s `className`.
       label: 'Click Me'
       action: (self) ->
   ```
+
+  Additional options:
+
+  * spinner
+      * `true` or `'inline'`: button expands to show a spinner, and is
+        disabled until `button_instance.enable()` is called
+      * `'replace'`: spinner replaces the button label instead
+  * variant
+      * '<color class>' ('friendly', 'dangerous', 'warning', etc)
+  * icon
+      * '<icon name>' ('gear', 'disk')
+
+
 
 * `Select` - A drop-down menu
 
@@ -92,15 +121,15 @@ strings to add to the element’s `className`.
       ]
   ```
 
-* `StringInput` - A single- or multi-line text input
+* `StringField` - A single- or multi-line text input
 
-  The `StringInput` serves as a text input, or a textarea. It can have a
+  The `StringField` serves as a text input, or a textarea. It can have a
   character or word limit that is hard, preventing any additional input, or
   soft, only warning. The input can also be tokenized, with a delimiter or on
   enter.
 
   ```coffeescript
-  new StringInput
+  new StringField
       on: change: (self, value) ->
          console.log(value)
   ```
@@ -117,27 +146,36 @@ as they are added.
 
 * `Popover` - A container that overlays, either as a flag or a modal
 
-The Popover in flag form can be positioned using its origin option. The origin
-is a string in the form `'<edge>-<position>'`, where `<edge>` is the side of
-the popover element — `'top'`, `'bottom'`, `'left'`, `'right'` — and
-`<position>` is a location along that edge — `'left'`, `'center'`, `'right'`
-or `'top'`, `'center'`, `'bottom'`, depending on the edge.
+    The Popover in flag form can be positioned using its origin option. The origin
+    is a string in the form `'<edge>-<position>'`, where `<edge>` is the side of
+    the popover element — `'top'`, `'bottom'`, `'left'`, `'right'` — and
+    `<position>` is a location along that edge — `'left'`, `'center'`, `'right'`
+    or `'top'`, `'center'`, `'bottom'`, depending on the edge.
 
-```coffeescript
-modal = new Popover
-    type: 'modal'
-    origin: 'bottom-left'
-    content: [
-        new Button
-            label: 'Do Stuff'
-            action: someActionFn
-    ]
-```
+    ```coffeescript
+    modal = new Popover
+        type   : 'flag'
+        origin : 'bottom-left'
+        content: [
+            new Button
+                label: 'Do Stuff'
+                action: someActionFn
+        ]
+    ```
+
+*   `List` - A container that groups fields of a single type into a single
+    serializable form.
+
+    ```coffeescript
+    list = new List
+        label: 'List Label'
+        value: ['First item', 'Second item']
+    ```
 
 
 ### Tags
 
-Sometimes you do just need a simple tag. The classes in the Tags module provide 
+Sometimes you do just need a simple tag. The classes in the Tags module provide
 wrappers for the standard HTML tags, like P, DIV, H1, and so on, that implement
 the functions that let them interoperate with Doodads. (Only certain tags are
 implemented, mainly the content-oriented ones. Input-oriented tags are of
@@ -152,7 +190,7 @@ new Doodad.Tags.P
 ```
 
 or lists of strings, other Tags, or other Doodads (or really anything that
-implements a `.render()` method that returns an element to be appended):
+implements a `.render()` method that returns itself and has an `el`):
 
 ```coffeescript
 new Doodad.Tags.H1
@@ -172,33 +210,14 @@ Bare strings in the content are converted to the appropriate element for the
 containing tag. When passed to a `UL` they become `LIs`, or passed to a `P`
 then become `TextNodes`.
 
-The full list of tags:
-
-* `A`
-* `BR`
-* `DIV`
-* `EM`
-* `H1`
-* `H2`
-* `H3`
-* `H4`
-* `H5`
-* `H6`
-* `IMG`
-* `LI`
-* `OL`
-* `P`
-* `SPAN`
-* `STRONG`
-* `Tag`
-* `TextNode`
-* `UL`
+The full list of tags: `A`, `BR`, `DIV`, `EM`, `H1`, `H2`, `H3`, `H4`, `H5`,
+`H6`, `IMG`, `LI`, `OL`, `P`, `SPAN`, `STRONG`, `Tag`, `TextNode`, `UL`.
 
 
 ## Authors
 
-* [Alec Perkins](https://github.com/alecperkins) ([Droptype Inc](http://droptype.com))
+* [Alec Perkins](https://github.com/alecperkins) ([Marquee](http://marquee.by))
 
 ## License
 
-Unlicensed aka Public Domain. See /UNLICENSE for more information.
+Unlicensed aka Public Domain. See /LICENSE for more information.

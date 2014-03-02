@@ -3,23 +3,86 @@ html
     head
         title Doodad v#{ VERSION } Examples: #{ example_name }
         meta(charset='utf-8')
+        //script(src='../../coffeescript.js')
+        //script(src='../../underscore.js')
+        //script(src='../../jquery.js')
+        //script(src='../../backbone.js')
         script(src='http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js')
-        script(src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js')
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
         script(src='http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js')
-        script(src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js')
-        link(rel='stylesheet',href='../doodad-#{ VERSION }-min.css')
-        script(src='../doodad-#{ VERSION }-min.js')
+        script(src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js')
+        link(rel='stylesheet',href='../doodad-#{ VERSION }.css')
+        script(src='../doodad-#{ VERSION }.js')
         style.
+            body {
+                background-color: #eee;
+                padding: 3em;
+                max-width: 800px;
+                margin: 0 auto;
+                font-size: 18px;
+                font-family: 'Times New Roman', Times, Georgia, serif;
+            }
+            .example {
+                background-color: white;
+                margin-bottom: 2em;
+                padding: 2em;
+            }
             .example_code {
                 white-space: pre;
                 font-family: Menlo, monospace;
                 font-size: 14px;
                 display: block;
             }
+            .example_code[data-collapsed="true"] {
+                max-height: 3em;
+                overflow: hidden;
+                opacity: 0.4;
+            }
+            .example_app {
+                margin: 1em 0;
+                padding: 1em;
+                border: 1px solid #ccc;
+            }
             .example-DISABLED {
                 display: none;
             }
+            code {
+                border: 1px solid #ccc;
+                padding: 0 0.2em;
+                font-size: 0.8em;
+                background: #f9f9f9;
+                color: #222222;
+                border-radius: 0.3em;
+                display: inline-block;
+            }
+            *:not(.example_app) p, *:not(.example_app) h2, *:not(.example_app) h1 {
+                max-width: 650px;
+                line-height: 1.5;
+            }
+            .example_app .output {
+                margin: 1em 0;
+                padding: 1em;
+                border: 1px solid rgba(255,255,0,0.4);
+                font-family: Menlo, 'Courier New', monospace;
+                white-space: pre;
+            }
+            .example_app .output:empty {
+                display: none;
+            }
     body
+
+        script(type='text/coffeescript').
+
+            class window.DummyModel extends Backbone.Model
+                save: (values, opts) =>
+                    console.log 'Pretending to save…'
+                    @set(values)
+                    setTimeout ->
+                        console.log 'Saved!'
+                        opts.success?()
+                    , 750
+
+
         block content
 
 
@@ -29,16 +92,24 @@ html
 
         script(type='text/coffeescript').
             examples = $('.example')
-            examples.find('h2').after """
-                <div class="example_app">
-                    <div class="output"></div>
-                </div>
-            """
+            examples.find('.example_code').each (i, el) ->
+                $el = $(el)
+                $el.before """
+                    <div class="example_app">
+                        <div class="output"></div>
+                    </div>
+                """
+                $el.attr('data-collapsed', true)
+                $el.on 'click', ->
+                    if $el.data('collapsed')
+                        $el.removeAttr('data-collapsed')
+                    else
+                        $el.attr('data-collapsed', true)
+                    return
 
             window.exampleSetup?()
 
             _.each doodads, (doodad_set, i) ->
-                console.log doodad_set, i
                 $example_el = $(examples[i])
                 unless _.isArray(doodad_set)
                     doodad_set = [doodad_set]
@@ -46,5 +117,5 @@ html
                 example_timeout = null
                 _.each doodad_set, (doodad_instance) ->
                     # Add the doodad_instance to the DOM
-                    $example_el.find('.example_app').prepend(doodad_instance.render())
+                    $example_el.find('.example_app').prepend(doodad_instance.render().el)
                     window.instanceSetup?($example_el, doodad_instance)

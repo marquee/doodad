@@ -1,0 +1,54 @@
+
+
+.StringField
+    display             : block
+    +box-sizing(border-box)
+    *
+        +box-sizing(border-box)
+    label
+        display: block
+
+
+.StringField_TokenForm
+    display: block
+ 
+.StringField_Tokens
+    display: block
+
+ 
+.StringField_Token
+    display: inline-block
+
+.StringField_Input
+    display: block
+    width: 100%
+    max-width: 100%
+
+.StringField:not(.-token).-icon
+    .StringField_Input
+        padding-right: $StringField-icon--width + $StringField-internal_padding * 2
+
+.StringField_TokenRemove
+    display: inline-block
+
+.StringField_Label
+    display: block
+    &:empty
+        display: none
+.StringField_Counter
+    float: right
+
+.StringField_CounterTotal:before
+    content: "/"
+
+
+.StringField_Icon
+    +extend(Icon)
+    width           : $StringField-icon--width
+    height          : $StringField-icon--height
+    display         : block
+    float           : right
+    position        : relative
+    right           : $StringField-internal_padding
+    top             : $StringField-internal_padding
+    margin-bottom   : $StringField-icon--height * -1

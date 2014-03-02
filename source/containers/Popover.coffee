@@ -42,26 +42,30 @@ active_popovers = {}
 
 class Popover extends BaseDoodad
     className: 'Popover'
-    initialize: (options) ->
-        super(arguments...)
-        @_options = _.extend {},
+    initialize: (options={}) ->
+
+        if options.content? and not _.isArray(options.content)
+            options.content = [options.content]
+
+        @_loadConfig options,
             type                : 'flag' # or 'modal
             content             : []
-            width               : 500
+            width               : 'auto'
             offset              : [0,0]
             close_on_outside    : false
+            close_on_confirm    : true
             title               : null
+            visible             : false
             dismiss             : null
             confirm             : null
             solo                : true
-            on                  : {}
-        , options
+            events              : {}
 
-        if @_options.type.indexOf('flag') isnt -1
-            if not @_options.origin?
-                @_options.origin = 'top-left'
+        super(@_config)
 
-        @on(event, handler) for event, handler of @_options.on
+        if @_config.type.indexOf('flag') isnt -1
+            if not @_config.origin?
+                @_config.origin = 'top-left'
 
         @_setClasses()
 
@@ -69,50 +73,63 @@ class Popover extends BaseDoodad
 
     _setClasses: ->
         super()
-        if @_options.type.indexOf('flag') isnt -1
-            @$el.addClass("#{ @className }-#{ @_options.origin }")
+        if @_config.type.indexOf('flag') isnt -1
+            origin = @_config.origin.split('-').join('_')
+            @$el.addClass("-origin--#{ origin }")
 
     render: =>
         @$el.empty()
         @ui = {}
-        @ui.content = $('<div class="Popover_content"></div>')
-        @ui.content.css(width: @_options.width)
-        if @_options.title
-            @ui.content.append("""<div class="Popover_title">#{ @_options.title }</div>""")
-        _.each @_options.content, (item) =>
-            @ui.content.append(item.render())
-        if @_options.dismiss or @_options.confirm
-            @ui.controls = $('<div class="Popover_controls"></div>')
-            if @_options.dismiss
-                unless @_options.dismiss.render?
-                    @_options.dismiss = new Button
-                        label: @_options.dismiss
-                        action: =>
-                            @trigger('dismiss')
+        @ui.content = $('<div class="Popover_Content"></div>')
+        @ui.body    = $('<div class="Popover_Body"></div>')
+        @ui.content.append(@ui.body)
+        @ui.content.css(width: @_config.width)
+        if @_config.title
+            $title = $("""<div class="Popover_Title"></div>""")
+            $title.text(@_config.title)
+            @ui.content.prepend($title)
+        _.each @_config.content, (item) =>
+            @ui.body.append(item.render().el)
+        if @_config.dismiss or @_config.confirm
+            @ui.controls = $('<div class="Popover_Controls"></div>')
+            if @_config.dismiss
+                if @_config.dismiss.on?
+                    @_config.dismiss.on 'click', =>
+                        @trigger('dismiss', this)
+                        @hide()
+                else
+                    @_config.dismiss = new Button
+                        label: @_config.dismiss
+                        on: click: =>
+                            @trigger('dismiss', this)
                             @hide()
-                        extra_classes: 'Popover_dismiss'
-                @ui.controls.append(@_options.dismiss.render())
+                @_config.dismiss.$el.addClass('Popover_Control -dismiss')
+                @ui.controls.append(@_config.dismiss.render().el)
 
-            if @_options.confirm
-                unless @_options.confirm.render?
-                    @_options.confirm = new Button
-                        label: @_options.confirm
-                        action: =>
-                            @trigger('confirm')
-                            @hide()
-                        class: 'friendly'
-                        extra_classes: 'Popover_confirm'
-                @ui.controls.append(@_options.confirm.render())
+            if @_config.confirm
+                if @_config.confirm.on?
+                    @_config.confirm.on 'click', =>
+                        @trigger('confirm', this)
+                        @hide() if @_config.close_on_confirm
+                else
+                    @_config.confirm = new Button
+                        label: @_config.confirm
+                        on: click: =>
+                            @trigger('confirm', this)
+                            @hide() if @_config.close_on_confirm
+                        variant: 'friendly'
+                @_config.confirm.$el.addClass('Popover_Control -confirm')
+                @ui.controls.append(@_config.confirm.render().el)
 
             @ui.content.append(@ui.controls)
         @$el.append(@ui.content)
-        return @el
+        return this
 
     # Public:   Set the position of the popover depending on its type.
     #
     # Returns nothing.
     setPosition: (args...) ->
-        if @_options.type is 'modal'
+        if @_config.type is 'modal'
             @_setModalPosition(args...)
         else
             @_setFlagPosition(args...)
@@ -169,7 +186,7 @@ class Popover extends BaseDoodad
                 when 'bottom'
                     offset_y = @ui.content.height()
 
-        [edge, position] = @_options.origin.split('-')
+        [edge, position] = @_config.origin.split('-')
 
         strToPos(edge)
         strToPos(position)
@@ -182,33 +199,28 @@ class Popover extends BaseDoodad
             else
                 offset_y = @ui.content.height() / 2
 
-
-        console.log edge, position, offset_x, offset_y, @_options.offset
-
-        # TODO: Allow @_options.offset to be a function, that's given the triggering element
+        # TODO: Allow @_config.offset to be a function, that's given the triggering element
         @$el.css
-            left: x + @_options.offset[0]# - offset_x
-            top: y + @_options.offset[1]# - offset_y
+            left: x + @_config.offset[0]# - offset_x
+            top: y + @_config.offset[1]# - offset_y
         @ui.content.css
             left: 0 - offset_x
             top: 0 - offset_y
 
     show: (trigger=null) =>
         @_is_showing = true
-        active_popovers[@cid] = this
-        console.log active_popovers
-        $('body').append(@render())
-        if @_options.close_on_outside
+        if @_config.close_on_outside
             _.defer =>
                 $(window).one('click', @hide)
-        if @_options.solo
-            console.log 'closing others!', @cid
+        if @_config.solo
             _.each active_popovers, (popover) =>
-                if popover? and popover.cid isnt @cid
+                if popover?
                     popover.hide()
+        active_popovers[@cid] = this
+        $('body').append(@render().el)
         @ui.content.css('opacity', 0)
         _.defer =>
-            if @_options.type.indexOf('fixed') is -1
+            if @_config.type.indexOf('fixed') is -1
                 @setPosition(trigger?.getPosition())
             else
                 @setPosition(trigger?.getScreenPosition())
@@ -230,7 +242,7 @@ class Popover extends BaseDoodad
         if e.target is @el
             @hide()
         else
-            if @_options.close_on_outside
+            if @_config.close_on_outside
                 e.stopPropagation()
         return
 

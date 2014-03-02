@@ -1,0 +1,100 @@
+
+
+
+
+.StringField
+    margin-bottom       : 1em
+    font-family         : $StringField-font--family
+
+.StringField_Input
+    font                : inherit
+    border              : 0
+    outline             : 0
+    color               : $StringField_Input-color
+    //width               : 10em
+
+.StringField_Token, .StringField_Input
+    margin              : 0
+
+
+.StringField_TokenForm, .StringField:not(.-token) .StringField_Input
+    border-width        : $StringField-border--width
+    border-style        : $StringField-border--style
+    border-color        : $StringField-border--color
+    border-radius       : $StringField-border--radius
+    background-color    : $StringField-background--color
+    padding             : $StringField-internal_padding
+
+.StringField_TokenForm
+    padding-bottom      : 0
+
+.StringField_Tokens
+    margin-top          : $StringField-internal_padding
+.StringField_Token
+    padding             : $StringField-internal_padding
+
+.StringField
+    +state(disabled)
+        .StringField_Label, .StringField_Icon
+            color: $StringField_Label-color--disabled
+        .StringField_TokenForm, &:not(.-token) .StringField_Input
+            border-color: $StringField-border--color--disabled
+        .StringField_Input
+            color: $StringField_Label-color--disabled
+
+    +state(focus)
+        .StringField_Label, .StringField_Icon
+            color: $StringField_Label-color--focus
+        .StringField_TokenForm, &:not(.-token) .StringField_Input
+            border-color: $StringField-border--color--focus
+    +state(error)
+        .StringField_Label, .StringField_Icon
+            color: $StringField_Label-color--error
+        .StringField_TokenForm, &:not(.-token) .StringField_Input
+            border-color: $StringField-border--color--error
+
+.StringField_Label
+    color: $StringField_Label-color
+    padding: $StringField-internal_padding
+
+.StringField_Icon
+    color: $StringField_Label-color
+
+
+ 
+.StringField_Token
+    border-width        : $StringField_Token-border--width
+    border-style        : $StringField_Token-border--style
+    border-color        : $StringField_Token-border--color
+    border-radius       : $StringField_Token-border--radius
+    background-color    : $StringField_Token-background--color
+    margin-right        : $StringField-internal_padding
+    margin-bottom       : $StringField-internal_padding
+    
+
+
+
+.StringField
+    &[data-charcount--close="true"]
+        .StringField_Counter
+            color: $StringField_Counter-color--warn
+    &[data-charcount--over="true"]
+        .StringField_Counter
+            color: $StringField_Counter-color--over
+
+
+.StringField_TokenRemove
+    cursor: pointer
+    opacity: 0.5
+    border: 0
+    background: transparent
+    font-size: 0
+    padding: 0
+    margin: 0
+    +icon(cancel)
+        font-size: 1rem
+    &:hover
+        opacity: 1
+        &:active
+            opacity: 0.5
+

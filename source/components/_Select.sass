@@ -1,0 +1,32 @@
+
+.Select
+    box-sizing      : border-box
+    position        : relative
+    [data-hidden="true"]
+        visibility: hidden
+    &.-inline
+        display: inline-block
+        .Select_Value
+            display: inline-block
+
+.Select_Label
+    display: inline-block
+    &:empty
+        display: none
+
+.Select_Choices
+    box-sizing      : border-box
+    min-width       : $Select_Choices-min_width
+    max-height      : $Select_Choices-max_height
+    position        : absolute
+    z-index         : $Select_Choices-z_index
+
+.Select_Value
+    box-sizing      : border-box
+    min-width       : $Select_Choices-min_width
+
+
+
+
+
+

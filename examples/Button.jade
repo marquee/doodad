@@ -3,8 +3,16 @@ extend _base
 block content
     h1 Doodad.Button
 
+    :markdown
+        `Buttons` are ordinary buttons, with some added support for inline
+        subcomponents like spinners and progress bars, icons, and hooks for
+        enabling and disabling.
+
     .example
         h2 Basic button
+        :markdown
+            A basic button that calls the given `action` function when clicked.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 label: 'Do Something'
@@ -13,6 +21,9 @@ block content
 
     .example
         h2 Bare button
+        :markdown
+            Buttons can be "bare", which removes the border and background.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 label: 'Do Something'
@@ -23,93 +34,219 @@ block content
 
     .example
         h2 Classy buttons
+        :markdown
+            Buttons can have different semantic `variants`, which correspond
+            to certain colors and icons.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
                     type: 'text'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
                     action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
         h2 Classy, naked buttons
+        :markdown
+            The variants can be bare, as well.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action'].map (class_) ->
                 return new Doodad.Button
                     type: 'text-bare'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
                     action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
         h2 Iconic buttons
+        :markdown
+            Buttons can be icon-only.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
                     type: 'icon'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
                     action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
         h2 Iconic label buttons
+        :markdown
+            Buttons can have icons and text, together.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
                     type: 'icon+text'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
                     action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
-        h2 Naken Icon buttons
+        h2 Naked Icon buttons
+        :markdown
+            Icon-only buttons can be bare, as well.
+
         script.example_code(type='text/coffeescript').
             doodads.push ['dangerous', 'friendly', 'warning', 'action', ''].map (class_) ->
                 return new Doodad.Button
                     type: 'icon-bare'
-                    class: class_
+                    variant: class_
                     label: "Do something \#{ class_ }"
                     action: (this_button) ->
                         @text("Something \#{ class_ } done!")
 
     .example
         h2 Dynamic label buttons
+        :markdown
+            The label can be set by calling `Button::setLabel(label)`.
+
         script.example_code(type='text/coffeescript').
             doodads.push new Doodad.Button
                 type: 'icon+text'
-                label: "Do something"
+                label: 'Do something'
                 action: (this_button) ->
-                    @text("Something done!")
+                    @text('Something done!')
                     this_button.setLabel('Do something again!')
 
     .example
-        h2 Spinner buttons
-        script.example_code(type='text/coffeescript').
-            doodads.push ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
-                return new Doodad.Button
-                    type: type
-                    label: "Do something"
-                    spinner: true
-                    action: (this_button) ->
-                        @text("Doing something!")
-                        setTimeout =>
-                            this_button.enable()
-                        , 2000
+        h2 Class-based button
+        :markdown
+            A button that is reused can be defined as a class, with the
+            options that would be passed to the constructor set as class
+            properties. Any options then passed to the constructor will
+            override the class options.
 
+        script.example_code(type='text/coffeescript').
+            class CustomButton extends Doodad.Button
+                type: 'icon+text'
+                label: 'Do something'
+                variant: 'action'
+                action: (this_button) ->
+                    @text('Something done!')
+                    this_button.setLabel('Do something again!')
+                    console.log 'action', new Date()
+            b1 = new CustomButton()
+            b2 = new CustomButton(label: 'Same something')
+            b1.on 'click', -> console.log 'clicked b1', new Date()
+            b2.on 'click', -> console.log 'clicked b2', new Date()
+            doodads.push [b1,b2]
+
+    .example
+        h2 Spinner buttons
+        :markdown
+            Buttons can have a spinner that is revealed on click by setting
+            `spinner: true`/`spinner: 'inline'`, which causes the spinner to
+            reveal by expanding, or `spinner: replace`, which replaces the
+            button label with the spinner. Buttons with a spinner enabled make
+            themselves disabled when clicked, and can be enabled calling 
+            `Button::enable()`, which also hides the spinner.
+
+            (`type: 'icon'` buttons do not expand to reveal the spinner, only
+            replace.)
+
+        script.example_code(type='text/coffeescript').
+            class SpinnerButton extends Doodad.Button
+                label: 'Do something'
+                spinner: true
+                action: (this_button) ->
+                    @text("Doing something!")
+                    setTimeout =>
+                        this_button.enable()
+                    , 2000
+            buttons = ['icon', 'text', 'icon+text', 'icon-bare', 'text-bare'].map (type) ->
+                return new SpinnerButton(type: type)
+            buttons.push new SpinnerButton(spinner: 'replace')
+            doodads.push(buttons)
+
+    .example
+        h2 Progress button
+        :markdown
+            The `ProgressBar` subcomponent can be used in buttons as well.
+            If the option `progress: true` is used, the button will disable
+            itself when clicked, and activate a progress bar. The value of
+            the progress bar can be set using `Button::setProgress(progress)`.
+
+            The progress bar color is dependent on the variant of the button.
+            Buttons CANNOT have both a spinner and a progress bar.
+
+        script.example_code(type='text/coffeescript').
+            class ProgressButton extends Doodad.Button
+                type: 'text'
+                progress: true
+                label: 'Do something'
+                action: (this_button) ->
+                    @text("Doing something!")
+                    p = 0
+                    p_int = setInterval ->
+                        p += 0.05
+                        if p > 1
+                            p = 1
+                            setTimeout ->
+                                this_button.enable()
+                            , 500
+                            clearInterval(p_int)
+                        this_button.setProgress(p)
+                    , 250
+            buttons = []
+            ['dangerous', 'friendly', 'warning', 'action', ''].forEach (class_) ->
+                buttons.push new ProgressButton(variant: class_)
+            ['icon+text', 'icon'].forEach (type_) ->
+                buttons.push new ProgressButton(type: type_)
+            doodads.push(buttons)
+
+    .example
+        h2 Button as link (just in case)
+        :markdown
+            Instead of an `action: ->` option, buttons can be given a `url`
+            option, with a URL to redirect the user to when clicked. This is
+            basically a link, though, which is preferred since it behaves
+            better.
+
+        script.example_code(type='text/coffeescript').
+            class CustomButton extends Doodad.Button
+                type: 'text'
+                label: 'Link to something'
+                url: 'http://example.com'
+            doodads.push new CustomButton()
+
+    .example
+        h2 Model-bound label
+        :markdown
+            Button labels can be used as Underscore templates that render
+            using a given model as the context. The label will rerender on
+            model change.
+
+        script.example_code(type='text/coffeescript').
+            model = new Backbone.Model(clicks: 0)
+            doodads.push [
+                new Doodad.Button
+                    label: 'Clicked <%= clicks %> time<% if(clicks!==1){ %>s<% } %>'
+                    model: model
+                    action: (self) ->
+                        model.set('clicks', model.get('clicks') + 1)
+                new Doodad.Button
+                    label: 'Reset'
+                    variant: 'warning'
+                    action: ->
+                        model.set('clicks', 0)
+            ]
 
     script(type='text/coffeescript').
         window.instanceSetup = ($example_el, doodad_instance) ->
             # Patch the action to use the output element as `this`, and have
             # it reset after two seconds.
-            old_action = doodad_instance._options.action
-            doodad_instance._options.action = (inst) ->
+            old_action = doodad_instance._config.action
+            doodad_instance._config.action = (inst) ->
                 old_action.call($example_el.find('.output'), inst)
                 clearTimeout(example_timeout)
                 example_timeout = setTimeout ->
                     $example_el.find('.output').text('')
                 , 2000
-            console.log 'patched', doodad_instance

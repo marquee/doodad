@@ -15,12 +15,12 @@ BaseDoodad = require '../BaseDoodad'
 #         {
 #             label: 'Set Align Left'
 #             value: 'left'
-#             class: 'align-left'
+#             classes: 'align-left'
 #         }
 #         {
 #             label: 'Set Align Right'
 #             value: 'right'
-#             class: 'align-right'
+#             classes: ['align-right']
 #         }
 #     ]
 
@@ -33,32 +33,30 @@ class Select extends BaseDoodad
     tagName: 'DIV'
     className: 'Select'
 
-    initialize: (options) ->
+    initialize: (options={}) ->
+        if options.action?
+            console.warn "Select `action` option is deprecated. Use `on: change: ->` event instead."
+            options.on ?= {}
+            options.on.change = options.action
         super(arguments...)
-        @_options = _.extend {},
+
+        @_loadConfig options,
             type            : 'drop'
             width           : null
             height          : null
             label           : ''
+            choices         : null
             placeholder     : '- - -'
             variant         : null
             enabled         : true
             required        : false
-            extra_classes   : []
-        , options
+            classes         : []
+
+        @_current_label = @_config.label
+        if @model?
+            @listenTo(@model, 'change', @_renderLabel)
 
         @render()
-
-    # Private: Apply the necessary classes to the element.
-    #
-    # Returns nothing.
-    _setClasses: ->
-        class_list = @_options.type.split('+')
-        if @_options.class?.length > 0
-            class_list.push(@_options.class.split(' ')...)
-        class_list = _.map class_list, (c) => "#{ @className }-#{ c }"
-        class_list.push(@_options.extra_classes...)
-        @$el.addClass(class_list.join(' '))
 
     # Public: Add the label to the element. If the Button is type 'icon', the
     #         label is set as the title.
@@ -67,118 +65,164 @@ class Select extends BaseDoodad
     render: ->
         @$el.empty()
         @_setClasses()
-        @ui = {}
+        @_ui = {}
 
-        switch @_options.type
-            when 'drop'
+        switch @_config.type
+            when 'drop', 'drop-inline'
                 @_renderDrop()
             when 'grid'
                 @_renderGrid()
 
         @delegateEvents()
-        return @el
+        return this
 
     events:
-        'click .Select_value' : '_showChoices'
-        'click .Select_label' : '_showChoices'
+        'click .Select_Value' : '_showChoices'
+        'click .Select_Label' : '_showChoices'
 
     _showChoices: ->
         # Keep it invisible until it is positioned.
-        @ui.choices.css
-            opacity: 0
-            left: @ui.value.position().left
-        @ui.choices.removeAttr('data-hidden')
+        @_ui.choices.css
+            opacity : 0
+            left    : @_ui.value.position().left
+            width   : @_ui.value.width()
+        @_ui.choices.removeAttr('data-hidden')
 
         # Align the currently selected choice to the middle of the form.
         _.defer =>
-            { top, left } = @_selected_choice_el.position()
+            # There may not be an already selected choice, if @setValue(null)
+            # was called, for example.
+            if @_selected_choice_el?
+                { top } = @_selected_choice_el.position()
+            else
+                top = 0
 
+            top -= @_ui.value.position().top
             # TODO: Constrain within window
 
-            @ui.choices.css
+            @_ui.choices.css
                 top: -1 * top
                 opacity: ''
-            console.log top, left
-            @ui.value.attr('data-hidden', true)
+            @_ui.value.attr('data-hidden', true)
 
 
     _setChoice: (choice, opts={}) =>
-        console.log 'setting choice', choice.value
-        @ui.choices.find('[data-selected]').removeAttr('data-selected')
-        if _.isFunction(choice.value)
-            @value = choice.value(this)
+        @_ui.choices.find('[data-selected]').removeAttr('data-selected')
+        if choice?
+            if _.isFunction(choice.value)
+                @value = choice.value(this)
+            else
+                @value = choice.value
+            @_selected_choice_el = choice.$el
+            @_selected_choice_el.attr('data-selected', true)
+            @_ui.value_label.text(choice.label)
         else
-            @value = choice.value
-        @_selected_choice_el = choice.$el
-        @_selected_choice_el.attr('data-selected', true)
-        @ui.value.text(choice.label)
-        @ui.choices.attr('data-hidden', true)
-        @ui.value.removeAttr('data-hidden')
+            @value = null
+            @_selected_choice_el = null
+            @_ui.value_label.text(@_config.placeholder)
+
+        @_ui.choices.attr('data-hidden', true)
+        @_ui.value.removeAttr('data-hidden')
+
+        if not choice or choice.null_choice
+            @_ui.value.addClass('-null')
+            @unsetState('has_value')
+            @_has_value = false
+        else
+            @_ui.value.removeClass('-null')
+            @setState('has_value')
+            @_has_value = true
         unless opts.silent
-            @_options.action(this, @value, choice.label)
+            @trigger('change', this, @value, choice?.label)
 
     _renderGrid: ->
         @$el.html """
-            <div class="Select_label">Category:</div>
-            <div class="Select_choices">
-                <div class="Select_choice">
-                    <span class="Select_choice_label">Option 1
+            <div class="Select_Label">Category:</div>
+            <div class="Select_Choices">
+                <div class="Select_Choice">
+                    <span class="Select_ChoiceLabel">Option 1
                 </div>
-                <div class="Select_choice" data-selected="true">Option 2</div>
-                <div class="Select_choice">Option 3</div>
-                <div class="Select_choice">Option 4</div>
-                <div class="Select_choice">Option 5</div>
+                <div class="Select_Choice" data-selected="true">Option 2</div>
+                <div class="Select_Choice">Option 3</div>
+                <div class="Select_Choice">Option 4</div>
+                <div class="Select_Choice">Option 5</div>
             </div>
         """
 
+    _makeChoiceEl: (choice) =>
+        choice.$el = $("""
+            <div class='Select_Choice #{ if choice.null_choice then '-null' else '' }'>
+                <span class='Select_ChoiceLabel'>
+                </span>
+            </div>
+        """)
+        if choice.classes?
+            if _.isArray(choice.classes)
+                choice.$el.addClass(choice.classes.join(' '))
+            else
+                choice.$el.addClass(choice.classes)
+        choice.$el.find('.Select_ChoiceLabel').text(choice.label)
+        choice.$el.attr('data-value', choice.value)
+        choice.$el.on 'click', =>
+            @_setChoice(choice)
+
+
     _renderDrop: ->
-        @ui.label = $("<div class='Select_label'>#{ @_options.label }</div>")
-        @ui.value = $("<div class='Select_value'><div>")
-        @ui.choices = $("<div class='Select_choices'></div>")
+        @_ui.label = $("<div class='Select_Label'></div>")
+        @_ui.value = $("<div class='Select_Value'><div>")
+        @_ui.value_label = $("<div class='Select_ValueLabel'><div>")
+        @_ui.value_icon = $("<div class='Select_ValueIcon'><div>")
+        @_ui.value.append(@_ui.value_label, @_ui.value_icon)
+        @_ui.choices = $("<div class='Select_Choices'></div>")
 
         has_default = false
 
-
-        makeChoiceEl = (choice) =>
-            choice.$el = $("""
-                <div class='Select_choice#{ if choice.null_choice then '-null' else '' }'>
-                    <span class='Select_choice_label'>
-                        #{ choice.label }
-                    </span>
-                </div>
-            """)
-            choice.$el.attr('data-value', choice.value)
-            choice.$el.on 'click', =>
-                @_setChoice(choice)
-
-        _.each @_options.choices, (choice) =>
-            console.log choice
-            makeChoiceEl(choice)
+        _.each @_config.choices, (choice) =>
+            @_makeChoiceEl(choice)
             if choice.default
                 has_default = true
                 @_setChoice(choice, silent: true)
-            @ui.choices.append(choice.$el)
+            @_ui.choices.append(choice.$el)
 
         # If it doesn't have a default set above, or is not required, add a
         # null choice to the list of choices that sets the value to null.
-        unless has_default and @_options.required
+        unless has_default and @_config.required
             do =>
                 null_choice =
                     null_choice: true
-                    label: @_options.placeholder
+                    label: @_config.placeholder
                     value: null
-                makeChoiceEl(null_choice)
-                @ui.choices.prepend(null_choice.$el)
+                @_makeChoiceEl(null_choice)
+                @_ui.choices.prepend(null_choice.$el)
                 # Set the choice if no default was set above.
                 unless has_default
                     @_setChoice(null_choice, silent: true)
 
-        @$el.append(@ui.label)
-        @$el.append(@ui.value)
-        @$el.append(@ui.choices)
+        @_renderLabel()
+        @$el.append(@_ui.label, @_ui.value, @_ui.choices)
     
-    # setValue: (value, label=null) ->
-    #     console.log 'Select.setValue', value, label
+    _renderLabel: =>
+        context = if @model? then @model.toJSON() else {}
+        @_ui.label.text(_.template(@_current_label, context))
+
+    setValue: (value, label=null) ->
+        target_choice = _.find @_config.choices, (choice) -> choice.value is value
+        console.log 'Select.setValue', value, label
+        if not target_choice and label
+            target_choice = 
+                value: value
+                label: label
+            @_config.choices.push(target_choice)
+            @_makeChoiceEl(target_choice)
+            @_ui.choices.append(target_choice.$el)
+        @_setChoice(target_choice)
+        return this
+
+    getValue: ->
+        return @value
+
+    hasValue: ->
+        return @_has_value
 
 
 module.exports = Select

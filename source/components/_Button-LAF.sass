@@ -1,0 +1,133 @@
+
+
+.Button
+    border          : 0
+    font-family     : $Button-font--family
+    font-size       : $Button-font--size
+    text-transform  : $Button-font--transform
+    &.-progress
+        // So the ProgressBar gets clipped
+        overflow        : hidden
+
+    .ProgressBar_Bar
+        background-color: $Button-background--default
+    &.-friendly
+        .ProgressBar_Bar
+            background-color: $Button-background--friendly
+    &.-dangerous
+        .ProgressBar_Bar
+            background-color: $Button-background--dangerous
+    &.-warning
+        .ProgressBar_Bar
+            background-color: $Button-background--warning
+    &.-action
+        .ProgressBar_Bar
+            background-color: $Button-background--action
+
+
+    &:not(.-bare)
+        border-width    : $Button-border--width
+        border-radius   : $Button-border--radius
+        border-color    : $Button-border--color
+        border-style    : $Button-border--style
+        background      : $Button-background--default
+        color           : $Button-font--color
+        &:hover:not(:disabled)
+            background: $Button-background--default--hover
+        &:active:not(:disabled)
+            background: $Button-background--default--active
+        &:disabled
+            background: $Button-background--default--disabled
+
+        &.-friendly
+            background: $Button-background--friendly
+            &:hover:not(:disabled)
+                background: $Button-background--friendly--hover
+            &:active:not(:disabled)
+                background: $Button-background--friendly--active
+            &:disabled
+                background: $Button-background--friendly--disabled
+
+        &.-dangerous
+            background: $Button-background--dangerous
+            &:hover:not(:disabled)
+                background: $Button-background--dangerous--hover
+            &:active:not(:disabled)
+                background: $Button-background--dangerous--active
+            &:disabled
+                background: $Button-background--dangerous--disabled
+
+        &.-warning
+            background: $Button-background--warning
+            &:hover:not(:disabled)
+                background: $Button-background--warning--hover
+            &:active:not(:disabled)
+                background: $Button-background--warning--active
+            &:disabled
+                background: $Button-background--warning--disabled
+
+        &.-action
+            background: $Button-background--action
+            &:hover:not(:disabled)
+                background: $Button-background--action--hover
+            &:active:not(:disabled)
+                background: $Button-background--action--active
+            &:disabled
+                background: $Button-background--action--disabled
+
+
+.Button.-bare
+    background              : transparent
+    font-weight             : $Button-font--weight--bare
+    -webkit-font-smoothing  : antialiased
+    &:hover, &:active
+        background: transparent
+
+    color: $Button-font--color--bare--default
+    &:not(:disabled)
+        &:hover
+            color: $Button-font--color--bare--default--hover
+        &:active
+            color: $Button-font--color--bare--default--active
+    &:disabled
+        color: $Button-font--color--bare--default--disabled
+
+    &.-friendly
+        &:not(:disabled)
+            color: $Button-font--color--bare--friendly
+            &:hover
+                color: $Button-font--color--bare--friendly--hover
+            &:active
+                color: $Button-font--color--bare--friendly--active
+
+    &.-dangerous
+        &:not(:disabled)
+            color: $Button-font--color--bare--dangerous
+            &:hover
+                color: $Button-font--color--bare--dangerous--hover
+            &:active
+                color: $Button-font--color--bare--dangerous--active
+
+    &.-warning
+        &:not(:disabled)
+            color: $Button-font--color--bare--warning
+            &:hover
+                color: $Button-font--color--bare--warning--hover
+            &:active
+                color: $Button-font--color--bare--warning--active
+
+    &.-action
+        &:not(:disabled)
+            color: $Button-font--color--bare--action
+            &:hover
+                color: $Button-font--color--bare--action--hover
+            &:active
+                color: $Button-font--color--bare--action--active
+
+.Button_Icon
+    +icon-selector
+        position    : relative
+        top         : 0.2em
+        font-size   : 1.3em
+
+

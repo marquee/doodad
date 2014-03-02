@@ -1,0 +1,46 @@
+extend _base
+
+block content
+    h1 Doodad.List
+
+    .info
+        :markdown
+            `Lists`
+
+    .example
+        h2 Basic list
+        :markdown
+            Basic `List` usage with several fields.
+
+        script.example_code(type='text/coffeescript').
+            new_list = new Doodad.List
+                label: 'Community Episodes'
+                value: [
+                        'Basic Intergluteal Numismatics'
+                        'Bondage and Beta Male Sexuality'
+                        'Introduction to Finality'
+                    ]
+            button = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_list.getValue(),null,4))
+            doodads.push([new_list, button])
+
+    .example
+        h2 Basic list
+        :markdown
+            Basic `List` usage with several fields.
+
+        script.example_code(type='text/coffeescript').
+            new_list = new Doodad.List
+                label: 'Space Shuttle Orbiters'
+                type: 'unordered'
+                value: [
+                        'Atlantis'
+                        'Discovery'
+                    ]
+            button = new Doodad.Button
+                label: 'Submit Form'
+                action: ->
+                    alert(JSON.stringify(new_list.getValue(),null,4))
+            doodads.push([new_list, button])

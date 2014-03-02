@@ -1,0 +1,207 @@
+extend _base
+
+block content
+    h1 Doodad Components
+
+    #components.example
+
+    script(type='text/coffeescript').
+        components = []
+        { StringField, Select, Button, Popover, Form, List } = Doodad
+        { dp, dh2, dh3, dh4, ddiv, dspan, dp, dformtext } = Doodad.Shortcuts
+
+        components.push dh2('StringField')
+
+        components.push new StringField
+            label: 'StringField'
+            placeholder: 'StringField'
+            char_limit: '~30'
+
+        components.push new StringField
+            label: 'StringField (disabled)'
+            placeholder: 'StringField'
+            enabled: false
+
+        components.push new StringField
+            label: 'StringField (error)'
+            placeholder: 'StringField'
+            value: 'erroneous input'
+            state:
+                error: true
+
+        components.push new StringField
+            type: 'multiline'
+            label: 'StringField (multiline)'
+            placeholder: 'StringField (multiline)'
+
+        components.push new StringField
+            label: 'StringField (token)'
+            type: 'token'
+            value: ['tag 1', 'tag 2']
+
+        components.push new dh2('Select')
+        components.push new Select
+            label: 'Select (drop)'
+            placeholder: 'Uncategorized'
+            choices: [
+                {
+                    label: 'Category 1'
+                    value: 'category-1'
+                }
+                {
+                    label: 'Category 2'
+                    value: 'category-2'
+                }
+            ]
+
+        components.push new Select
+            label: 'Select (drop-inline)'
+            type: 'drop-inline'
+            placeholder: 'Uncategorized'
+            choices: [
+                {
+                    label: 'Category 1'
+                    value: 'category-1'
+                }
+                {
+                    label: 'Category 2'
+                    value: 'category-2'
+                }
+            ]
+        components.push dspan '« inline'
+
+        components.push dh2('Buttons')
+
+        components.push dh3 'Types'
+        ['text','icon','text+icon','text-bare','icon-bare','text+icon-bare'].forEach (type) ->
+            components.push ddiv dh4(type), new Button
+                label   : 'Click Me'
+                type    : type
+
+        components.push dh3 'With Spinner'
+        ['text','text+icon','text-bare','text+icon-bare'].forEach (type) ->
+            components.push ddiv dh4(type),
+                new Button
+                    label   : 'Click Me'
+                    type    : type
+                    spinner : true
+                    on: click: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+                new Button
+                    label   : 'Click Me'
+                    type    : type
+                    spinner : 'replace'
+                    on: click: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+
+        ['text','text+icon','text-bare','text+icon-bare'].forEach (type) ->
+            sizes = ['large','medium','small'].map (size) ->
+                new Button
+                    label   : 'Click Me'
+                    type    : type
+                    variant : ':' + size
+                    spinner : true
+                    on: click: (self) ->
+                        setTimeout ->
+                            self.enable()
+                        , 1000
+            components.push dp sizes...
+
+
+        components.push dh3 'Disabled'
+        components.push new Button
+            label: 'Click Me'
+            on: click: ->
+            enabled: false
+
+        components.push dh3 'Variants'
+        ['action','dangerous','warning','friendly'].forEach (variant) ->
+            components.push dp new Button
+                type    : 'icon+text'
+                label   : 'Click Me (' + variant + ')' # dunno why string interpolation wasn't working here
+                variant : variant
+
+
+
+
+        components.push dh2 'Popovers'
+        components.push dh3 'Modal'
+        modal_form = new Form
+            content: [
+                new StringField()
+                new StringField()
+                new StringField()
+                new StringField()
+            ]
+        modal = new Popover
+            visible: false
+            type: 'modal'
+            title: 'Modal Title'
+            dismiss: new Button
+                label: 'Nevermind'
+                type: 'text-bare'
+            confirm: 'Save'
+            content: modal_form
+        components.push new Button
+            label: 'Show Modal'
+            action: modal.show
+
+
+
+        components.push dh3 'Flag'
+        flag_form = new Form
+            content: [
+                new StringField()
+                new StringField()
+                new StringField()
+                new StringField()
+            ]
+        flag = new Popover
+            origin: 'left-top'
+            visible: false
+            title: 'Flag Title'
+            content: modal_form
+        components.push new Button
+            label: 'Show Flag'
+            action: flag.toggle
+
+
+
+        components.push dh2 'Form'
+        components.push dh3 'With layout'
+
+        class ReusableForm extends Form
+            layout: [
+                [ ['field_1'] ]
+                [ ['field_2'],['field_3', 'formtext_1'] ]
+                [ ['field_4'] ]
+            ]
+            content: -> [
+                new StringField label: 'Field 1'
+                new StringField label: 'Field 2', type: 'multiline'
+                new StringField label: 'Field 3'
+                dformtext('Some help text describing the form.')
+                new StringField label: 'Field 4'
+            ]
+
+        components.push new ReusableForm()
+
+
+        components.push dh2 'List'
+
+        components.push new List
+            value: ['First item', 'Second item']
+
+
+
+
+
+
+        $components = $('#components')
+        components.forEach (doodad) ->
+            console.log doodad
+            $components.append(doodad.render().el)

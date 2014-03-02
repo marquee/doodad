@@ -1,0 +1,62 @@
+extend _base
+
+block content
+    h1 Doodad.ProgressBar
+
+    .example
+        h2 Basic progress bar, inactive
+        script.example_code(type='text/coffeescript').
+            doodads.push new Doodad.ProgressBar
+                initial_value: 0.5
+                css:
+                    width: 100
+                    height: 30
+
+    .example
+        h2 Basic progress bar, active
+        script.example_code(type='text/coffeescript').
+            bar = new Doodad.ProgressBar
+                css:
+                    width: 100
+                    height: 30
+            doodads.push(bar)
+            v = 0
+            setInterval ->
+                v += 0.01
+                if v > 1
+                    v = 0
+                bar.setValue(v)
+            , 100
+
+    .example
+        h2 Text progress
+        script.example_code(type='text/coffeescript').
+            bar = new Doodad.ProgressBar
+                type: 'text'
+            doodads.push(bar)
+            v = 0
+            setInterval ->
+                v += 0.1
+                if v > 1
+                    v = 0
+                bar.setValue(v)
+            , 500
+
+    .example
+        h2 Text and bar progress
+        script.example_code(type='text/coffeescript').
+            bar = new Doodad.ProgressBar
+                type: 'bar+text'
+                transition: 1000
+                css:
+                    width: 100
+                    height: 30
+            doodads.push(bar)
+            v = 0
+            setInterval ->
+                v += 0.1
+                if v > 1
+                    v = 0
+                bar.setValue(v)
+            , 500
+
