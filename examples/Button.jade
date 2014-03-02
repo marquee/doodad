@@ -133,10 +133,11 @@ block content
                     @text('Something done!')
                     this_button.setLabel('Do something again!')
                     console.log 'action', new Date()
-            b = new CustomButton()
-            b.on 'click', ->
-                console.log 'click2', new Date()
-            doodads.push b
+            b1 = new CustomButton()
+            b2 = new CustomButton(label: 'Same something')
+            b1.on 'click', -> console.log 'clicked b1', new Date()
+            b2.on 'click', -> console.log 'clicked b2', new Date()
+            doodads.push [b1,b2]
 
     .example
         h2 Spinner buttons
