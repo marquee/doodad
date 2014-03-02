@@ -1,5 +1,5 @@
 BaseDoodad = require '../BaseDoodad'
- 
+
 # si = new StringField
 #     placeholder: 'tags, comma-separated'
 #     on_change: ->d
@@ -23,10 +23,10 @@ parseLimit = (limit) ->
 class StringField extends BaseDoodad
     @__doc__ = """
     """
- 
+
     tagName: 'DIV'
     className: 'StringField'
- 
+
     initialize: (options={}) ->
         @_is_enabled = true
         if options.tokenize?
@@ -91,7 +91,7 @@ class StringField extends BaseDoodad
                 model[binding](name, value)
         return this
 
- 
+
     _setClasses: ->
         if @_config.icon
             @$el.addClass('-icon')
@@ -175,8 +175,8 @@ class StringField extends BaseDoodad
     disable: ->
         @_ui.input.attr('disabled', true)
         return super()
-        
- 
+
+
     # Public: Set the StringField state to enabled.
     #
     # Returns nothing.
@@ -188,7 +188,7 @@ class StringField extends BaseDoodad
         if @_config.char_limit
             limit = @_config.char_limit
             count = @value.length
-        else 
+        else
             limit = @_config.word_limit
             count = @value.match(/[\d\w_-]+/g)?.length or 0
         @over_limit = count > limit
@@ -222,19 +222,23 @@ class StringField extends BaseDoodad
                 e.stopPropagation()
                 @_removeToken(token)
             @_ui.tokens.append($el)
- 
+
     _updatePlaceholder: ->
         if @value.length > 0
             @_ui.input.attr('placeholder', '')
         else
             @_ui.input.attr('placeholder', @_config.placeholder)
- 
+
     events: ->
         'keydown    .StringField_Input'        : '_handleInput'
         'paste      .StringField_Input'        : '_handleInput'
         'click      .StringField_TokenForm'    : '_focusInput'
         'blur       .StringField_Input'        : '_fireBlur'
         'focus      .StringField_Input'        : '_fireFocus'
+
+    focus: =>
+        @_ui.input.focus()
+        return this
 
     _focusInput: ->
         if @_is_enabled
@@ -247,13 +251,13 @@ class StringField extends BaseDoodad
     _fireFocus: (e) ->
         @setState('focus')
         @trigger('focus', this)
- 
+
     _removeToken: (token) ->
         @value = _.without(@value, token)
         @_renderTokens()
         @raw_value = @value.join(@_config.delimiter)
         @trigger('change', this, @value, @raw_value)
- 
+
     _processPaste: (e) ->
         _.defer =>
             incoming_value = @_ui.input.val()
@@ -267,7 +271,7 @@ class StringField extends BaseDoodad
                 @raw_value = @value = incoming_value
             @trigger('change', this, @value, @raw_value)
         return
- 
+
     _handleInput: (e) ->
         was_token_trigger = e.which in [KEYCODES.ENTER, KEYCODES.TAB]
         if @_config.type is 'token'
