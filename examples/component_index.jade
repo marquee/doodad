@@ -3,11 +3,11 @@ extend _base
 block content
     h1 Doodad Components
 
-    #components(style='max-width: 800px;margin: 0 auto')
+    #components.example(style='max-width: 800px;margin: 0 auto')
 
     script(type='text/coffeescript').
         components = []
-        { StringField, Select, Button, Popover, Form } = Doodad
+        { StringField, Select, Button, Popover, Form, List } = Doodad
         { dp, dh2, dh3, dh4, ddiv, dspan, dp, dformtext } = Doodad.Shortcuts
 
         components.push dh2('StringField')
@@ -190,6 +190,11 @@ block content
         
         components.push new ReusableForm()
 
+
+        components.push dh2 'List'
+
+        components.push new List
+            value: ['First item', 'Second item']
 
 
 
