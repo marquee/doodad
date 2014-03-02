@@ -30,7 +30,7 @@ Button = require '../components/Button'
 
 parseLimit = (n) ->
     return [parseInt(n), n.substring?(n.length - 1) is '+']
-        
+
 
 class List extends BaseDoodad
     className: 'List'
@@ -52,7 +52,7 @@ class List extends BaseDoodad
 
         @value = @_config.value
         @_generateFields()
-        
+
         console.log '_item_limit', @_item_limit, '@_is_flexible', @_is_flexible
         if @model?
             @bindTo(@model)
@@ -101,7 +101,7 @@ class List extends BaseDoodad
                 label   : @_config.remove_label
                 type    : 'icon-bare'
                 action  : => @_removeField(field)
-            $li.prepend(rm_button.el)
+            $li.append(rm_button.el)
         @ui.fields.append($li)
 
     _removeField: (field) ->
@@ -124,6 +124,8 @@ class List extends BaseDoodad
         @value.push(value)
         @fields.push(field)
         @_renderField(field)
+        if field.focus?
+            _.defer(field.focus)
         return this
 
     _makeField: (value, i) =>
@@ -136,7 +138,7 @@ class List extends BaseDoodad
             field.name = "field_#{ i }"
         return field
 
-    # Internal: 
+    # Internal:
     #
     # Returns nothing.
     _generateFields: ->
