@@ -3,7 +3,7 @@ extend _base
 block content
     h1 Doodad Components
 
-    #components.example(style='max-width: 800px;margin: 0 auto')
+    #components.example
 
     script(type='text/coffeescript').
         components = []
@@ -187,7 +187,7 @@ block content
                 dformtext('Some help text describing the form.')
                 new StringField label: 'Field 4'
             ]
-        
+
         components.push new ReusableForm()
 
 
@@ -205,21 +205,3 @@ block content
         components.forEach (doodad) ->
             console.log doodad
             $components.append(doodad.render().el)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
