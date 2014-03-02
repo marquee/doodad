@@ -47,6 +47,7 @@ compassExtraOptions = [
     '--css-dir',         'build/',
     '--images-dir',      'build/images/',
     '--javascripts-dir', 'build/',
+    '--load-all',  'node_modules/',
 ]
 
 
@@ -79,13 +80,10 @@ task 'build:examples', '', (opts) ->
 task 'build:scripts', '', (opts) ->
     coffee_builder = spawn 'coffee', ['--output', BUILD_FOLDER, '--compile', SOURCE_FOLDER]
     captureOutput coffee_builder, 'COFFEE', ->
-        index_file = path.join(BUILD_FOLDER, 'doodad.js')
-        index_content = fs.readFileSync(index_file).toString()
-        index_content = index_content.replace(/\{X VERSION X\}/g, VERSION)
-        fs.writeFileSync(index_file, index_content)
         browserify = require 'browserify'
         b = browserify()
-        b.add(path.join(index_file))
+        dist_file = path.join(BUILD_FOLDER, 'dist.js')
+        b.add(path.join(dist_file))
         output_file = path.join(OUTPUT_FOLDER, JS_LIB_NAME)
         output_stream = fs.createWriteStream(output_file)
         b.bundle (err, src) ->
@@ -249,7 +247,7 @@ sassSourcePrefix = (source) ->
     // Doodad v#{ VERSION }
     // Public Domain, https://github.com/marquee/doodad
     // #{ build_date.getFullYear() }-#{ build_date.getMonth() + 1 }-#{ build_date.getDate() }
-    
+
     #{ source }
     """
 

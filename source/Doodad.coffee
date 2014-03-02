@@ -33,5 +33,3 @@ Doodad =
     Tags        : Tags
     # Toggle      : Toggle
     VERSION     : '{X VERSION X}'
-
-window.Doodad = Doodad
