@@ -27,7 +27,7 @@ button = new Button
 $('#app').append(button.el)
 ```
 
-The element contructors take various options which control their appearance
+The element constructors take various options which control their appearance
 and behavior. Also, the element classes are based on Backbone Views, and can
 be used as such.
 
@@ -75,7 +75,7 @@ strings to add to the element’s `className`.
 ### Components
 
 * `Button` - A clickable button that can have icons and spinners built-in
-  
+
   Bare minimum, a `Button` requires a label and an action. The action is a
   function that is called whenever the button is clicked, and receives the
   button instance as an argument.
@@ -85,6 +85,19 @@ strings to add to the element’s `className`.
       label: 'Click Me'
       action: (self) ->
   ```
+
+  Additional options:
+
+  * spinner
+      * `true` or `'inline'`: button expands to show a spinner, and is
+        disabled until `button_instance.enable()` is called
+      * `'replace'`: spinner replaces the button label instead
+  * variant
+      * '<color class>' ('friendly', 'dangerous', 'warning', etc)
+  * icon
+      * '<icon name>' ('gear', 'disk')
+
+
 
 * `Select` - A drop-down menu
 
@@ -133,27 +146,36 @@ as they are added.
 
 * `Popover` - A container that overlays, either as a flag or a modal
 
-The Popover in flag form can be positioned using its origin option. The origin
-is a string in the form `'<edge>-<position>'`, where `<edge>` is the side of
-the popover element — `'top'`, `'bottom'`, `'left'`, `'right'` — and
-`<position>` is a location along that edge — `'left'`, `'center'`, `'right'`
-or `'top'`, `'center'`, `'bottom'`, depending on the edge.
+    The Popover in flag form can be positioned using its origin option. The origin
+    is a string in the form `'<edge>-<position>'`, where `<edge>` is the side of
+    the popover element — `'top'`, `'bottom'`, `'left'`, `'right'` — and
+    `<position>` is a location along that edge — `'left'`, `'center'`, `'right'`
+    or `'top'`, `'center'`, `'bottom'`, depending on the edge.
 
-```coffeescript
-modal = new Popover
-    type: 'modal'
-    origin: 'bottom-left'
-    content: [
-        new Button
-            label: 'Do Stuff'
-            action: someActionFn
-    ]
-```
+    ```coffeescript
+    modal = new Popover
+        type   : 'flag'
+        origin : 'bottom-left'
+        content: [
+            new Button
+                label: 'Do Stuff'
+                action: someActionFn
+        ]
+    ```
+
+*   `List` - A container that groups fields of a single type into a single
+    serializable form.
+
+    ```coffeescript
+    list = new List
+        label: 'List Label'
+        value: ['First item', 'Second item']
+    ```
 
 
 ### Tags
 
-Sometimes you do just need a simple tag. The classes in the Tags module provide 
+Sometimes you do just need a simple tag. The classes in the Tags module provide
 wrappers for the standard HTML tags, like P, DIV, H1, and so on, that implement
 the functions that let them interoperate with Doodads. (Only certain tags are
 implemented, mainly the content-oriented ones. Input-oriented tags are of
@@ -188,32 +210,13 @@ Bare strings in the content are converted to the appropriate element for the
 containing tag. When passed to a `UL` they become `LIs`, or passed to a `P`
 then become `TextNodes`.
 
-The full list of tags:
-
-* `A`
-* `BR`
-* `DIV`
-* `EM`
-* `H1`
-* `H2`
-* `H3`
-* `H4`
-* `H5`
-* `H6`
-* `IMG`
-* `LI`
-* `OL`
-* `P`
-* `SPAN`
-* `STRONG`
-* `Tag`
-* `TextNode`
-* `UL`
+The full list of tags: `A`, `BR`, `DIV`, `EM`, `H1`, `H2`, `H3`, `H4`, `H5`,
+`H6`, `IMG`, `LI`, `OL`, `P`, `SPAN`, `STRONG`, `Tag`, `TextNode`, `UL`.
 
 
 ## Authors
 
-* [Alec Perkins](https://github.com/alecperkins) ([Droptype Inc](http://droptype.com))
+* [Alec Perkins](https://github.com/alecperkins) ([Marquee](http://marquee.by))
 
 ## License
 
