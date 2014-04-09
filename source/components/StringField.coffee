@@ -325,6 +325,7 @@ class StringField extends BaseDoodad
         return
 
     setValue: (value, opts={ silent: false }) =>
+        value ?= ''
         if value isnt @value
             @raw_value = value
             if @_config.type is 'token'
